@@ -1,0 +1,51 @@
+{
+  "name": "revane-ioc",
+  "version": "1.0.0",
+  "description": "inversion of control framework",
+  "main": "index.js",
+  "scripts": {
+    "unit": "tape bin/test/**/*.test.js | tspec",
+    "test": "npm run lint && npm run compile && npm run unit",
+    "lint": "tslint --project tsconfig.json --config tslint.yaml",
+    "coveralls": "npm run compile && npm run coverage -s && coveralls < coverage/lcov.info",
+    "coverage": "npm run compile && nyc npm run unit",
+    "compile": "tsc",
+    "prepublish": "npm run compile -s"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
+  },
+  "author": "Denis Fäcke",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SerayaEryn/revane-ioc.git"
+  },
+  "dependencies": {
+    "array.prototype.flat": "^1.2.1",
+    "esprima": "^4.0.0",
+    "fast-xml-parser": "^3.12.5",
+    "recursive-readdir": "^2.2.2",
+    "reflect-metadata": "^0.1.12",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.11.1",
+    "@types/node": "^10.7.0",
+    "coveralls": "^3.0.1",
+    "nyc": "^12.0.1",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.9.1",
+    "tape-catch": "^1.0.6",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.10.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^2.9.1"
+  },
+  "keywords": [
+    "inversion of control",
+    "ioc",
+    "dependency injection"
+  ],
+  "types": "RevaneIOC.d.ts"
+}
