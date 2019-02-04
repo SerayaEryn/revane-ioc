@@ -2,6 +2,7 @@ import Bean from '../../revane-ioc-core/context/bean/Bean'
 
 export default abstract class AbstractBean implements Bean {
   protected isClass: boolean
+  public type: string
 
   public abstract getInstance (): any
 
@@ -23,7 +24,11 @@ export default abstract class AbstractBean implements Bean {
     return instance
   }
 
-  public postConstruct () {
+  public postConstruct (): Promise<any> {
+    return Promise.resolve()
+  }
+
+  public preDestroy (): Promise<any> {
     return Promise.resolve()
   }
 }

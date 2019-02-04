@@ -34,20 +34,26 @@ export default class Container {
 
   public getByType (type): any[] {
     const beansByType = []
-    for (const id of Object.keys(this.beans)) {
-      if (this.beans[id].type === type) {
-        beansByType.push(this.get(id))
+    for (const bean of this.beans.values()) {
+      if (bean.type === type) {
+        beansByType.push(bean)
       }
     }
     return beansByType
   }
 
   public has (id: string): boolean {
-    return this.beans[id] !== undefined
+    return this.beans.has(id)
+  }
+
+  public async tearDown (): Promise<void> {
+    for (const bean of this.beans.values()) {
+      await bean.preDestroy()
+    }
   }
 
   private getStrict (id): Bean {
-    const bean: Bean = this.beans[id]
+    const bean: Bean = this.beans.get(id)
     if (!bean) {
       throw new NotFoundError(id)
     }
@@ -69,7 +75,7 @@ export default class Container {
   }
 
   private set (id: string, bean: Bean): void {
-    this.beans[id] = bean
+    this.beans.set(id, bean)
   }
 
   private getClass (entry: BeanDefinition) {

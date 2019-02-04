@@ -82,6 +82,10 @@ export default class Context {
     return this.container.getByType(type)
   }
 
+  public async tearDown (): Promise<void> {
+    await this.container.tearDown()
+  }
+
   private getPath (beanDefinition: BeanDefinition): string {
     if (!this.isRelative(beanDefinition) || this.isAbsolute(beanDefinition)) {
       return beanDefinition.class

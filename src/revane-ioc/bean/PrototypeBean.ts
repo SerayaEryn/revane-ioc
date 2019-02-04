@@ -5,7 +5,7 @@ import Bean from '../../revane-ioc-core/context/bean/Bean'
 export default class PrototypeBean extends AbstractBean {
   public static scope: string = 'prototype'
   public isClass: boolean
-  private type: string
+  public type: string
   private clazz: string
   public entry: BeanDefinition
   private dependencies: any

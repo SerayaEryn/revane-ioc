@@ -55,6 +55,10 @@ export default class RevaneIOC {
     return this.revaneCore.getByType(type)
   }
 
+  public async tearDown (): Promise<void> {
+    await this.revaneCore.tearDown()
+  }
+
   private prepareOptions (options: Options): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
     const files: string[] = options.configurationFiles || []

@@ -53,4 +53,8 @@ export default class RevaneIOCCore {
   public getByType (type: string): any[] {
     return this.context.getByType(type)
   }
+
+  public async tearDown () {
+    await this.context.tearDown()
+  }
 }

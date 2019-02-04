@@ -1,6 +1,7 @@
 import Bean from './Bean'
 
 export default class ValueBean implements Bean {
+  public type: string = 'value'
   private value: any
 
   constructor (value: any) {
@@ -12,6 +13,10 @@ export default class ValueBean implements Bean {
   }
 
   public postConstruct (): Promise<any> {
+    return Promise.resolve()
+  }
+
+  public preDestroy (): Promise<any> {
     return Promise.resolve()
   }
 }

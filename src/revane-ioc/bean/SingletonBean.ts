@@ -3,13 +3,14 @@ import AbstractBean from './AbstractBean'
 export default class SingletonBean extends AbstractBean {
   public static scope: string = 'singleton'
   protected isClass: boolean
-  private type
+  public type: string
   private instance
 
   constructor (Clazz, entry, isClass, dependencies) {
     super()
     this.type = entry.type
     this.isClass = isClass
+    this.type = entry.type
     this.instance = this.createInstance(Clazz, dependencies)
   }
 
@@ -23,5 +24,12 @@ export default class SingletonBean extends AbstractBean {
     } else {
       return Promise.resolve()
     }
+  }
+
+  public preDestroy (): Promise<any> {
+    if (this.instance.preDestroy) {
+      return this.instance.preDestroy()
+    }
+    return Promise.resolve()
   }
 }
