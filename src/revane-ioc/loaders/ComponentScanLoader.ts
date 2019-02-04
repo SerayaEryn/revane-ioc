@@ -72,11 +72,15 @@ function getBeanDefinition (module1, clazz): BeanDefinition {
   const type = Reflect.getMetadata('type', module1)
   const scope = Reflect.getMetadata('scope', module1) || 'singleton'
   const dependencies = Reflect.getMetadata('dependencies', module1).map(toReference)
+  const inject = Reflect.getMetadata('inject', module1)
   const beanDefinition = new BeanDefinition(id)
   beanDefinition.class = clazz
   beanDefinition.properties = dependencies
   beanDefinition.scope = scope
   beanDefinition.type = type
+  beanDefinition.options = {
+    inject
+  }
   return beanDefinition
 }
 

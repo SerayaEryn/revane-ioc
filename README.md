@@ -343,6 +343,17 @@ class Example {}
 Scope('prototype')(Example)
 ```
 
+#### Inject(ids: string | string[])
+
+Sets the properties defined by `ids` at the decorated class.
+
+```js
+
+const { Inject } = require('revane-ioc');
+class Example {}
+Inject('test')(Example)
+```
+
 ## License
 
 [MIT](./LICENSE)

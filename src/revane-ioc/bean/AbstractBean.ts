@@ -6,11 +6,21 @@ export default abstract class AbstractBean implements Bean {
   public abstract getInstance (): any
 
   public createInstance (Clazz, dependencies) {
+
+    const parameters = dependencies.dependencies.map((bean) => bean.getInstance())
+    let instance = null
     if (this.isClass) {
-      return new Clazz(...dependencies)
+      instance = new Clazz(...parameters)
     } else {
-      return Clazz
+      instance = Clazz
     }
+
+    if (dependencies.inject) {
+      for (const bean of dependencies.inject) {
+        instance[bean.id] = bean.bean.getInstance()
+      }
+    }
+    return instance
   }
 
   public postConstruct () {

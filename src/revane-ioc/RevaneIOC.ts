@@ -13,7 +13,7 @@ import NotInitializedError from './NotInitializedError'
 
 export * from './decorators/Decorators'
 
-export default class Revane {
+export default class RevaneIOC {
   private revaneCore: RevaneCore
   private options: Options
   private initialized: boolean = false

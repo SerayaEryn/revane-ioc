@@ -6,11 +6,10 @@ export default class SingletonBean extends AbstractBean {
   private type
   private instance
 
-  constructor (Clazz, entry, isClass, dependencyBeans) {
+  constructor (Clazz, entry, isClass, dependencies) {
     super()
     this.type = entry.type
     this.isClass = isClass
-    const dependencies = dependencyBeans.map((bean) => bean.getInstance())
     this.instance = this.createInstance(Clazz, dependencies)
   }
 

@@ -1,4 +1,4 @@
-'use strict'
+import BeanOptions from './BeanOptions'
 
 export default class BeanDefinition {
   public class: string
@@ -7,6 +7,7 @@ export default class BeanDefinition {
   public properties: any[]
   public path: string
   public scope: string
+  public options: BeanOptions = new BeanOptions()
 
   constructor (id: string) {
     this.id = id

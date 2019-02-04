@@ -3,7 +3,7 @@ import * as test from 'tape-catch'
 import ComponentScanLoader from '../src/revane-ioc/loaders/ComponentScanLoader'
 
 test('should do component scan without filters', (t) => {
-  t.plan(12)
+  t.plan(15)
 
   const options = {
     basePackage: path.join(__dirname, '../../testdata')
@@ -12,7 +12,7 @@ test('should do component scan without filters', (t) => {
   const componentScanResolver = new ComponentScanLoader(options)
   return componentScanResolver.load()
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 6)
+      t.strictEquals(beanDefinitions.length, 7)
       const scan1 = findDefinition(beanDefinitions, 'scan1')
       t.strictEquals(scan1.scope, 'singleton')
       const scan2 = findDefinition(beanDefinitions, 'scan2')
@@ -30,6 +30,10 @@ test('should do component scan without filters', (t) => {
       const scan3 = findDefinition(beanDefinitions, 'scan3')
       t.strictEquals(scan3.scope, 'singleton')
       t.deepEquals(scan3.properties, [{ ref: 'test6' }])
+      const scan4 = findDefinition(beanDefinitions, 'scan4')
+      t.strictEquals(scan4.scope, 'singleton')
+      t.deepEquals(scan4.properties, [])
+      t.deepEquals(scan4.options, { inject: [ 'test6' ] })
     })
     .catch((err) => t.error(err))
 })
@@ -66,7 +70,7 @@ test('should do component scan with include filter', (t) => {
   const componentScanResolver = new ComponentScanLoader(options)
   return componentScanResolver.load()
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 6)
+      t.strictEquals(beanDefinitions.length, 7)
     })
     .catch((err) => t.err(err))
 })

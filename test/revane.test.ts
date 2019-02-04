@@ -316,6 +316,6 @@ test('should get components', (t) => {
     .then(() => {
       const beans = revane.getByType('component')
 
-      t.strictEquals(4, beans.length)
+      t.strictEquals(5, beans.length)
     })
 })

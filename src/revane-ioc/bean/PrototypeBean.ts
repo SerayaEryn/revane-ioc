@@ -1,12 +1,14 @@
 import AbstractBean from './AbstractBean'
+import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import Bean from '../../revane-ioc-core/context/bean/Bean'
 
 export default class PrototypeBean extends AbstractBean {
   public static scope: string = 'prototype'
   public isClass: boolean
   private type: string
   private clazz: string
-  private entry
-  private dependencies: any[]
+  public entry: BeanDefinition
+  private dependencies: any
 
   constructor (clazz, entry, isClass, dependencies) {
     super()
@@ -18,8 +20,7 @@ export default class PrototypeBean extends AbstractBean {
   }
 
   public getInstance (): any {
-    const dependencies = this.dependencies.map((bean) => bean.getInstance())
-    const instance = this.createInstance(this.clazz, dependencies)
+    const instance = this.createInstance(this.clazz, this.dependencies)
     if (instance.postConstruct) {
       instance.postConstruct()
     }

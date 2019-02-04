@@ -14,10 +14,12 @@ test('should read xml configuration file and register beans', (t) => {
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
+          options: {},
           id: 'xml1',
           class: './xml/xml1.js'
         },
         {
+          options: {},
           id: 'xml2',
           class: './xml/xml2',
           properties: [{
@@ -25,6 +27,7 @@ test('should read xml configuration file and register beans', (t) => {
           }]
         },
         {
+          options: {},
           id: 'xml3',
           class: './xml/xml3',
           properties: [

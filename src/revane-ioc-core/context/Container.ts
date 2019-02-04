@@ -91,7 +91,20 @@ export default class Container {
   private async createBeanForScope (BeanForScope, entry, Clazz): Promise<any> {
     const isClazz = this.isClass(Clazz)
     const dependencies = await this.getDependencies(isClazz, entry)
-    return new BeanForScope(Clazz, entry, isClazz, dependencies)
+    const inject = await this.getInjectables(entry)
+    return new BeanForScope(Clazz, entry, isClazz, { dependencies, inject })
+  }
+
+  private async getInjectables (entry: BeanDefinition) {
+    if (entry.options && entry.options.inject) {
+      return Promise.all(entry.options.inject.map(async (id) => {
+        return {
+          id,
+          bean: await this.getDependecySafe({ ref: id }, entry.id)
+        }
+      }))
+    }
+    return Promise.resolve([])
   }
 
   private async getDependencies (isClass, entry: BeanDefinition): Promise<Bean[]> {
