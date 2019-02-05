@@ -14,6 +14,7 @@ declare class RevaneIOC {
   public has (id: string): boolean
   public getMultiple (ids: string[]): any[]
   public getByType (type: string): any[]
+  public tearDown (): Promise<void>
 }
 
 declare class ComponentOptions {
@@ -26,5 +27,6 @@ export function Repository(options?: string | ComponentOptions): Function
 export function Service(options?: string | ComponentOptions): Function
 export function Controller(options?: string | ComponentOptions): Function
 export function Scope(scope: string): Function
+export function Inject(scope: string | string[]): Function
 
 export default RevaneIOC;
