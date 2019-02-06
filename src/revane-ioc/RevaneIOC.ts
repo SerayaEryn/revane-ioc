@@ -1,4 +1,4 @@
-import CoreOptions from '../revane-ioc-core/Options'
+import CoreOptions, { LoaderOptions } from '../revane-ioc-core/Options'
 import RevaneCore from '../revane-ioc-core/RevaneIOCCore'
 import DefaultBeanTypeRegistry from '../revane-ioc-core/context/DefaultBeanTypeRegistry'
 
@@ -66,6 +66,7 @@ export default class RevaneIOC {
     coreOptions.loaderOptions = files.map((file) => {
       return { file: file }
     })
+    coreOptions.loaderOptions = coreOptions.loaderOptions.concat(options.loaderOptions || [])
     this.checkForUnknownEndings(coreOptions.loaderOptions)
     if (options.componentScan !== false) {
       coreOptions.loaderOptions.push({
@@ -80,7 +81,7 @@ export default class RevaneIOC {
     return coreOptions
   }
 
-  private checkForUnknownEndings (files): void {
+  private checkForUnknownEndings (files: LoaderOptions[]): void {
     const loaderClasses = [XmlFileLoader, JsonFileLoader, ComponentScanLoader]
     for (const file of files) {
       const relevant: Array<boolean> = []

@@ -1,3 +1,3 @@
 export default interface BeanTypeRegistry {
-  get (scope)
+  get (scope: string): any
 }

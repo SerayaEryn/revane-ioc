@@ -8,6 +8,7 @@ import RegexFilter from './RegexFilter'
 import Loader from '../../revane-ioc-core/Loader'
 
 import * as recursiveReaddir from 'recursive-readdir'
+import { ComponentScanLoaderOptions } from '../Options'
 
 const filterByType = {
   regex: RegexFilter
@@ -15,8 +16,8 @@ const filterByType = {
 
 export default class ComponentScanLoader implements Loader {
   private basePackage: string
-  private includeFilters: any[]
-  private excludeFilters: any[]
+  private includeFilters: Filter[]
+  private excludeFilters: Filter[]
 
   constructor (options: any) {
     this.basePackage = options.basePackage

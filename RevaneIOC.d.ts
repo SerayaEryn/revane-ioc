@@ -1,10 +1,24 @@
-declare class Options {
+export type ComponentScanLoaderOptions = {
+  componentScan: boolean
+}
+
+export type FileLoaderOptions = {
+  file: string
+}
+
+export type RegexFilter = {
+  type: string, 
+  regex: string
+}
+
+export class Options {
   public noRedefinition?: boolean
   public basePackage: string
   public configurationFiles?: string[]
   public componentScan?: boolean
-  public includeFilters?
-  public excludeFilters?
+  public includeFilters?: RegexFilter[]
+  public excludeFilters?: RegexFilter[]
+  public loaderOptions?: (ComponentScanLoaderOptions | FileLoaderOptions)[]
 }
 
 declare class RevaneIOC {

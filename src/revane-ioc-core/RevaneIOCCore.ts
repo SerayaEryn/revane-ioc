@@ -1,6 +1,7 @@
 import BeanLoader from './BeanLoader'
 import Context from './context/Context'
 import Options from './Options'
+import Loader from './Loader'
 
 import * as flat from 'array.prototype.flat'
 import BeanTypeRegistry from './context/BeanTypeRegistry'
@@ -9,14 +10,14 @@ export default class RevaneIOCCore {
   protected options: Options
   private context: Context
   private beanTypeRegistry: BeanTypeRegistry
-  private plugins: Map<string, Function[]> = new Map()
+  private plugins: Map<string, (any | Loader)[]> = new Map()
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
     this.beanTypeRegistry = beanTypeRegistry
   }
 
-  public addPlugin (name: string, plugin) {
+  public addPlugin (name: string, plugin: any | Loader) {
     let pluginsByName = this.plugins.get(name)
     if (!pluginsByName) {
       pluginsByName = []

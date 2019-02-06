@@ -5,6 +5,7 @@ import Container from './Container'
 import BeanDefinedTwiceError from './errors/BeanDefinedTwiceError'
 import ContextNotInitializedError from './errors/ContextNotInitializedError'
 import BeanTypeRegistry from './BeanTypeRegistry'
+import Loader from '../Loader'
 
 export default class Context {
   private options: Options
@@ -12,9 +13,9 @@ export default class Context {
   private container: Container
   private initialized: boolean = false
   private beanTypeRegistry: BeanTypeRegistry
-  private plugins: Map<string, Function[]>
+  private plugins: Map<string, (any | Loader)[]>
 
-  constructor (options: Options, beanTypeRegistry: BeanTypeRegistry, plugins: Map<string, Function[]>) {
+  constructor (options: Options, beanTypeRegistry: BeanTypeRegistry, plugins: Map<string, (any | Loader)[]>) {
     this.options = options
     this.beanDefinitions = new Map()
     this.beanTypeRegistry = beanTypeRegistry
@@ -25,7 +26,7 @@ export default class Context {
     const preInitializePlugins = this.plugins.get('preInitialize')
     if (preInitializePlugins) {
       for (const plugin of preInitializePlugins) {
-        await plugin(this)
+        await plugin.apply(this)
       }
     }
     const entries = [...this.beanDefinitions.values()]

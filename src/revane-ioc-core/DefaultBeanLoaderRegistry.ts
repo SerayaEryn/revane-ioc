@@ -5,7 +5,7 @@ import BeanLoaderRegistry from './BeanLoaderRegistry'
 export default class DefaultBeanLoaderRegistry implements BeanLoaderRegistry {
   private loaders: Loader[] = []
 
-  public register (loader): void {
+  public register (loader: Loader): void {
     this.loaders.push(loader)
   }
 

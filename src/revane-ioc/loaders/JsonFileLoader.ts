@@ -3,10 +3,11 @@
 import * as fileSystem from 'fs'
 import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
+import { FileLoaderOptions } from '../Options'
 
 export default class JsonFileLoader implements Loader {
   private path: string
-  constructor (options: any) {
+  constructor (options: FileLoaderOptions) {
     this.path = options.file
   }
 

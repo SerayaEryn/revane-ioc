@@ -10,7 +10,7 @@ export default class RegexFilter implements Filter {
     this.applies = this.applies.bind(this)
   }
 
-  public applies (clazz): boolean {
+  public applies (clazz: string): boolean {
     return this.regex.test(clazz)
   }
 }

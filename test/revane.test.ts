@@ -320,6 +320,39 @@ test('should read json config file, component scan and register beans', (t) => {
     })
 })
 
+test('should read json config file, component scan and register beans', (t) => {
+  t.plan(4)
+
+  const options = {
+    loaderOptions: [
+      {
+        file: path.join(__dirname, '../../testdata/json/config.json')
+      },
+      {
+        file: path.join(__dirname, '../../testdata/xml/config2.xml')
+      },
+      {
+        componentScan: true,
+        basePackage: path.join(__dirname, '../../testdata')
+      }
+    ],
+    basePackage: path.join(__dirname, '../../testdata'),
+    componentScan: false
+  }
+  const revane = new Revane(options)
+  return revane.initialize()
+    .then(() => {
+      const bean1 = revane.get('json1')
+      const bean2 = revane.get('json2')
+      const bean3 = revane.get('scan1')
+
+      t.ok(bean1)
+      t.ok(bean2)
+      t.ok(bean2.json1)
+      t.ok(bean3)
+    })
+})
+
 test('should get components', (t) => {
   t.plan(1)
 

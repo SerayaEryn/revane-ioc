@@ -7,6 +7,11 @@ import InvalidScopeError from './errors/InvalidScopeError'
 import NotFoundError from './errors/NotFoundError'
 import BeanTypeRegistry from './BeanTypeRegistry'
 
+type Property = {
+  value?: string
+  ref?: string
+}
+
 export default class Container {
   private entries: BeanDefinition[]
   private beans: Map<string, Bean>
@@ -32,7 +37,7 @@ export default class Container {
     return bean.getInstance()
   }
 
-  public getByType (type): any[] {
+  public getByType (type: string): any[] {
     const beansByType = []
     for (const bean of this.beans.values()) {
       if (bean.type === type) {
@@ -52,7 +57,7 @@ export default class Container {
     }
   }
 
-  private getStrict (id): Bean {
+  private getStrict (id: string): Bean {
     const bean: Bean = this.beans.get(id)
     if (!bean) {
       throw new NotFoundError(id)
@@ -86,7 +91,7 @@ export default class Container {
     return Clazz
   }
 
-  private createBean (entry: BeanDefinition, Clazz): Promise<Bean> {
+  private createBean (entry: BeanDefinition, Clazz: any): Promise<Bean> {
     const BeanForScope = this.beanTypeRegistry.get(entry.scope)
     if (BeanForScope) {
       return this.createBeanForScope(BeanForScope, entry, Clazz)
@@ -94,7 +99,7 @@ export default class Container {
     throw new InvalidScopeError(entry.scope)
   }
 
-  private async createBeanForScope (BeanForScope, entry, Clazz): Promise<any> {
+  private async createBeanForScope (BeanForScope: any, entry: BeanDefinition, Clazz: any): Promise<any> {
     const isClazz = this.isClass(Clazz)
     const dependencies = await this.getDependencies(isClazz, entry)
     const inject = await this.getInjectables(entry)
@@ -113,16 +118,16 @@ export default class Container {
     return Promise.resolve([])
   }
 
-  private async getDependencies (isClass, entry: BeanDefinition): Promise<Bean[]> {
+  private async getDependencies (isClass: boolean, entry: BeanDefinition): Promise<Bean[]> {
     if (isClass) {
-      return Promise.all(entry.properties.map(async (property) => {
+      return Promise.all(entry.properties.map(async (property: Property | Property) => {
         return this.getDependecySafe(property, entry.id)
       }))
     }
     return Promise.resolve([])
   }
 
-  private async getDependecySafe (property, parentId): Promise<Bean> {
+  private async getDependecySafe (property: Property, parentId: string): Promise<Bean> {
     if (property.value) {
       return new ValueBean(property.value)
     }
@@ -130,7 +135,7 @@ export default class Container {
     return this.getStrict(property.ref)
   }
 
-  private async ensureDependencyIsPresent (property, parentId): Promise<void> {
+  private async ensureDependencyIsPresent (property: Property, parentId: string): Promise<void> {
     if (!this.hasDependency(property.ref)) {
       await this.registerDependency(property.ref, parentId)
     }
@@ -169,7 +174,7 @@ export default class Container {
     throw new DependencyNotFoundError(id, parentId)
   }
 
-  private isClass (Clazz): boolean {
+  private isClass (Clazz: any): boolean {
     try {
       Object.defineProperty(Clazz, 'prototype', {
         writable: true
