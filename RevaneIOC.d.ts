@@ -1,5 +1,6 @@
 export type ComponentScanLoaderOptions = {
-  componentScan: boolean
+  componentScan: boolean,
+  basePackage: string
 }
 
 export type FileLoaderOptions = {
