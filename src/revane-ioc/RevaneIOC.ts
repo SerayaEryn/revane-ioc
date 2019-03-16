@@ -12,6 +12,7 @@ import Options from './Options'
 import NotInitializedError from './NotInitializedError'
 
 export * from './decorators/Decorators'
+export * from './Options'
 
 export default class RevaneIOC {
   private revaneCore: RevaneCore

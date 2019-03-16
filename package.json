@@ -9,7 +9,7 @@
     "lint": "tslint --project tsconfig.json --config tslint.yaml",
     "coveralls": "npm run compile && npm run coverage -s && coveralls < coverage/lcov.info",
     "coverage": "npm run compile && nyc npm run unit",
-    "compile": "tsc",
+    "compile": "tsc -d",
     "prepublish": "npm run compile -s"
   },
   "engines": {
@@ -47,5 +47,5 @@
     "ioc",
     "dependency injection"
   ],
-  "types": "RevaneIOC.d.ts"
+  "types": "bin/src/reane-ioc/RevaneIOC.d.ts"
 }

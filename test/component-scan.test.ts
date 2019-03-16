@@ -6,7 +6,8 @@ test('should do component scan without filters', (t) => {
   t.plan(15)
 
   const options = {
-    basePackage: path.join(__dirname, '../../testdata')
+    basePackage: path.join(__dirname, '../../testdata'),
+    componentScan: true
   }
 
   const componentScanResolver = new ComponentScanLoader(options)
@@ -46,7 +47,8 @@ test('should do component scan with exclude filter', (t) => {
     excludeFilters: [{
       type: 'regex',
       regex: '.*'
-    }]
+    }],
+    componentScan: true
   }
 
   const componentScanResolver = new ComponentScanLoader(options)
@@ -64,7 +66,8 @@ test('should do component scan with include filter', (t) => {
     includeFilters: [{
       type: 'regex',
       regex: '.*'
-    }]
+    }],
+    componentScan: true
   }
 
   const componentScanResolver = new ComponentScanLoader(options)
