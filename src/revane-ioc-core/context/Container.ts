@@ -41,7 +41,7 @@ export default class Container {
     const beansByType = []
     for (const bean of this.beans.values()) {
       if (bean.type === type) {
-        beansByType.push(bean)
+        beansByType.push(bean.getInstance())
       }
     }
     return beansByType

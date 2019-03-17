@@ -342,7 +342,7 @@ test('should read json config file, component scan and register beans', (t) => {
 })
 
 test('should get components', (t) => {
-  t.plan(1)
+  t.plan(6)
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
@@ -357,6 +357,11 @@ test('should get components', (t) => {
     .then(() => {
       const beans = revane.getByType('component')
 
+      t.ok(beans[0].postConstructed)
+      t.ok(beans[1].test6)
+      t.ok(beans[2].test6)
+      t.ok(beans[3].arg)
+      t.ok(beans[4].test6)
       t.strictEquals(5, beans.length)
     })
 })

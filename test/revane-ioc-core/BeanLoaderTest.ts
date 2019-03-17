@@ -1,7 +1,7 @@
 import * as test from 'tape-catch'
 import BeanLoader from '../../src/revane-ioc-core/BeanLoader'
-import Loader from '../../src/revane-ioc-core/Loader';
-import BeanDefinition from '../../src/revane-ioc-core/BeanDefinition';
+import Loader from '../../src/revane-ioc-core/Loader'
+import BeanDefinition from '../../src/revane-ioc-core/BeanDefinition'
 
 test('should reject on errors in loaders', async (t) => {
   t.plan(1)
