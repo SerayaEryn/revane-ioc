@@ -16,10 +16,8 @@ export default abstract class AbstractBean implements Bean {
       instance = Clazz
     }
 
-    if (dependencies.inject) {
-      for (const bean of dependencies.inject) {
-        instance[bean.id] = bean.bean.getInstance()
-      }
+    for (const bean of dependencies.inject || []) {
+      instance[bean.id] = bean.bean.getInstance()
     }
     return instance
   }

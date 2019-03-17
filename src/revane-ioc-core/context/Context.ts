@@ -13,22 +13,14 @@ export default class Context {
   private container: Container
   private initialized: boolean = false
   private beanTypeRegistry: BeanTypeRegistry
-  private plugins: Map<string, (any | Loader)[]>
 
-  constructor (options: Options, beanTypeRegistry: BeanTypeRegistry, plugins: Map<string, (any | Loader)[]>) {
+  constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
     this.beanDefinitions = new Map()
     this.beanTypeRegistry = beanTypeRegistry
-    this.plugins = plugins
   }
 
   public async initialize (): Promise<void> {
-    const preInitializePlugins = this.plugins.get('preInitialize')
-    if (preInitializePlugins) {
-      for (const plugin of preInitializePlugins) {
-        await plugin.apply(this)
-      }
-    }
     const entries = [...this.beanDefinitions.values()]
     this.container = new Container(entries, this.beanTypeRegistry)
     await this.container.initialize()

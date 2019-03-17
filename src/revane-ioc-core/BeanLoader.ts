@@ -20,7 +20,7 @@ export default class BeanLoader {
   }
 
   private prepareBeanResolverRegistry (options: Options): void {
-    for (const optionsForResolver of options.loaderOptions) {
+    for (const optionsForResolver of options.loaderOptions || []) {
       for (const Loader of this.loaders) {
         if (Loader.isRelevant(optionsForResolver)) {
           this.beanResolverRegistry.register(new Loader(optionsForResolver))

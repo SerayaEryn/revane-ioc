@@ -27,11 +27,7 @@ export default class RevaneIOCCore {
   }
 
   public async initialize (): Promise<void> {
-    this.context = new Context(
-      this.options,
-      this.beanTypeRegistry,
-      this.plugins
-    )
+    this.context = new Context(this.options, this.beanTypeRegistry)
     const loaders = this.plugins.get('loader')
     const beanLoader = new BeanLoader(loaders)
     const beanDefinitions = await beanLoader.getBeanDefinitions(this.options)
