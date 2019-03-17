@@ -19,8 +19,6 @@ export type RegexFilter = {
 export default class Options {
   public noRedefinition?: boolean
   public basePackage?: string
-  public configurationFiles?: string[]
-  public componentScan?: boolean
   public includeFilters?: RegexFilter[]
   public excludeFilters?: RegexFilter[]
   public loaderOptions?: (ComponentScanLoaderOptions | FileLoaderOptions)[]

@@ -63,7 +63,10 @@ module.exports = Controller(UserController);
 const RevaneIOC = require('revane-ioc');
 
 const options = {
-  basePackage: __dirname
+  basePackage: __dirname,
+  loaderOptions: [
+    { componentScan: true, basePackage: __dirname }
+  ]
 };
 const revane = new RevaneIOC(options);
 revane.initialize()
@@ -108,8 +111,8 @@ Configuration files may be passed with the `configurationFiles` option. The `con
 //app.js
 const options = {
   basePackage: __dirname,
-  configurationFiles: [
-    __dirname + '/config.json'
+  loaderOptions: [
+    { file: __dirname + '/config.json' }
   ]
 };
 const revane = new RevaneIOC(options);
@@ -132,8 +135,8 @@ revane.initialize()
 //app.js
 const options = {
   basePackage: __dirname,
-  configurationFiles: [
-    __dirname + '/config.xml'
+  loaderOptions: [
+    { file: __dirname + '/config.xml' }
   ]
 };
 const revane = new RevaneIOC(options);
@@ -189,10 +192,16 @@ It is possible to apply filters to the component scan. There are two types of fi
 //app.js
 const options = {
   basePackage: __dirname,
-  excludeFilters: [{
-    type: 'regex',
-    regex: '.*Mock.js'
-  }]
+  loaderOptions: [
+    {
+      componentScan: true,
+      basePackage: __dirname,
+      excludeFilters: [{
+        type: 'regex',
+        regex: '.*Mock.js'
+      }]
+    }
+  ]
 };
 const revane = new RevaneIOC(options);
 revane.initialize()

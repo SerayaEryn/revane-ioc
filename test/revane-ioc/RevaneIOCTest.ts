@@ -8,8 +8,8 @@ test('should read json configuration file and register beans', (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     componentScan: false,
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json')
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ]
   }
   const revane = new Revane(options)
@@ -29,10 +29,9 @@ test('should read json configuration file and register beans', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config3.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config3.json') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -53,10 +52,9 @@ test('should handle has()', async (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config3.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config3.json') }
+    ]
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -72,11 +70,10 @@ test('should read json and xml configuration file and register beans', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json'),
-      path.join(__dirname, '../../../testdata/xml/config.xml')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') },
+      { file: path.join(__dirname, '../../../testdata/xml/config.xml') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -100,10 +97,9 @@ test('should create bean for module', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/xml/config3.xml')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/xml/config3.xml') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -118,10 +114,9 @@ test('should create bean for module with value', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/xml/config4.xml')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/xml/config4.xml') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -137,10 +132,9 @@ test('should tearDown', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/xml/config4.xml')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/xml/config4.xml') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -155,8 +149,7 @@ test('should read not reject on missing paths', (t) => {
   t.plan(1)
 
   const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
-    componentScan: false
+    basePackage: path.join(__dirname, '../../../testdata')
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -170,10 +163,9 @@ test('should read json config file and reject on missing dependency', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config2.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config2.json') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -188,10 +180,9 @@ test('should reject error on unknown configuration file ending', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config2.test')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config2.test') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -206,10 +197,9 @@ test('should throw error on get() if not initialized', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ]
   }
   const revane = new Revane(options)
   try {
@@ -225,10 +215,9 @@ test('should throw error on has() if not initialized', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ]
   }
   const revane = new Revane(options)
   try {
@@ -244,8 +233,8 @@ test('should throw error on getMultiple if not initialized', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json')
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     componentScan: false
   }
@@ -263,10 +252,9 @@ test('should return multiple beans', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ]
   }
   const revane = new Revane(options)
   return revane.initialize()
@@ -282,10 +270,9 @@ test('should throw error on getByType if not initialized', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json')
-    ],
-    componentScan: false
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ]
   }
   const revane = new Revane(options)
   try {
@@ -301,9 +288,10 @@ test('should read json config file, component scan and register beans', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json'),
-      path.join(__dirname, '../../../testdata/xml/config2.xml')
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') },
+      { file: path.join(__dirname, '../../../testdata/xml/config2.xml') },
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata') }
     ]
   }
   const revane = new Revane(options)
@@ -358,9 +346,10 @@ test('should get components', (t) => {
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
-    configurationFiles: [
-      path.join(__dirname, '../../../testdata/json/config.json'),
-      path.join(__dirname, '../../../testdata/xml/config2.xml')
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') },
+      { file: path.join(__dirname, '../../../testdata/xml/config2.xml') },
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata') }
     ]
   }
   const revane = new Revane(options)

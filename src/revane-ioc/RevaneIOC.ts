@@ -62,21 +62,8 @@ export default class RevaneIOC {
 
   private prepareOptions (options: Options): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
-    const files: string[] = options.configurationFiles || []
-
-    coreOptions.loaderOptions = files.map((file) => {
-      return { file: file }
-    })
-    coreOptions.loaderOptions = coreOptions.loaderOptions.concat(options.loaderOptions || [])
+    coreOptions.loaderOptions = options.loaderOptions || []
     this.checkForUnknownEndings(coreOptions.loaderOptions)
-    if (options.componentScan !== false) {
-      coreOptions.loaderOptions.push({
-        componentScan: true,
-        basePackage: options.basePackage,
-        includeFilters: options.includeFilters,
-        excludeFilters: options.excludeFilters
-      })
-    }
     coreOptions.defaultScope = 'singleton'
     coreOptions.basePackage = options.basePackage
     return coreOptions
