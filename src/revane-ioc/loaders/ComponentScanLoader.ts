@@ -9,6 +9,9 @@ import Loader from '../../revane-ioc-core/Loader'
 
 import * as recursiveReaddir from 'recursive-readdir'
 import { ComponentScanLoaderOptions } from '../Options'
+import {
+  idSym, typeSym, scopeSym, dependenciesSym, injectSym
+} from '../decorators/Symbols'
 
 const filterByType = {
   regex: RegexFilter
@@ -35,7 +38,7 @@ export default class ComponentScanLoader implements Loader {
         for (const file of filteredFiles) {
           let module1 = getClazz(file)
           const clazz = file.replace(this.basePackage, '.')
-          if (module1 && Reflect.getMetadata('id', module1)) {
+          if (module1 && Reflect.getMetadata(idSym, module1)) {
             const beanDefinition = getBeanDefinition(module1, clazz)
             result.push(beanDefinition)
           }
@@ -69,11 +72,11 @@ function getClazz (file: string): any {
 }
 
 function getBeanDefinition (module1, clazz): BeanDefinition {
-  const id = Reflect.getMetadata('id', module1)
-  const type = Reflect.getMetadata('type', module1)
-  const scope = Reflect.getMetadata('scope', module1) || 'singleton'
-  const dependencies = Reflect.getMetadata('dependencies', module1).map(toReference)
-  const inject = Reflect.getMetadata('inject', module1)
+  const id = Reflect.getMetadata(idSym, module1)
+  const type = Reflect.getMetadata(typeSym, module1)
+  const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
+  const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
+  const inject = Reflect.getMetadata(injectSym, module1)
   const beanDefinition = new BeanDefinition(id)
   beanDefinition.class = clazz
   beanDefinition.properties = dependencies

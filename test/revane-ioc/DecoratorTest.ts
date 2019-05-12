@@ -1,6 +1,9 @@
 import 'reflect-metadata'
 import * as test from 'tape-catch'
 import { Scope, Service, Inject } from '../../src/revane-ioc/RevaneIOC'
+import {
+  scopeSym, idSym, dependenciesSym, injectSym
+} from '../../src/revane-ioc/decorators/Symbols'
 
 test('should add scope and service meta data', t => {
   t.plan(3)
@@ -11,9 +14,9 @@ test('should add scope and service meta data', t => {
   TestClass
   ))
 
-  t.strictEquals(Reflect.getMetadata('scope', TestClass), 'prototype')
-  t.strictEquals(Reflect.getMetadata('id', TestClass), 'testClass')
-  t.deepEquals(Reflect.getMetadata('dependencies', TestClass), [])
+  t.strictEquals(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
+  t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'testClass')
+  t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
 })
 
 test('should add scope and service meta data', t => {
@@ -25,9 +28,9 @@ test('should add scope and service meta data', t => {
   TestClass
   ))
 
-  t.strictEquals(Reflect.getMetadata('scope', TestClass), 'prototype')
-  t.strictEquals(Reflect.getMetadata('id', TestClass), 'test')
-  t.deepEquals(Reflect.getMetadata('dependencies', TestClass), [])
+  t.strictEquals(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
+  t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'test')
+  t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
 })
 
 test('should add scope and service meta data', t => {
@@ -36,8 +39,8 @@ test('should add scope and service meta data', t => {
   @Service
   class TestClass {}
 
-  t.strictEquals(Reflect.getMetadata('id', TestClass), 'testClass')
-  t.deepEquals(Reflect.getMetadata('dependencies', TestClass), [])
+  t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'testClass')
+  t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
 })
 
 test('should add injected dependencies', t => {
@@ -48,7 +51,7 @@ test('should add injected dependencies', t => {
   TestClass
   )
 
-  t.deepEquals(Reflect.getMetadata('inject', TestClass), ['test1'])
+  t.deepEquals(Reflect.getMetadata(injectSym, TestClass), ['test1'])
 })
 
 test('should add injected dependencies as list', t => {
@@ -59,5 +62,5 @@ test('should add injected dependencies as list', t => {
   TestClass
   )
 
-  t.deepEquals(Reflect.getMetadata('inject', TestClass), ['test1'])
+  t.deepEquals(Reflect.getMetadata(injectSym, TestClass), ['test1'])
 })

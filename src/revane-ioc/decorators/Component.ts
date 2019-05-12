@@ -1,5 +1,6 @@
 import Options from './Options'
 import * as esprima from 'esprima'
+import { dependenciesSym, idSym, typeSym } from './Symbols'
 
 export function createComponentDecorator (type: string) {
   return function decoratoteComponent (options?: Options | string | any) {
@@ -21,9 +22,9 @@ export function createComponentDecorator (type: string) {
           id = getId(tree)
         }
         const dependencies = getDependencies(tree, opts)
-        Reflect.defineMetadata('dependencies', dependencies, Class)
-        Reflect.defineMetadata('id', id, Class)
-        Reflect.defineMetadata('type', type, Class)
+        Reflect.defineMetadata(dependenciesSym, dependencies, Class)
+        Reflect.defineMetadata(idSym, id, Class)
+        Reflect.defineMetadata(typeSym, type, Class)
         return Class
       }
     } else {
@@ -31,9 +32,9 @@ export function createComponentDecorator (type: string) {
       const opts = new Options()
       const id = getId(tree)
       const dependencies = getDependencies(tree, opts)
-      Reflect.defineMetadata('dependencies', dependencies, options)
-      Reflect.defineMetadata('id', id, options)
-      Reflect.defineMetadata('type', type, options)
+      Reflect.defineMetadata(dependenciesSym, dependencies, options)
+      Reflect.defineMetadata(idSym, id, options)
+      Reflect.defineMetadata(typeSym, type, options)
       return options
     }
   }
