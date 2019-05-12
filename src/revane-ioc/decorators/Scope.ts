@@ -1,12 +1,12 @@
 'use strict'
 
 import 'reflect-metadata'
-import Decorator from './Decorator'
 
-export default class Scope extends Decorator {
-  public define (Class) {
-    const scope = this.options
-    Reflect.defineMetadata('scope', scope, Class)
-    return Class
+export function createScopeDecorator () {
+  return function decoratoteScope (scope: string) {
+    return function define (Class) {
+      Reflect.defineMetadata('scope', scope, Class)
+      return Class
+    }
   }
 }

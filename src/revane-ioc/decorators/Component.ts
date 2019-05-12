@@ -1,39 +1,30 @@
-'use strict'
-
-import * as esprima from 'esprima'
-import 'reflect-metadata'
-import Decorator from './Decorator'
 import Options from './Options'
+import * as esprima from 'esprima'
 
-export default class Component extends Decorator {
-  public type
+export function createComponentDecorator (type: string) {
+  return function decoratoteComponent (options?: Options | string) {
+    return function define (Class) {
+      let opts: Options
+      let id: string
+      if (typeof options === 'string') {
+        id = options
+        opts = new Options()
+      } else {
+        opts = options || new Options()
+        id = opts.id
+      }
 
-  constructor (type) {
-    super()
-    this.type = type
-  }
+      const tree = getSyntaxTree(Class)
 
-  public define (Class) {
-    let opts: Options
-    let id: string
-    if (typeof this.options === 'string') {
-      id = this.options
-      opts = new Options()
-    } else {
-      opts = this.options || new Options()
-      id = opts.id
+      if (!id) {
+        id = getId(tree)
+      }
+      const dependencies = getDependencies(tree, opts)
+      Reflect.defineMetadata('dependencies', dependencies, Class)
+      Reflect.defineMetadata('id', id, Class)
+      Reflect.defineMetadata('type', type, Class)
+      return Class
     }
-
-    const tree = getSyntaxTree(Class)
-
-    if (!id) {
-      id = getId(tree)
-    }
-    const dependencies = getDependencies(tree, opts)
-    Reflect.defineMetadata('dependencies', dependencies, Class)
-    Reflect.defineMetadata('id', id, Class)
-    Reflect.defineMetadata('type', this.type, Class)
-    return Class
   }
 }
 

@@ -1,12 +1,13 @@
 'use strict'
 
 import 'reflect-metadata'
-import Decorator from './Decorator'
 
-export default class Inject extends Decorator {
-  public define (Class) {
-    const ids = typeof this.options === 'string' ? [this.options] : this.options
-    Reflect.defineMetadata('inject', ids, Class)
-    return Class
+export function createInjectDecorator () {
+  return function decoratoteInject (options: string | string[]) {
+    return function define (Class) {
+      const ids = typeof options === 'string' ? [options] : options
+      Reflect.defineMetadata('inject', ids, Class)
+      return Class
+    }
   }
 }
