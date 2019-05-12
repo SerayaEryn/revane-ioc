@@ -2,28 +2,39 @@ import Options from './Options'
 import * as esprima from 'esprima'
 
 export function createComponentDecorator (type: string) {
-  return function decoratoteComponent (options?: Options | string) {
-    return function define (Class) {
-      let opts: Options
-      let id: string
-      if (typeof options === 'string') {
-        id = options
-        opts = new Options()
-      } else {
-        opts = options || new Options()
-        id = opts.id
-      }
+  return function decoratoteComponent (options?: Options | string | any) {
+    if (typeof options === 'string' || options === undefined || options.id || options.dependencies) {
+      return function define (Class) {
+        let opts: Options
+        let id: string
+        if (typeof options === 'string') {
+          id = options
+          opts = new Options()
+        } else {
+          opts = options || new Options()
+          id = opts.id
+        }
 
-      const tree = getSyntaxTree(Class)
+        const tree = getSyntaxTree(Class)
 
-      if (!id) {
-        id = getId(tree)
+        if (!id) {
+          id = getId(tree)
+        }
+        const dependencies = getDependencies(tree, opts)
+        Reflect.defineMetadata('dependencies', dependencies, Class)
+        Reflect.defineMetadata('id', id, Class)
+        Reflect.defineMetadata('type', type, Class)
+        return Class
       }
+    } else {
+      const tree = getSyntaxTree(options)
+      const opts = new Options()
+      const id = getId(tree)
       const dependencies = getDependencies(tree, opts)
-      Reflect.defineMetadata('dependencies', dependencies, Class)
-      Reflect.defineMetadata('id', id, Class)
-      Reflect.defineMetadata('type', type, Class)
-      return Class
+      Reflect.defineMetadata('dependencies', dependencies, options)
+      Reflect.defineMetadata('id', id, options)
+      Reflect.defineMetadata('type', type, options)
+      return options
     }
   }
 }

@@ -30,6 +30,16 @@ test('should add scope and service meta data', t => {
   t.deepEquals(Reflect.getMetadata('dependencies', TestClass), [])
 })
 
+test('should add scope and service meta data', t => {
+  t.plan(2)
+
+  @Service
+  class TestClass {}
+
+  t.strictEquals(Reflect.getMetadata('id', TestClass), 'testClass')
+  t.deepEquals(Reflect.getMetadata('dependencies', TestClass), [])
+})
+
 test('should add injected dependencies', t => {
   t.plan(1)
   class TestClass {}
