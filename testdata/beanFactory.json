@@ -1,0 +1,6 @@
+[
+  {
+    "id": "beanFactory",
+    "class": "./bin/testdata/BeanFactory.js"
+  }
+]

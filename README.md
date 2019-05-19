@@ -18,6 +18,7 @@
   * [Dependency Injection](#dependency-injection)
   * [Post Construct](#post-construct)
   * [Scopes](#scopes)
+  * [Bean Factory](#bean-factory)
 * [API](#api)
 
 ## Installation
@@ -242,6 +243,22 @@ class Example {
 ### Scopes
 
 There are two possible scopes: `singleton` and `prototype`. If no scope is specified `singleton` will be used.
+
+### Bean Factory
+
+Beans may be defined by decorating a method, that returns a bean, on a class 
+with the `@Bean` decorator.
+
+```ts
+import { Bean } from 'revane-ioc'
+
+class BeanFactory {
+  @Bean
+  bean () {
+    return aBean
+  }
+}
+```
 
 ## API
 

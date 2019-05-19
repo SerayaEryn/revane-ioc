@@ -6,6 +6,8 @@ import DependencyRegisterError from './errors/DependencyRegisterError'
 import InvalidScopeError from './errors/InvalidScopeError'
 import NotFoundError from './errors/NotFoundError'
 import BeanTypeRegistry from './BeanTypeRegistry'
+import SingletonBean from '../../revane-ioc/bean/SingletonBean'
+import 'reflect-metadata'
 
 type Property = {
   value?: string
@@ -103,6 +105,22 @@ export default class Container {
     const isClazz = this.isClass(Clazz)
     const dependencies = await this.getDependencies(isClazz, entry)
     const inject = await this.getInjectables(entry)
+
+    const beans = Clazz.prototype ? Reflect.getMetadata('beans', Clazz.prototype) || [] : []
+    for (const bean of beans) {
+      const beanDefinition: BeanDefinition = {
+        id: bean.id,
+        type: bean.type,
+        scope: 'singleton',
+        properties: [],
+        path: null,
+        class: null,
+        options: { inject: null }
+      }
+      const beanFromFactory = new SingletonBean(bean.instance, beanDefinition, false, { dependencies: [] })
+      this.set(bean.id, beanFromFactory)
+    }
+
     return new BeanForScope(Clazz, entry, isClazz, { dependencies, inject })
   }
 
