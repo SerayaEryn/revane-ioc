@@ -99,7 +99,9 @@ export default class RevaneIOC {
   }
 
   private checkForUnknownEndings (files: LoaderOptions[]): void {
-    const loaderClasses = [XmlFileLoader, JsonFileLoader, ComponentScanLoader]
+    const loaderClasses = [
+      XmlFileLoader, JsonFileLoader, ComponentScanLoader
+    ].concat(this.options.plugins.loaders)
     for (const file of files) {
       const relevant: Array<boolean> = []
       for (const loaderClass of loaderClasses) {

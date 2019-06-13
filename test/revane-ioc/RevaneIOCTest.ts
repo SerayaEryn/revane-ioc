@@ -224,6 +224,35 @@ test('should reject error on unknown configuration file ending', (t) => {
     })
 })
 
+test('should not reject on custom file ending from loader', (t) => {
+  t.plan(1)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config2.test') }
+    ],
+    plugins: {
+      loaders: [
+        class Loader {
+          static type = 'test'
+          load () {
+            return Promise.resolve([])
+          }
+          static isRelevant (options) {
+            return options.file && options.file.endsWith('test')
+          }
+        }
+      ]
+    }
+  }
+  const revane = new Revane(options)
+  return revane.initialize()
+    .then(() => {
+      t.pass()
+    })
+})
+
 test('should throw error on get() if not initialized', (t) => {
   t.plan(2)
 
