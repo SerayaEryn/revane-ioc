@@ -157,10 +157,10 @@ export default class Container {
     return Promise.resolve([])
   }
 
-  private async loadAfter (entry: BeanDefinition): Promise<Bean[]> {
-    return Promise.all((entry.loadAfter || []).map(async (property: Property | Property) => {
-      return this.getDependecySafe(property, entry.id)
-    }))
+  private async loadAfter (entry: BeanDefinition): Promise<void> {
+    for (const property of entry.loadAfter || []) {
+      await this.getDependecySafe(property, entry.id)
+    }
   }
 
   private async getDependecySafe (property: Property, parentId: string): Promise<Bean> {
