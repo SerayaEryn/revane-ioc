@@ -9,6 +9,7 @@ export default class BeanDefinition {
   public path: string
   public scope: string
   public options: BeanOptions = new BeanOptions()
+  public instance?: any
 
   constructor (id: string) {
     this.id = id

@@ -91,6 +91,9 @@ export default class Container {
   }
 
   private getClass (entry: BeanDefinition) {
+    if (entry.instance) {
+      return entry.instance
+    }
     const Clazz = require(entry.path)
     if (Clazz.default) {
       return Clazz.default

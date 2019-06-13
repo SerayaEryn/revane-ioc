@@ -44,6 +44,11 @@ export default class RevaneIOC {
     this.revaneCore.addPlugin('loader', this.getLoaderType('xml') || XmlFileLoader)
     this.revaneCore.addPlugin('loader', this.getLoaderType('json') || JsonFileLoader)
     this.revaneCore.addPlugin('loader', this.getLoaderType('scan') || ComponentScanLoader)
+    for (const loader of this.options.plugins.loaders) {
+      if (!['xml', 'json', 'scan'].includes(loader.type)) {
+        this.revaneCore.addPlugin('loader', loader)
+      }
+    }
     await this.revaneCore.initialize()
     this.initialized = true
   }
