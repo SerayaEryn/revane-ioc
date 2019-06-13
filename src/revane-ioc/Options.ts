@@ -22,4 +22,7 @@ export default class Options {
   public includeFilters?: RegexFilter[]
   public excludeFilters?: RegexFilter[]
   public loaderOptions?: (ComponentScanLoaderOptions | FileLoaderOptions)[]
+  public plugins?: {
+    loaders?: any[]
+  }
 }

@@ -7,6 +7,8 @@ import { FileLoaderOptions } from '../Options'
 
 export default class JsonFileLoader implements Loader {
   private path: string
+  static type: string = 'json'
+
   constructor (options: FileLoaderOptions) {
     this.path = options.file
   }

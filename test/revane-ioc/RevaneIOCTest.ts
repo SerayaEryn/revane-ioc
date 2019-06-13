@@ -1,6 +1,8 @@
 import * as path from 'path'
 import * as test from 'tape-catch'
 import Revane from '../../src/revane-ioc/RevaneIOC'
+import Loader from '../../src/revane-ioc-core/Loader'
+import BeanDefinition from '../../src/revane-ioc-core/BeanDefinition'
 
 test('should read json configuration file and register beans', (t) => {
   t.plan(3)
@@ -21,6 +23,36 @@ test('should read json configuration file and register beans', (t) => {
       t.ok(bean1)
       t.ok(bean2)
       t.ok(bean2.json1)
+    })
+})
+
+test('should use loader from Plugin', (t) => {
+  t.plan(1)
+
+  class FakeLoader implements Loader {
+    load (): Promise<BeanDefinition[]> {
+      throw new Error('Method not implemented.')
+    }
+    static isRelevant () {
+      return true
+    }
+    static type: string = 'json'
+  }
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ],
+    plugins: {
+      loaders: [ FakeLoader ]
+    }
+  }
+  const revane = new Revane(options)
+  return revane.initialize()
+    .catch((error) => {
+      t.equals(error.message, 'Method not implemented.')
     })
 })
 

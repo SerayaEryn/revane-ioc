@@ -10,9 +10,15 @@ import PrototypeBean from './bean/PrototypeBean'
 import SingletonBean from './bean/SingletonBean'
 import Options from './Options'
 import NotInitializedError from './NotInitializedError'
+import BeanDefinition from '../revane-ioc-core/BeanDefinition'
+import Loader from '../revane-ioc-core/Loader'
 
 export * from './decorators/Decorators'
 export * from './Options'
+export {
+  BeanDefinition,
+  Loader
+}
 
 export default class RevaneIOC {
   private revaneCore: RevaneCore
@@ -21,6 +27,12 @@ export default class RevaneIOC {
 
   constructor (options: Options) {
     this.options = options
+    if (!this.options.plugins) {
+      this.options.plugins = {}
+    }
+    if (!this.options.plugins.loaders) {
+      this.options.plugins.loaders = []
+    }
   }
 
   public async initialize (): Promise<void> {
@@ -29,11 +41,20 @@ export default class RevaneIOC {
     beanTypeRegistry.register(SingletonBean)
     beanTypeRegistry.register(PrototypeBean)
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
-    this.revaneCore.addPlugin('loader', JsonFileLoader)
-    this.revaneCore.addPlugin('loader', XmlFileLoader)
-    this.revaneCore.addPlugin('loader', ComponentScanLoader)
+    this.revaneCore.addPlugin('loader', this.getLoaderType('xml') || XmlFileLoader)
+    this.revaneCore.addPlugin('loader', this.getLoaderType('json') || JsonFileLoader)
+    this.revaneCore.addPlugin('loader', this.getLoaderType('scan') || ComponentScanLoader)
     await this.revaneCore.initialize()
     this.initialized = true
+  }
+
+  private getLoaderType (type: string) {
+    for (const LoaderType of this.options.plugins.loaders) {
+      if (LoaderType.type === type) {
+        return LoaderType
+      }
+    }
+    return null
   }
 
   public get (id: string): any {

@@ -18,6 +18,7 @@ const options = {
 
 export default class XmlFileLoader implements Loader {
   private path: string
+  static type: string = 'xml'
 
   constructor (options: FileLoaderOptions) {
     this.path = options.file

@@ -103,6 +103,7 @@ export default class Container {
 
   private async createBeanForScope (BeanForScope: any, entry: BeanDefinition, Clazz: any): Promise<any> {
     const isClazz = this.isClass(Clazz)
+    await this.loadAfter(entry)
     const dependencies = await this.getDependencies(isClazz, entry)
     const inject = await this.getInjectables(entry)
 
@@ -143,6 +144,12 @@ export default class Container {
       }))
     }
     return Promise.resolve([])
+  }
+
+  private async loadAfter (entry: BeanDefinition): Promise<Bean[]> {
+    return Promise.all((entry.loadAfter || []).map(async (property: Property | Property) => {
+      return this.getDependecySafe(property, entry.id)
+    }))
   }
 
   private async getDependecySafe (property: Property, parentId: string): Promise<Bean> {

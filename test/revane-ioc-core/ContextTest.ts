@@ -221,6 +221,34 @@ test('Should provide dependency to class', async (t) => {
   t.ok(bean.test1)
 })
 
+test('Should handle load after', async (t) => {
+  t.plan(2)
+
+  const beanDefinition1 = new BeanDefinition('test2')
+  beanDefinition1.class = '../../../testdata/test2'
+  beanDefinition1.scope = 'mocked'
+  beanDefinition1.properties = [{ value: 'test1' }]
+  beanDefinition1.loadAfter = [ { ref: 'test1' } ]
+  const beanDefinition2 = new BeanDefinition('test1')
+  beanDefinition2.class = '../../../testdata/test1'
+  beanDefinition2.scope = 'mocked'
+  const beanDefinitions = [
+    beanDefinition1,
+    beanDefinition2
+  ]
+  const options = {
+    basePackage: __dirname
+  }
+  const context = new Context(options, beanTypeRegistry)
+  context.addBeanDefinitions(beanDefinitions)
+  await context.initialize()
+
+  const bean = context.get('test2')
+
+  t.ok(bean)
+  t.ok(bean.test1)
+})
+
 test('disallow duplicate definition', (t) => {
   t.plan(2)
 

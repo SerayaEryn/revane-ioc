@@ -5,6 +5,7 @@ export default class BeanDefinition {
   public id: string
   public type: string
   public properties: any[]
+  public loadAfter?: any[]
   public path: string
   public scope: string
   public options: BeanOptions = new BeanOptions()
