@@ -22,7 +22,7 @@ export default class Context {
 
   public async initialize (): Promise<void> {
     const entries = [...this.beanDefinitions.values()]
-    this.container = new Container(entries, this.beanTypeRegistry)
+    this.container = new Container(entries, this.beanTypeRegistry, this.options.plugins)
     await this.container.initialize()
     this.beanDefinitions = null
     this.initialized = true

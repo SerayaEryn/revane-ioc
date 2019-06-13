@@ -18,14 +18,19 @@ export default class Container {
   private entries: BeanDefinition[]
   private beans: Map<string, Bean>
   private beanTypeRegistry: BeanTypeRegistry
+  private plugins: any
 
-  constructor (entries: BeanDefinition[], beanTypeRegistry: BeanTypeRegistry) {
+  constructor (entries: BeanDefinition[], beanTypeRegistry: BeanTypeRegistry, plugins: any) {
     this.entries = entries
+    this.plugins = plugins
     this.beans = new Map()
     this.beanTypeRegistry = beanTypeRegistry
   }
 
   public async initialize (): Promise<void> {
+    if (this.plugins && this.plugins.initialize) {
+      this.plugins.initialize(this)
+    }
     for (const entry of this.entries) {
       if (!this.has(entry.id)) {
         await this.registerBean(entry)

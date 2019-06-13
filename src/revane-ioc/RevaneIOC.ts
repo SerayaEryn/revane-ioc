@@ -87,6 +87,9 @@ export default class RevaneIOC {
     this.checkForUnknownEndings(coreOptions.loaderOptions)
     coreOptions.defaultScope = 'singleton'
     coreOptions.basePackage = options.basePackage
+    coreOptions.plugins = {
+      initialize: options.plugins.containterInitialize
+    }
     return coreOptions
   }
 
