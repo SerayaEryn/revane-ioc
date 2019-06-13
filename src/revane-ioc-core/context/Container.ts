@@ -73,6 +73,7 @@ export default class Container {
   }
 
   private async registerBean (entry: BeanDefinition): Promise<void> {
+    await this.loadAfter(entry)
     const Clazz = this.getClass(entry)
     const bean: Bean = await this.createBean(entry, Clazz)
     this.set(entry.id, bean)
@@ -111,7 +112,6 @@ export default class Container {
 
   private async createBeanForScope (BeanForScope: any, entry: BeanDefinition, Clazz: any): Promise<any> {
     const isClazz = this.isClass(Clazz)
-    await this.loadAfter(entry)
     const dependencies = await this.getDependencies(isClazz, entry)
     const inject = await this.getInjectables(entry)
 
