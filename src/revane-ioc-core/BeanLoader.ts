@@ -24,7 +24,7 @@ export default class BeanLoader {
     for (const optionsForResolver of options.loaderOptions || []) {
       for (const Loader of this.loaders) {
         if (Loader.isRelevant(optionsForResolver)) {
-          this.beanResolverRegistry.register(new Loader(optionsForResolver))
+          this.beanResolverRegistry.register(new Loader(optionsForResolver, options.basePackage))
         }
       }
     }

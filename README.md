@@ -185,6 +185,15 @@ class UserController {
 };
 ```
 
+The component scan may be activated in a xml file, too:
+
+```xml
+<?xml version="1" encoding="utf-8">
+<beans>
+  <context:component-scan base-package="."/>
+</beans>
+```
+
 #### Filters
 
 It is possible to apply filters to the component scan. There are two types of filters: `includeFilters` and `excludeFilters`.

@@ -7,7 +7,7 @@ test('should read json configuration file and register beans', (t) => {
 
   const file = path.join(__dirname, '../../../testdata/json/config.json')
 
-  const jsonFileResolver = new JsonFileLoader({ file })
+  const jsonFileResolver = new JsonFileLoader({ file }, null)
 
   return jsonFileResolver.load()
     .then((beanDefinitions) => {
@@ -32,7 +32,7 @@ test('should reject on error', (t) => {
 
   const file = path.join(__dirname, '../../../testdata/json/configa.json')
 
-  const jsonFileResolver = new JsonFileLoader({ file })
+  const jsonFileResolver = new JsonFileLoader({ file }, null)
 
   return jsonFileResolver.load()
     .catch((err) => {

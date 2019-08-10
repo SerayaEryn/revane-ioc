@@ -24,7 +24,7 @@ export default class ComponentScanLoader implements Loader {
   private excludeFilters: Filter[]
   static type: string = 'scan'
 
-  constructor (options: LoaderOptions) {
+  constructor (options: LoaderOptions, basePackage: string) {
     this.basePackage = options.basePackage
     this.includeFilters = convert(options.includeFilters || [])
     this.excludeFilters = convert(options.excludeFilters || [])

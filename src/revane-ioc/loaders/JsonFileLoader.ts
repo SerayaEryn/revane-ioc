@@ -9,7 +9,7 @@ export default class JsonFileLoader implements Loader {
   private path: string
   static type: string = 'json'
 
-  constructor (options: LoaderOptions) {
+  constructor (options: LoaderOptions, basePackage: string) {
     this.path = options.file
   }
 

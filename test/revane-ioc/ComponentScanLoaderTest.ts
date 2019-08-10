@@ -5,12 +5,13 @@ import ComponentScanLoader from '../../src/revane-ioc/loaders/ComponentScanLoade
 test('should do component scan without filters', (t) => {
   t.plan(15)
 
+  const basePackage = path.join(__dirname, '../../../testdata');
   const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
+    basePackage,
     componentScan: true
   }
 
-  const componentScanResolver = new ComponentScanLoader(options)
+  const componentScanResolver = new ComponentScanLoader(options, basePackage)
   return componentScanResolver.load()
     .then((beanDefinitions) => {
       t.strictEquals(beanDefinitions.length, 7)
@@ -42,8 +43,9 @@ test('should do component scan without filters', (t) => {
 test('should do component scan with exclude filter', (t) => {
   t.plan(1)
 
+  const basePackage = path.join(__dirname, '../../../testdata');
   const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
+    basePackage,
     excludeFilters: [{
       type: 'regex',
       regex: '.*'
@@ -51,7 +53,7 @@ test('should do component scan with exclude filter', (t) => {
     componentScan: true
   }
 
-  const componentScanResolver = new ComponentScanLoader(options)
+  const componentScanResolver = new ComponentScanLoader(options, basePackage)
   return componentScanResolver.load()
     .then((beanDefinitions) => {
       t.strictEquals(beanDefinitions.length, 0)
@@ -61,8 +63,9 @@ test('should do component scan with exclude filter', (t) => {
 test('should do component scan with include filter', (t) => {
   t.plan(1)
 
+  const basePackage = path.join(__dirname, '../../../testdata');
   const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
+    basePackage,
     includeFilters: [{
       type: 'regex',
       regex: '.*'
@@ -70,7 +73,7 @@ test('should do component scan with include filter', (t) => {
     componentScan: true
   }
 
-  const componentScanResolver = new ComponentScanLoader(options)
+  const componentScanResolver = new ComponentScanLoader(options, basePackage)
   return componentScanResolver.load()
     .then((beanDefinitions) => {
       t.strictEquals(beanDefinitions.length, 7)

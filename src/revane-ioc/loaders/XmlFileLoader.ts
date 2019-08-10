@@ -6,6 +6,8 @@ import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
 import { Property } from '../../revane-ioc-core/context/Container'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
+import { join } from 'path'
+import ComponentScanLoader from './ComponentScanLoader'
 
 const options = {
   allowBooleanAttributes: false,
@@ -27,18 +29,20 @@ type XmlReference = {
 }
 
 type XmlAttribute = {
-  class: string
-  type: string
-  id: string
+  class?: string
+  type?: string
+  id?: string,
+  'base-package'?: string
 }
 
 type XmlBean = {
-  attr: XmlAttribute
-  ref: XmlReference
+  attr?: XmlAttribute
+  ref?: XmlReference
 }
 
 type XmlBeans = {
-  bean: XmlBean[] | XmlBean
+  bean?: XmlBean[] | XmlBean,
+  'context:component-scan'?: XmlBean
 }
 
 type Xml = {
@@ -48,28 +52,50 @@ type Xml = {
 export default class XmlFileLoader implements Loader {
   private path: string
   static type: string = 'xml'
+  private basePackage: string
 
-  constructor (options: LoaderOptions) {
+  constructor (options: LoaderOptions, basePackage: string) {
     this.path = options.file
+    this.basePackage = basePackage
   }
 
-  public load (): Promise<BeanDefinition[]> {
-    return new Promise((resolve, reject) => {
+  public async load (): Promise<BeanDefinition[]> {
+    const data = await new Promise((resolve, reject) => {
       fileSystem.readFile(this.path, (error, data) => {
         if (error) {
           reject(error)
         } else {
-          const result: Xml = fastXmlParser.parse(data.toString(), options)
-          let beanDefinitions: BeanDefinition[]
-          if (Array.isArray(result.beans.bean)) {
-            beanDefinitions = result.beans.bean.map(toBeanDefinition)
-          } else {
-            beanDefinitions = [toBeanDefinition(result.beans.bean)]
-          }
-          resolve(beanDefinitions)
+          resolve(data)
         }
       })
     })
+    const result: Xml = fastXmlParser.parse(data.toString(), options)
+
+    let beanDefinitions: BeanDefinition[] = []
+    const beans = result.beans
+    if (beans['context:component-scan']) {
+      const moreBeanDefinitions = await this.performScan(beans)
+      beanDefinitions = beanDefinitions.concat(moreBeanDefinitions)
+    }
+
+    if (!beans.bean) {
+      return beanDefinitions
+    }
+    if (Array.isArray(beans.bean)) {
+      beanDefinitions = beanDefinitions.concat(beans.bean.map(toBeanDefinition))
+    } else {
+      beanDefinitions.push(toBeanDefinition(beans.bean))
+    }
+    return beanDefinitions
+  }
+
+  private async performScan(beans: XmlBeans) {
+    const relativePath = beans['context:component-scan'].attr['base-package']
+    const directory = join(this.basePackage, relativePath)
+    const componentScanLoader = new ComponentScanLoader({
+      basePackage: directory
+    }, this.basePackage)
+    return componentScanLoader.load()
   }
 
   public static isRelevant (options: LoaderOptions): boolean {
