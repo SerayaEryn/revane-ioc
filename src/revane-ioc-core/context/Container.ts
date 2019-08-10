@@ -97,9 +97,6 @@ export default class Container {
 
   private async registerBean (entry: BeanDefinition): Promise<void> {
     await this.loadAfter(entry)
-    if (this.has(entry.id)) {
-      return
-    }
     const Clazz = this.getClass(entry)
     const bean: Bean = await this.createBean(entry, Clazz)
     this.set(entry.id, bean)
