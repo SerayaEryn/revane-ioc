@@ -8,28 +8,51 @@ import NotFoundError from './errors/NotFoundError'
 import BeanTypeRegistry from './BeanTypeRegistry'
 import SingletonBean from '../../revane-ioc/bean/SingletonBean'
 import 'reflect-metadata'
+import Options from '../Options'
 
-type Property = {
+export type Property = {
   value?: string
   ref?: string
+}
+
+type Injectable = {
+  id: string,
+  bean: Bean
+}
+
+export class BeanProvider {
+  private container: Container
+
+  constructor (container: Container) {
+    this.container = container
+  }
+
+  public get (id: string): any {
+    return this.container.get(id)
+  }
 }
 
 export default class Container {
   private entries: BeanDefinition[]
   private beans: Map<string, Bean>
   private beanTypeRegistry: BeanTypeRegistry
-  private plugins: any
+  private options: Options
 
-  constructor (entries: BeanDefinition[], beanTypeRegistry: BeanTypeRegistry, plugins: any) {
+  constructor (
+    entries: BeanDefinition[],
+    beanTypeRegistry: BeanTypeRegistry,
+    options: Options
+  ) {
     this.entries = entries
-    this.plugins = plugins
+    this.options = options
     this.beans = new Map()
     this.beanTypeRegistry = beanTypeRegistry
   }
 
   public async initialize (): Promise<void> {
-    if (this.plugins && this.plugins.initialize) {
-      this.plugins.initialize(this)
+    const { plugins } = this.options
+    if (plugins && plugins.initialize) {
+      plugins.initialize(new BeanProvider(this))
     }
     for (const entry of this.entries) {
       if (!this.has(entry.id)) {
@@ -94,7 +117,7 @@ export default class Container {
     this.beans.set(id, bean)
   }
 
-  private getClass (entry: BeanDefinition) {
+  private getClass (entry: BeanDefinition): any {
     if (entry.instance) {
       return entry.instance
     }
@@ -136,7 +159,7 @@ export default class Container {
     return new BeanForScope(Clazz, entry, isClazz, { dependencies, inject })
   }
 
-  private async getInjectables (entry: BeanDefinition) {
+  private async getInjectables (entry: BeanDefinition): Promise<Injectable[]> {
     if (entry.options && entry.options.inject) {
       return Promise.all(entry.options.inject.map(async (id) => {
         return {

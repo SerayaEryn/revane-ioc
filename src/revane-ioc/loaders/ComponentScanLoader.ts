@@ -8,10 +8,11 @@ import RegexFilter from './RegexFilter'
 import Loader from '../../revane-ioc-core/Loader'
 
 import * as recursiveReaddir from 'recursive-readdir'
-import { ComponentScanLoaderOptions } from '../Options'
 import {
   idSym, typeSym, scopeSym, dependenciesSym, injectSym
 } from '../decorators/Symbols'
+import { Property } from '../../revane-ioc-core/context/Container'
+import { LoaderOptions } from '../../revane-ioc-core/Options'
 
 const filterByType = {
   regex: RegexFilter
@@ -23,7 +24,7 @@ export default class ComponentScanLoader implements Loader {
   private excludeFilters: Filter[]
   static type: string = 'scan'
 
-  constructor (options: ComponentScanLoaderOptions) {
+  constructor (options: LoaderOptions) {
     this.basePackage = options.basePackage
     this.includeFilters = convert(options.includeFilters || [])
     this.excludeFilters = convert(options.excludeFilters || [])
@@ -48,7 +49,7 @@ export default class ComponentScanLoader implements Loader {
       })
   }
 
-  public static isRelevant (options) {
+  public static isRelevant (options: LoaderOptions) {
     return options.componentScan
   }
 
@@ -89,7 +90,7 @@ function getBeanDefinition (module1, clazz): BeanDefinition {
   return beanDefinition
 }
 
-function toReference (id: string) {
+function toReference (id: string): Property {
   return {
     ref: id
   }

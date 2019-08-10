@@ -7,7 +7,7 @@ export default class DefaultBeanTypeRegistry implements BeanTypeRegistry {
     this.typesByScope[beanType.scope] = beanType
   }
 
-  public get (scope: any): any {
+  public get (scope: string): any {
     return this.typesByScope[scope]
   }
 }

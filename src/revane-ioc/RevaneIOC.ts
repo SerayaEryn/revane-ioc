@@ -12,12 +12,14 @@ import Options from './Options'
 import NotInitializedError from './NotInitializedError'
 import BeanDefinition from '../revane-ioc-core/BeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
+import { BeanProvider } from '../revane-ioc-core/context/Container'
 
 export * from './decorators/Decorators'
 export * from './Options'
 export {
   BeanDefinition,
-  Loader
+  Loader,
+  BeanProvider
 }
 
 export default class RevaneIOC {

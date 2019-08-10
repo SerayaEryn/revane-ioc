@@ -1,5 +1,6 @@
 import DefaultBeanLoaderRegistry from './DefaultBeanLoaderRegistry'
 import Options from './Options'
+import BeanDefinition from './BeanDefinition'
 
 export default class BeanLoader {
   private beanResolverRegistry: DefaultBeanLoaderRegistry
@@ -10,7 +11,7 @@ export default class BeanLoader {
     this.beanResolverRegistry = new DefaultBeanLoaderRegistry()
   }
 
-  public getBeanDefinitions (options: Options) {
+  public getBeanDefinitions (options: Options): Promise<BeanDefinition[][]> {
     try {
       this.prepareBeanResolverRegistry(options)
       return this.beanResolverRegistry.get()

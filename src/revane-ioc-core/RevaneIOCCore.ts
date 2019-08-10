@@ -51,7 +51,7 @@ export default class RevaneIOCCore {
     return this.context.getByType(type)
   }
 
-  public async tearDown () {
+  public async tearDown (): Promise<void> {
     await this.context.tearDown()
   }
 }

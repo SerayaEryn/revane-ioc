@@ -15,7 +15,8 @@ test('should read xml configuration file and register beans', (t) => {
         {
           options: {},
           id: 'xml1',
-          class: './xml/xml1.js'
+          class: './xml/xml1.js',
+          properties: []
         },
         {
           options: {},

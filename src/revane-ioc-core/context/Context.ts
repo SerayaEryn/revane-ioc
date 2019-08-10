@@ -5,7 +5,6 @@ import Container from './Container'
 import BeanDefinedTwiceError from './errors/BeanDefinedTwiceError'
 import ContextNotInitializedError from './errors/ContextNotInitializedError'
 import BeanTypeRegistry from './BeanTypeRegistry'
-import Loader from '../Loader'
 
 export default class Context {
   private options: Options
@@ -22,7 +21,7 @@ export default class Context {
 
   public async initialize (): Promise<void> {
     const entries = [...this.beanDefinitions.values()]
-    this.container = new Container(entries, this.beanTypeRegistry, this.options.plugins)
+    this.container = new Container(entries, this.beanTypeRegistry, this.options)
     await this.container.initialize()
     this.beanDefinitions = null
     this.initialized = true
