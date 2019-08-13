@@ -73,7 +73,7 @@ export default class XmlFileLoader implements Loader {
 
     let beanDefinitions: BeanDefinition[] = []
     const beans = result.beans
-    if (beans['context:component-scan']) {
+    if (beans['component-scan'] || beans['context:component-scan']) {
       const moreBeanDefinitions = await this.performScan(beans)
       beanDefinitions = beanDefinitions.concat(moreBeanDefinitions)
     }
@@ -89,8 +89,9 @@ export default class XmlFileLoader implements Loader {
     return beanDefinitions
   }
 
-  private async performScan(beans: XmlBeans) {
-    const relativePath = beans['context:component-scan'].attr['base-package']
+  private async performScan (beans: XmlBeans) {
+    const componentScan = beans['component-scan'] || beans['context:component-scan']
+    const relativePath = componentScan.attr['base-package']
     const directory = join(this.basePackage, relativePath)
     const componentScanLoader = new ComponentScanLoader({
       basePackage: directory
