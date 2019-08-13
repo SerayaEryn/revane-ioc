@@ -22,23 +22,32 @@ export default class ComponentScanLoader implements Loader {
   private basePackage: string
   private includeFilters: Filter[]
   private excludeFilters: Filter[]
+  private path: string
+
   static type: string = 'scan'
 
   constructor (options: LoaderOptions, basePackage: string) {
-    this.basePackage = options.basePackage
+    this.path = options.basePackage
+    this.basePackage = basePackage
     this.includeFilters = convert(options.includeFilters || [])
     this.excludeFilters = convert(options.excludeFilters || [])
   }
 
   public load (): Promise<BeanDefinition[]> {
-    return recursiveReaddir(this.basePackage)
+    return recursiveReaddir(this.path)
       .then((files: string[]) => {
         const flattenFiles = flat(files)
         let filteredFiles = filterByJavascriptFiles(flattenFiles)
         filteredFiles = this.applyFilters(filteredFiles)
         const result = []
         for (const file of filteredFiles) {
-          let module1 = getClazz(file)
+          let module1
+          try {
+            module1 = getClazz(file)
+          } catch (error) {
+            // skip file
+            continue
+          }
           const clazz = file.replace(this.basePackage, '.')
           if (module1 && Reflect.getMetadata(idSym, module1)) {
             const beanDefinition = getBeanDefinition(module1, clazz)
