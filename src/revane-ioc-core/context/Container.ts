@@ -170,9 +170,12 @@ export default class Container {
 
   private async getDependencies (isClass: boolean, entry: BeanDefinition): Promise<Bean[]> {
     if (isClass) {
-      return Promise.all(entry.properties.map(async (property: Property | Property) => {
-        return this.getDependecySafe(property, entry.id)
-      }))
+      const dependencies = []
+      for (const property of entry.properties) {
+        const dependency = await this.getDependecySafe(property, entry.id)
+        dependencies.push(dependency)
+      }
+      return dependencies
     }
     return Promise.resolve([])
   }
