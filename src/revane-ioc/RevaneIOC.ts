@@ -19,7 +19,10 @@ export * from './Options'
 export {
   BeanDefinition,
   Loader,
-  BeanProvider
+  BeanProvider,
+  XmlFileLoader,
+  ComponentScanLoader,
+  JsonFileLoader
 }
 
 export default class RevaneIOC {

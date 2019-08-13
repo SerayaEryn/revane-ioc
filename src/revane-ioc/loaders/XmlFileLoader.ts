@@ -57,18 +57,11 @@ export default class XmlFileLoader implements Loader {
   constructor (options: LoaderOptions, basePackage: string) {
     this.path = options.file
     this.basePackage = basePackage
+    this.toBeanDefinition = this.toBeanDefinition.bind(this)
   }
 
   public async load (): Promise<BeanDefinition[]> {
-    const data = await new Promise((resolve, reject) => {
-      fileSystem.readFile(this.path, (error, data) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(data)
-        }
-      })
-    })
+    const data = await this.loadFile()
     const result: Xml = fastXmlParser.parse(data.toString(), options)
 
     let beanDefinitions: BeanDefinition[] = []
@@ -82,11 +75,23 @@ export default class XmlFileLoader implements Loader {
       return beanDefinitions
     }
     if (Array.isArray(beans.bean)) {
-      beanDefinitions = beanDefinitions.concat(beans.bean.map(toBeanDefinition))
+      beanDefinitions = beanDefinitions.concat(beans.bean.map(this.toBeanDefinition))
     } else {
-      beanDefinitions.push(toBeanDefinition(beans.bean))
+      beanDefinitions.push(this.toBeanDefinition(beans.bean))
     }
     return beanDefinitions
+  }
+
+  private async loadFile () {
+    return new Promise((resolve, reject) => {
+      fileSystem.readFile(this.path, (error, data) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(data)
+        }
+      })
+    })
   }
 
   private async performScan (beans: XmlBeans) {
@@ -102,29 +107,29 @@ export default class XmlFileLoader implements Loader {
   public static isRelevant (options: LoaderOptions): boolean {
     return options.file && options.file.endsWith('.xml')
   }
-}
 
-function toBeanDefinition (bean: XmlBean): BeanDefinition {
-  const beanDefinition = new BeanDefinition(bean.attr.id)
-  beanDefinition.class = bean.attr.class
-  if (bean.attr.type) {
-    beanDefinition.type = bean.attr.type
-  }
-  const ref = bean.ref
-  beanDefinition.properties = getProperties(ref)
-  return beanDefinition
-}
-
-function getProperties (ref: XmlReference): Property[] {
-  let properties: Property[] = []
-  if (ref) {
-    if (Array.isArray(ref)) {
-      properties = ref.map(toReference)
-    } else {
-      properties = [toReference(ref)]
+  private toBeanDefinition (bean: XmlBean): BeanDefinition {
+    const beanDefinition = new BeanDefinition(bean.attr.id)
+    beanDefinition.class = bean.attr.class
+    if (bean.attr.type) {
+      beanDefinition.type = bean.attr.type
     }
+    const ref = bean.ref
+    beanDefinition.properties = this.getProperties(ref)
+    return beanDefinition
   }
-  return properties
+
+  private getProperties (ref: XmlReference): Property[] {
+    let properties: Property[] = []
+    if (ref) {
+      if (Array.isArray(ref)) {
+        properties = ref.map(toReference)
+      } else {
+        properties = [toReference(ref)]
+      }
+    }
+    return properties
+  }
 }
 
 function toReference (ref: XmlReference): Property {
