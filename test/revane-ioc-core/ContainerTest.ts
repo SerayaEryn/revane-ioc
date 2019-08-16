@@ -23,7 +23,9 @@ test('should execute initialize plugin', async (t) => {
   beanDefinition.scope = 'singleton'
   const container = new Container([ beanDefinition ], registry, options)
   await container.initialize()
-  t.ok(beanProvider1.get('test'))
+
+  const bean = await beanProvider1.get('test')
+  t.ok(bean)
 })
 
 test('should use instance from beanDefinintion.instance', async (t) => {
@@ -37,5 +39,6 @@ test('should use instance from beanDefinintion.instance', async (t) => {
   const container = new Container([ beanDefinition ], registry, { basePackage: __dirname })
   await container.initialize()
 
-  t.ok(container.get('test').works)
+  const bean = await container.get('test')
+  t.ok(bean.works)
 })

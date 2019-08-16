@@ -8,7 +8,11 @@ export default class ValueBean implements Bean {
     this.value = value
   }
 
-  public getInstance (): any {
+  public async init (): Promise<any> {
+    return Promise.resolve()
+  }
+
+  public async getInstance (): Promise<any> {
     return this.value
   }
 

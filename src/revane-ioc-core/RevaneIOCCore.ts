@@ -35,19 +35,19 @@ export default class RevaneIOCCore {
     await this.context.initialize()
   }
 
-  public get (id: string): any {
+  public async get (id: string): Promise<any> {
     return this.context.get(id)
   }
 
-  public has (id: string): boolean {
+  public async has (id: string): Promise<boolean> {
     return this.context.has(id)
   }
 
-  public getMultiple (ids: string[]): any[] {
+  public async getMultiple (ids: string[]): Promise<any[]> {
     return this.context.getMultiple(ids)
   }
 
-  public getByType (type: string): any[] {
+  public async getByType (type: string): Promise<any[]> {
     return this.context.getByType(type)
   }
 

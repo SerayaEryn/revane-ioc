@@ -1,6 +1,5 @@
 import AbstractBean from './AbstractBean'
 import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
-import Bean from '../../revane-ioc-core/context/bean/Bean'
 
 export default class PrototypeBean extends AbstractBean {
   public static scope: string = 'prototype'
@@ -19,10 +18,10 @@ export default class PrototypeBean extends AbstractBean {
     this.dependencies = dependencies
   }
 
-  public getInstance (): any {
-    const instance = this.createInstance(this.clazz, this.dependencies)
+  public async getInstance (): Promise<any> {
+    const instance = await this.createInstance(this.clazz, this.dependencies)
     if (instance.postConstruct) {
-      instance.postConstruct()
+      await instance.postConstruct()
     }
     return instance
   }

@@ -7,18 +7,21 @@ test('should class postContruct on instance', async (t) => {
   const Clazz = require('../../../testdata/test6')
 
   const bean = new SingletonBean(Clazz, {}, true, { dependencies: [], inject: [] })
+  await bean.init()
   await bean.postConstruct()
 
-  t.ok(bean.getInstance().postConstructed)
+  const instance = await bean.getInstance()
+  t.ok(instance.postConstructed)
 })
 
-test('should return Promise on preDestroy()', (t) => {
+test('should return Promise on preDestroy()', async (t) => {
   t.plan(1)
 
   const Clazz = require('../../../testdata/test6')
 
   const bean = new SingletonBean(Clazz, {}, true, { dependencies: [], inject: [] })
-  bean.preDestroy()
+  await bean.init()
+  return bean.preDestroy()
     .then(() => t.pass())
     .catch((err) => t.error(err))
 })

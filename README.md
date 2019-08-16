@@ -284,15 +284,15 @@ revane.initialize()
   .then(() => /*...*/)
 ```
 
-#### get(id)
+#### get(id): Promise\<any>
 
 Returns the bean for the `id`. Throws an error if no bean with the `id` is found.
 
-#### has(id)
+#### has(id): Promise\<boolean>
 
 Allows to check if a bean for `id` exists.
 
-#### getMultiple(ids)
+#### getMultiple(ids): Promise\<any[]>
 
 Returns multiple beans specified by the `ids`.
 

@@ -84,22 +84,22 @@ export default class RevaneIOC {
     return null
   }
 
-  public get (id: string): any {
+  public async get (id: string): Promise<any> {
     this.checkIfInitialized()
     return this.revaneCore.get(id)
   }
 
-  public has (id: string): boolean {
+  public async has (id: string): Promise<boolean> {
     this.checkIfInitialized()
     return this.revaneCore.has(id)
   }
 
-  public getMultiple (ids: string[]): any[] {
+  public async getMultiple (ids: string[]): Promise<any[]> {
     this.checkIfInitialized()
     return this.revaneCore.getMultiple(ids)
   }
 
-  public getByType (type: string): any[] {
+  public async getByType (type: string): Promise<any[]> {
     this.checkIfInitialized()
     return this.revaneCore.getByType(type)
   }
