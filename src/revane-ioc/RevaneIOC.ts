@@ -1,4 +1,4 @@
-import CoreOptions, { LoaderOptions } from '../revane-ioc-core/Options'
+import CoreOptions, { LoaderOptions, RegexFilter } from '../revane-ioc-core/Options'
 import RevaneCore from '../revane-ioc-core/RevaneIOCCore'
 import DefaultBeanTypeRegistry from '../revane-ioc-core/context/DefaultBeanTypeRegistry'
 
@@ -12,7 +12,6 @@ import Options from './Options'
 import NotInitializedError from './NotInitializedError'
 import BeanDefinition from '../revane-ioc-core/BeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
-import RegexFilter from './loaders/RegexFilter'
 
 export * from './decorators/Decorators'
 export * from './Options'
@@ -22,8 +21,8 @@ export {
   XmlFileLoader,
   ComponentScanLoader,
   JsonFileLoader,
-  RegexFilter,
-  Options
+  Options,
+  RegexFilter
 }
 
 export default class RevaneIOC {
