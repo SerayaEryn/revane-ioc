@@ -21,7 +21,6 @@ export {
   XmlFileLoader,
   ComponentScanLoader,
   JsonFileLoader,
-  Options,
   RegexFilter
 }
 
