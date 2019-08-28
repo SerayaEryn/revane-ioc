@@ -12,18 +12,18 @@ import Options from './Options'
 import NotInitializedError from './NotInitializedError'
 import BeanDefinition from '../revane-ioc-core/BeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
-import { BeanProvider } from '../revane-ioc-core/context/Container'
+import RegexFilter from './loaders/RegexFilter'
 
-export * from './loaders/RegexFilter'
 export * from './decorators/Decorators'
 export * from './Options'
 export {
   BeanDefinition,
   Loader,
-  BeanProvider,
   XmlFileLoader,
   ComponentScanLoader,
-  JsonFileLoader
+  JsonFileLoader,
+  RegexFilter,
+  Options
 }
 
 export default class RevaneIOC {
