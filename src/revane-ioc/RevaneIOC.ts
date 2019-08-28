@@ -14,6 +14,7 @@ import BeanDefinition from '../revane-ioc-core/BeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
 import { BeanProvider } from '../revane-ioc-core/context/Container'
 
+export * from './loaders/RegexFilter'
 export * from './decorators/Decorators'
 export * from './Options'
 export {
