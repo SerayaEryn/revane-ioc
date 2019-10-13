@@ -47,5 +47,8 @@
     "ioc",
     "dependency injection"
   ],
-  "types": "bin/src/revane-ioc/RevaneIOC.d.ts"
+  "types": "bin/src/revane-ioc/RevaneIOC.d.ts",
+  "files": [
+    "bin/src"
+  ]
 }
