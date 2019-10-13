@@ -25,4 +25,8 @@ export default class PrototypeBean extends AbstractBean {
     }
     return instance
   }
+
+  public async init (): Promise<void> {
+    return Promise.resolve()
+  }
 }

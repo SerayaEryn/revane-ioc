@@ -4,4 +4,7 @@
   <bean id="xml2" class="./xml/xml2">
     <ref value="xml1"/>
   </bean>
+  <bean id="xml3" class="./xml/xml2" scope="prototype">
+    <ref value="xml1"/>
+  </bean>
 </beans>

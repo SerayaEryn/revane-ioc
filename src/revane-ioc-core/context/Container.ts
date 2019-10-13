@@ -99,7 +99,7 @@ export default class Container {
   private async registerBean (entry: BeanDefinition): Promise<void> {
     await this.loadAfter(entry)
     const Clazz = this.getClass(entry)
-    const bean: Bean = await this.createBean(entry, Clazz)
+    const bean = await this.createBean(entry, Clazz)
     await bean.init()
     this.set(entry.id, bean)
     await bean.postConstruct()
@@ -191,7 +191,9 @@ export default class Container {
 
   private async getDependecySafe (property: Property, parentId: string): Promise<Bean> {
     if (property.value) {
-      return new ValueBean(property.value)
+      const bean = new ValueBean(property.value)
+      await bean.init()
+      return bean
     }
     await this.ensureDependencyIsPresent(property, parentId)
     return this.getStrict(property.ref)

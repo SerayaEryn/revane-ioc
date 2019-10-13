@@ -134,7 +134,7 @@ test('should create bean for module', async (t) => {
 })
 
 test('should create bean for module with value', async (t) => {
-  t.plan(2)
+  t.plan(3)
 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
@@ -144,9 +144,11 @@ test('should create bean for module with value', async (t) => {
   }
   const revane = new Revane(options)
   await revane.initialize()
-  console.log(revane['revaneCore']['context']['container']['beans'])
+
   const bean = await revane.get('xml2')
+  const bean2 = await revane.get('xml3')
   t.ok(bean)
+  t.ok(bean2)
   t.equals(bean.xml1, 'xml1')
 })
 

@@ -30,6 +30,7 @@ type XmlReference = {
 
 type XmlAttribute = {
   class?: string
+  scope?: string
   type?: string
   id?: string,
   'base-package'?: string
@@ -111,6 +112,7 @@ export default class XmlFileLoader implements Loader {
   private toBeanDefinition (bean: XmlBean): BeanDefinition {
     const beanDefinition = new BeanDefinition(bean.attr.id)
     beanDefinition.class = bean.attr.class
+    beanDefinition.scope = bean.attr.scope || 'singleton'
     if (bean.attr.type) {
       beanDefinition.type = bean.attr.type
     }

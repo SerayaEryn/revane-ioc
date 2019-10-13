@@ -5,11 +5,16 @@
   "exclude": [
       "testdata/**",
       "bin/test/**",
-      "bin/src/revane-ioc-core/Loader.js"
+      "bin/src/revane-ioc-core/Loader.js",
+      "bin/src/revane-ioc-core/BeanLoaderRegistry.js",
+      "bin/src/revane-ioc-core/context/BeanTypeRegistry.js",
+      "bin/src/revane-ioc-core/context/bean/Bean.js",
+      "bin/src/revane-ioc/loaders/Filter.js"
   ],
   "reporter": [
     "lcov",
     "text",
+    "html",
     "text-summary"
   ],
   "all": true,
