@@ -17,6 +17,10 @@ class MockedBean implements Bean {
     }
   }
 
+  init (): Promise<void> {
+    return Promise.resolve()
+  }
+
   getInstance (): any {
     return this.instance
   }
@@ -134,7 +138,7 @@ test('should register bean (object)', async (t) => {
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
-  const bean = context.get('test3')
+  const bean = await context.get('test3')
 
   t.ok(bean)
   t.strictEqual(bean.test, 'test3')
@@ -161,7 +165,7 @@ test('Should pass dependencies to constructor', async (t) => {
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
-  const bean = context.get('test2')
+  const bean = await context.get('test2')
 
   t.ok(bean)
   t.ok(bean.test1)
@@ -188,7 +192,7 @@ test('Should ignore order of bean definition', async (t) => {
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
-  const bean = context.get('test2')
+  const bean = await context.get('test2')
 
   t.ok(bean)
   t.deepEquals(bean.test1, { type: 'value', value: 'test1' })
@@ -215,7 +219,7 @@ test('Should provide dependency to class', async (t) => {
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
-  const bean = context.get('test2')
+  const bean = await context.get('test2')
 
   t.ok(bean)
   t.ok(bean.test1)
@@ -243,7 +247,7 @@ test('Should handle load after', async (t) => {
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
-  const bean = context.get('test2')
+  const bean = await context.get('test2')
 
   t.ok(bean)
   t.ok(bean.test1)
@@ -329,7 +333,7 @@ test('initialize should fail on error', async (t) => {
   }
 })
 
-test('throw error if get on uninitialized context', (t) => {
+test('throw error if get on uninitialized context', async (t) => {
   t.plan(2)
 
   const options = {
@@ -338,14 +342,14 @@ test('throw error if get on uninitialized context', (t) => {
   const context = new Context(options, beanTypeRegistry)
 
   try {
-    context.get('test2')
+    await context.get('test2')
   } catch (err) {
     t.ok(err)
     t.strictEqual(err.code, 'REV_ERR_CONTEXT_NOT_INITIALIZED')
   }
 })
 
-test('throw error if has on uninitialized context', (t) => {
+test('throw error if has on uninitialized context', async (t) => {
   t.plan(2)
 
   const options = {
@@ -354,14 +358,14 @@ test('throw error if has on uninitialized context', (t) => {
   const context = new Context(options, beanTypeRegistry)
 
   try {
-    context.has('test2')
+    await context.has('test2')
   } catch (err) {
     t.ok(err)
     t.strictEqual(err.code, 'REV_ERR_CONTEXT_NOT_INITIALIZED')
   }
 })
 
-test('throw error if getByType on uninitialized context', (t) => {
+test('throw error if getByType on uninitialized context', async (t) => {
   t.plan(2)
 
   const options = {
@@ -370,14 +374,14 @@ test('throw error if getByType on uninitialized context', (t) => {
   const context = new Context(options, beanTypeRegistry)
 
   try {
-    context.getByType('test')
+    await context.getByType('test')
   } catch (err) {
     t.ok(err)
     t.strictEqual(err.code, 'REV_ERR_CONTEXT_NOT_INITIALIZED')
   }
 })
 
-test('throw error if getMultiple on uninitialized context', (t) => {
+test('throw error if getMultiple on uninitialized context', async (t) => {
   t.plan(2)
 
   const options = {
@@ -386,7 +390,7 @@ test('throw error if getMultiple on uninitialized context', (t) => {
   const context = new Context(options, beanTypeRegistry)
 
   try {
-    context.getMultiple(['test2'])
+    await context.getMultiple(['test2'])
   } catch (err) {
     t.ok(err)
     t.strictEqual(err.code, 'REV_ERR_CONTEXT_NOT_INITIALIZED')
@@ -470,7 +474,7 @@ test('should throw error if not found', async (t) => {
   await context.initialize()
 
   try {
-    context.get('test')
+    await context.get('test')
   } catch (err) {
     t.ok(err)
     t.strictEqual(err.code, 'REV_ERR_NOT_FOUND')
@@ -501,7 +505,7 @@ test('should handle on has()', async (t) => {
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
-  t.ok(context.has('test2'))
-  t.ok(context.has('test1'))
-  t.notOk(context.has('unknown'))
+  t.ok(await context.has('test2'))
+  t.ok(await context.has('test1'))
+  t.notOk(await context.has('unknown'))
 })

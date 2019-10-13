@@ -1,6 +1,7 @@
 export default interface Bean {
   type: string
-  getInstance (): any
+  init (): Promise<any>
+  getInstance (): Promise<any>
   postConstruct (): Promise<any>
   preDestroy (): Promise<any>
 }

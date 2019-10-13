@@ -8,7 +8,8 @@ test('should class postConstruct on instance', async (t) => {
 
   const bean = new PrototypeBean(Clazz, {}, true, { dependencies: [], inject: [] })
 
-  t.ok(bean.getInstance().postConstructed)
+  const instance = await bean.getInstance()
+  t.ok(instance.postConstructed)
 })
 
 test('should handle missing postConstruct on instance', async (t) => {
@@ -18,7 +19,7 @@ test('should handle missing postConstruct on instance', async (t) => {
 
   const bean = new PrototypeBean(Clazz, {}, true, { dependencies: [], inject: [] })
 
-  t.ok(bean.getInstance())
+  t.ok(await bean.getInstance())
 })
 
 test('should return Promise on preDestroy()', (t) => {
@@ -54,7 +55,7 @@ test('should handle missing inject', (t) => {
     .catch((err) => t.error(err))
 })
 
-test('should handle inject', (t) => {
+test('should handle inject', async (t) => {
   t.plan(1)
 
   const Clazz = require('../../../testdata/test6')
@@ -68,5 +69,6 @@ test('should handle inject', (t) => {
       }
     ]
   })
-  t.ok(bean.getInstance().test)
+  const instance = await bean.getInstance()
+  t.ok(instance.test)
 })

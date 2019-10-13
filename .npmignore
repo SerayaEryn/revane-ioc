@@ -1,9 +1,0 @@
-src/
-node_modules/*
-coverage
-.nyc_output
-test
-testdata
-.travis.yml
-tsconfig.json
-tslint.yaml

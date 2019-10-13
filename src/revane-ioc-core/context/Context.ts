@@ -49,25 +49,30 @@ export default class Context {
     }
   }
 
-  public get (id: string): any {
+  public async get (id: string): Promise<any> {
     if (!this.initialized) {
       throw new ContextNotInitializedError()
     }
     return this.container.get(id)
   }
 
-  public has (id: string): boolean {
+  public async has (id: string): Promise<boolean> {
     if (!this.initialized) {
       throw new ContextNotInitializedError()
     }
     return this.container.has(id)
   }
 
-  public getMultiple (ids: string[]): any[] {
-    return ids.map(((id: string) => this.get(id)))
+  public async getMultiple (ids: string[]): Promise<any[]> {
+    const beans = []
+    for (const id of ids) {
+      const bean = await this.get(id)
+      beans.push(bean)
+    }
+    return beans
   }
 
-  public getByType (type: string): any[] {
+  public async getByType (type: string): Promise<any[]> {
     if (!this.initialized) {
       throw new ContextNotInitializedError()
     }

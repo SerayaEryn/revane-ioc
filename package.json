@@ -7,7 +7,6 @@
     "unit": "tape bin/test/**/*.test.js bin/test/**/*Test.js | tspec",
     "test": "npm run lint && npm run compile && npm run unit",
     "lint": "tslint --project tsconfig.json --config tslint.yaml",
-    "coveralls": "npm run compile && npm run coverage -s && coveralls < coverage/lcov.info",
     "coverage": "npm run compile && nyc npm run unit",
     "compile": "tsc -d",
     "prepublish": "npm run compile -s"
@@ -32,7 +31,6 @@
   "devDependencies": {
     "@types/express": "^4.11.1",
     "@types/node": "^10.7.0",
-    "coveralls": "^3.0.1",
     "nyc": "^14.1.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.1",
@@ -47,5 +45,8 @@
     "ioc",
     "dependency injection"
   ],
-  "types": "bin/src/revane-ioc/RevaneIOC.d.ts"
+  "types": "bin/src/revane-ioc/RevaneIOC.d.ts",
+  "files": [
+    "bin/src"
+  ]
 }

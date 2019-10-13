@@ -16,7 +16,8 @@ test('should read xml configuration file and register beans', (t) => {
           options: {},
           id: 'xml1',
           class: './xml/xml1.js',
-          properties: []
+          properties: [],
+          scope: 'singleton'
         },
         {
           options: {},
@@ -24,7 +25,8 @@ test('should read xml configuration file and register beans', (t) => {
           class: './xml/xml2',
           properties: [{
             ref: 'xml1'
-          }]
+          }],
+          scope: 'singleton'
         },
         {
           options: {},
@@ -33,7 +35,8 @@ test('should read xml configuration file and register beans', (t) => {
           properties: [
             { ref: 'xml1' },
             { ref: 'xml2' }
-          ]
+          ],
+          scope: 'singleton'
         }
       ])
     })

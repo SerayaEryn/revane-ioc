@@ -55,29 +55,30 @@ export default class Container {
       plugins.initialize(new BeanProvider(this))
     }
     for (const entry of this.entries) {
-      if (!this.has(entry.id)) {
+      if (!await this.has(entry.id)) {
         await this.registerBean(entry)
       }
     }
     this.clearEntries()
   }
 
-  public get (id: string): any {
+  public async get (id: string): Promise<any> {
     const bean = this.getStrict(id)
     return bean.getInstance()
   }
 
-  public getByType (type: string): any[] {
+  public async getByType (type: string): Promise<any[]> {
     const beansByType = []
     for (const bean of this.beans.values()) {
       if (bean.type === type) {
-        beansByType.push(bean.getInstance())
+        const instance = await bean.getInstance()
+        beansByType.push(instance)
       }
     }
     return beansByType
   }
 
-  public has (id: string): boolean {
+  public async has (id: string): Promise<boolean> {
     return this.beans.has(id)
   }
 
@@ -98,7 +99,8 @@ export default class Container {
   private async registerBean (entry: BeanDefinition): Promise<void> {
     await this.loadAfter(entry)
     const Clazz = this.getClass(entry)
-    const bean: Bean = await this.createBean(entry, Clazz)
+    const bean = await this.createBean(entry, Clazz)
+    await bean.init()
     this.set(entry.id, bean)
     await bean.postConstruct()
       .catch((error) => {
@@ -125,7 +127,7 @@ export default class Container {
     return Clazz
   }
 
-  private createBean (entry: BeanDefinition, Clazz: any): Promise<Bean> {
+  private async createBean (entry: BeanDefinition, Clazz: any): Promise<Bean> {
     const BeanForScope = this.beanTypeRegistry.get(entry.scope)
     if (BeanForScope) {
       return this.createBeanForScope(BeanForScope, entry, Clazz)
@@ -150,6 +152,7 @@ export default class Container {
         options: { inject: null }
       }
       const beanFromFactory = new SingletonBean(bean.instance, beanDefinition, false, { dependencies: [] })
+      await beanFromFactory.init()
       this.set(bean.id, beanFromFactory)
     }
 
@@ -188,19 +191,21 @@ export default class Container {
 
   private async getDependecySafe (property: Property, parentId: string): Promise<Bean> {
     if (property.value) {
-      return new ValueBean(property.value)
+      const bean = new ValueBean(property.value)
+      await bean.init()
+      return bean
     }
     await this.ensureDependencyIsPresent(property, parentId)
     return this.getStrict(property.ref)
   }
 
   private async ensureDependencyIsPresent (property: Property, parentId: string): Promise<void> {
-    if (!this.hasDependency(property.ref)) {
+    if (!(await this.hasDependency(property.ref))) {
       await this.registerDependency(property.ref, parentId)
     }
   }
 
-  private hasDependency (id: string): boolean {
+  private async hasDependency (id: string): Promise<boolean> {
     return this.has(id)
   }
 
