@@ -4,7 +4,7 @@
 ![Build Status](https://github.com/SerayaEryn/revane-ioc/workflows/ci/badge.svg)
 [![Build Status](https://travis-ci.org/SerayaEryn/revane-ioc.svg?branch=master)](https://travis-ci.org/SerayaEryn/revane-ioc)
 [![Coverage Status](https://coveralls.io/repos/github/SerayaEryn/revane-ioc/badge.svg?branch=master)](https://coveralls.io/github/SerayaEryn/revane-ioc?branch=master) 
-[![NPM version](https://img.shields.io/npm/v/revane-ioc.svg?style=flat)](https://www.npmjs.com/package/revane-ioc)
+[![NPM version](https://img.shields.io/npm/v/revane-ioc.svg?style=flat)](https://www.npmjs.com/package/revane-ioc) [![Greenkeeper badge](https://badges.greenkeeper.io/SerayaEryn/revane-ioc.svg)](https://greenkeeper.io/)
 
 `revane-ioc` is a inversion of control framework inspired by spring.
 
