@@ -70,7 +70,7 @@ test('should register bean (class)', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -92,7 +92,7 @@ test('should true if has bean', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
 
   const has = context.hasBeanDefinintion('test1')
@@ -113,7 +113,7 @@ test('should false if does not has bean', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
 
   const has = context.hasBeanDefinintion('test2')
@@ -134,7 +134,7 @@ test('should register bean (object)', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -161,7 +161,7 @@ test('Should pass dependencies to constructor', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -188,7 +188,7 @@ test('Should ignore order of bean definition', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -215,7 +215,7 @@ test('Should provide dependency to class', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -243,7 +243,7 @@ test('Should handle load after', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -270,7 +270,7 @@ test('disallow duplicate definition', (t) => {
     basePackage: __dirname,
     noRedefinition: true
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
 
   try {
     context.addBeanDefinitions(beanDefinitions)
@@ -293,7 +293,7 @@ test('disallow unknown scope', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
 
   try {
@@ -324,7 +324,7 @@ test('initialize should fail on error', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   try {
     await context.initialize()
@@ -339,7 +339,7 @@ test('throw error if get on uninitialized context', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
 
   try {
     await context.get('test2')
@@ -355,7 +355,7 @@ test('throw error if has on uninitialized context', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
 
   try {
     await context.has('test2')
@@ -371,7 +371,7 @@ test('throw error if getByType on uninitialized context', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
 
   try {
     await context.getByType('test')
@@ -387,7 +387,7 @@ test('throw error if getMultiple on uninitialized context', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
 
   try {
     await context.getMultiple(['test2'])
@@ -417,7 +417,7 @@ test('should throw error if error on post construct', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
 
   try {
@@ -449,7 +449,7 @@ test('should throw error if error on creation', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
 
   try {
@@ -469,7 +469,7 @@ test('should throw error if not found', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 
@@ -501,7 +501,7 @@ test('should handle on has()', async (t) => {
   const options = {
     basePackage: __dirname
   }
-  const context = new Context(options, beanTypeRegistry)
+  const context = new Context(options, beanTypeRegistry, new Map())
   context.addBeanDefinitions(beanDefinitions)
   await context.initialize()
 

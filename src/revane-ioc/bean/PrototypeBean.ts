@@ -20,6 +20,9 @@ export default class PrototypeBean extends AbstractBean {
 
   public async getInstance (): Promise<any> {
     const instance = await this.createInstance(this.clazz, this.dependencies)
+    for (const key of Object.keys(this.dependencies.configurationPropertyValues || {})) {
+      instance[key] = this.dependencies.configurationPropertyValues[key]
+    }
     if (instance.postConstruct) {
       await instance.postConstruct()
     }

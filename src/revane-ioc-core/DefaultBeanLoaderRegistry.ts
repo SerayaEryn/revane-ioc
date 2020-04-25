@@ -1,6 +1,7 @@
 import Loader from './Loader'
 import BeanDefinition from './BeanDefinition'
 import BeanLoaderRegistry from './BeanLoaderRegistry'
+import { LoaderOptions } from '../revane-ioc/RevaneIOC'
 
 export default class DefaultBeanLoaderRegistry implements BeanLoaderRegistry {
   private loaders: Loader[] = []
@@ -9,8 +10,11 @@ export default class DefaultBeanLoaderRegistry implements BeanLoaderRegistry {
     this.loaders.push(loader)
   }
 
-  public get (): Promise<BeanDefinition[][]> {
-    const promises = this.loaders.map((loader) => loader.load())
+  public get (loaderOptions: LoaderOptions[], basePackage: string): Promise<BeanDefinition[][]> {
+    let promises = []
+    for (let index = 0; index < this.loaders.length; index++) {
+      promises.push(this.loaders[index].load(loaderOptions[index], basePackage))
+    }
     return Promise.all(promises)
   }
 }

@@ -19,6 +19,9 @@ export default class SingletonBean extends AbstractBean {
 
   public async init (): Promise<void> {
     this.instance = await this.createInstance(this.Clazz, this.dependencies)
+    for (const key of Object.keys(this.dependencies.configurationPropertyValues || {})) {
+      this.instance[key] = this.dependencies.configurationPropertyValues[key]
+    }
   }
 
   public async getInstance (): Promise<any> {

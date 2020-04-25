@@ -10,7 +10,9 @@ test('should create bean using beanFactory', async (t) => {
     componentScan: false,
     loaderOptions: [
       { file: path.join(__dirname, '../../../testdata/beanFactory.json') }
-    ]
+    ],
+    profile: 'test',
+    configuration: { disabled: true }
   }
   const revane = new Revane(options)
   await revane.initialize()

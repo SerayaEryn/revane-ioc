@@ -11,10 +11,10 @@ test('should do component scan without filters', (t) => {
     componentScan: true
   }
 
-  const componentScanResolver = new ComponentScanLoader(options, basePackage)
-  return componentScanResolver.load()
+  const componentScanResolver = new ComponentScanLoader()
+  return componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 7)
+      t.strictEquals(beanDefinitions.length, 8)
       const scan1 = findDefinition(beanDefinitions, 'scan1')
       t.strictEquals(scan1.scope, 'singleton')
       const scan2 = findDefinition(beanDefinitions, 'scan2')
@@ -53,8 +53,8 @@ test('should do component scan with exclude filter', (t) => {
     componentScan: true
   }
 
-  const componentScanResolver = new ComponentScanLoader(options, basePackage)
-  return componentScanResolver.load()
+  const componentScanResolver = new ComponentScanLoader()
+  return componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
       t.strictEquals(beanDefinitions.length, 0)
     })
@@ -73,10 +73,10 @@ test('should do component scan with include filter', (t) => {
     componentScan: true
   }
 
-  const componentScanResolver = new ComponentScanLoader(options, basePackage)
-  return componentScanResolver.load()
+  const componentScanResolver = new ComponentScanLoader()
+  return componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 7)
+      t.strictEquals(beanDefinitions.length, 8)
     })
     .catch((err) => t.err(err))
 })

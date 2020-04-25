@@ -11,12 +11,16 @@ test('should reject on errors in loaders', async (t) => {
       throw new Error('booom')
     }
 
-    static isRelevant (): boolean {
+    isRelevant (): boolean {
       return true
+    }
+
+    type (): string {
+      return 'mock'
     }
   }
 
-  const beanLoader = new BeanLoader([MockedLoader])
+  const beanLoader = new BeanLoader([ new MockedLoader() ])
 
   try {
     await beanLoader.getBeanDefinitions({

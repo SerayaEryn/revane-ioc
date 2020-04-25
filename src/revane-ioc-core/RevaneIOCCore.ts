@@ -5,19 +5,20 @@ import Loader from './Loader'
 
 import * as flat from 'array.prototype.flat'
 import BeanTypeRegistry from './context/BeanTypeRegistry'
+import { ContextPlugin } from './context/ContextPlugin'
 
 export default class RevaneIOCCore {
   protected options: Options
   private context: Context
   private beanTypeRegistry: BeanTypeRegistry
-  private plugins: Map<string, (any | Loader)[]> = new Map()
+  private plugins: Map<string, (Loader | ContextPlugin)[]> = new Map()
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
     this.beanTypeRegistry = beanTypeRegistry
   }
 
-  public addPlugin (name: string, plugin: any | Loader) {
+  public addPlugin (name: string, plugin: Loader | ContextPlugin) {
     let pluginsByName = this.plugins.get(name)
     if (!pluginsByName) {
       pluginsByName = []
@@ -27,8 +28,8 @@ export default class RevaneIOCCore {
   }
 
   public async initialize (): Promise<void> {
-    this.context = new Context(this.options, this.beanTypeRegistry)
-    const loaders = this.plugins.get('loader')
+    this.context = new Context(this.options, this.beanTypeRegistry, this.plugins)
+    const loaders: Loader[] = this.plugins.get('loader') as Loader[]
     const beanLoader = new BeanLoader(loaders)
     const beanDefinitions = await beanLoader.getBeanDefinitions(this.options)
     this.context.addBeanDefinitions(flat(beanDefinitions))

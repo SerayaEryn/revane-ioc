@@ -8,7 +8,7 @@ import NotFoundError from './errors/NotFoundError'
 import BeanTypeRegistry from './BeanTypeRegistry'
 import SingletonBean from '../../revane-ioc/bean/SingletonBean'
 import 'reflect-metadata'
-import Options from '../Options'
+import { Configuration } from './Configuration'
 
 export type Property = {
   value?: string
@@ -20,40 +20,24 @@ type Injectable = {
   bean: Bean
 }
 
-export class BeanProvider {
-  private container: Container
-
-  constructor (container: Container) {
-    this.container = container
-  }
-
-  public get (id: string): any {
-    return this.container.get(id)
-  }
-}
-
 export default class Container {
   private entries: BeanDefinition[]
   private beans: Map<string, Bean>
   private beanTypeRegistry: BeanTypeRegistry
-  private options: Options
+  private configuration?: Configuration
 
   constructor (
     entries: BeanDefinition[],
     beanTypeRegistry: BeanTypeRegistry,
-    options: Options
+    configuration?: Configuration
   ) {
     this.entries = entries
-    this.options = options
     this.beans = new Map()
     this.beanTypeRegistry = beanTypeRegistry
+    this.configuration = configuration
   }
 
   public async initialize (): Promise<void> {
-    const { plugins } = this.options
-    if (plugins && plugins.initialize) {
-      plugins.initialize(new BeanProvider(this))
-    }
     for (const entry of this.entries) {
       if (!await this.has(entry.id)) {
         await this.registerBean(entry)
@@ -135,7 +119,11 @@ export default class Container {
     throw new InvalidScopeError(entry.scope)
   }
 
-  private async createBeanForScope (BeanForScope: any, entry: BeanDefinition, Clazz: any): Promise<any> {
+  private async createBeanForScope (
+    BeanForScope: any,
+    entry: BeanDefinition,
+    Clazz: any
+  ): Promise<any> {
     const isClazz = this.isClass(Clazz)
     const dependencies = await this.getDependencies(isClazz, entry)
     const inject = await this.getInjectables(entry)
@@ -156,7 +144,24 @@ export default class Container {
       this.set(bean.id, beanFromFactory)
     }
 
-    return new BeanForScope(Clazz, entry, isClazz, { dependencies, inject })
+    const configurationPropertyValues = {}
+    if (this.configuration != null) {
+      const configurationProperties = entry.configurationProperties
+      if (configurationProperties) {
+        for (const configurationProperty of configurationProperties.properties || []) {
+          const key = configurationProperties.prefix + '.' + configurationProperty
+          if (this.configuration.has(key)) {
+            configurationPropertyValues[configurationProperty] = this.configuration.get(key)
+          }
+        }
+      }
+    }
+
+    return new BeanForScope(Clazz, entry, isClazz, {
+      dependencies,
+      inject,
+      configurationPropertyValues
+    })
   }
 
   private async getInjectables (entry: BeanDefinition): Promise<Injectable[]> {

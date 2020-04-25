@@ -1,5 +1,6 @@
 import Options from './Options'
-import * as esprima from 'esprima'
+import { Parser } from 'acorn'
+import * as classFields from 'acorn-class-fields'
 import { dependenciesSym, idSym, typeSym } from './Symbols'
 
 export function createComponentDecorator (type: string) {
@@ -42,7 +43,7 @@ export function createComponentDecorator (type: string) {
 
 function getSyntaxTree (Class) {
   const functionAsString = Class.toString()
-  return esprima.parse(functionAsString)
+  return Parser.extend(classFields).parse(functionAsString)
 }
 
 function getId (tree) {

@@ -4,7 +4,7 @@ import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 import DefaultBeanTypeRegistry from '../../src/revane-ioc-core/context/DefaultBeanTypeRegistry'
 import SingletonBean from '../../src/revane-ioc/bean/SingletonBean'
 
-test('should execute initialize plugin', async (t) => {
+/*test('should execute initialize plugin', async (t) => {
   t.plan(2)
   let beanProvider1
   const options = {
@@ -26,7 +26,7 @@ test('should execute initialize plugin', async (t) => {
 
   const bean = await beanProvider1.get('test')
   t.ok(bean)
-})
+})*/
 
 test('should use instance from beanDefinintion.instance', async (t) => {
   t.plan(1)
@@ -36,7 +36,7 @@ test('should use instance from beanDefinintion.instance', async (t) => {
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.instance = { works: true }
   beanDefinition.scope = 'singleton'
-  const container = new Container([ beanDefinition ], registry, { basePackage: __dirname })
+  const container = new Container([ beanDefinition ], registry)
   await container.initialize()
 
   const bean = await container.get('test')

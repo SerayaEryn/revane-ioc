@@ -11,6 +11,7 @@ export default class BeanDefinition {
   public scope: string
   public options: BeanOptions = new BeanOptions()
   public instance?: any
+  public configurationProperties?: any
 
   constructor (id: string) {
     this.id = id

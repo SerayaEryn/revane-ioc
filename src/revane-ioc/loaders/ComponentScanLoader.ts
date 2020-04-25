@@ -9,7 +9,12 @@ import Loader from '../../revane-ioc-core/Loader'
 
 import * as recursiveReaddir from 'recursive-readdir'
 import {
-  idSym, typeSym, scopeSym, dependenciesSym, injectSym
+  idSym,
+  typeSym,
+  scopeSym,
+  dependenciesSym,
+  injectSym,
+  configurationPropertiesSym
 } from '../decorators/Symbols'
 import { Property } from '../../revane-ioc-core/context/Container'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
@@ -19,26 +24,16 @@ const filterByType = {
 }
 
 export default class ComponentScanLoader implements Loader {
-  private basePackage: string
-  private includeFilters: Filter[]
-  private excludeFilters: Filter[]
-  private path: string
+  public load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
+    const path = options.basePackage
+    const includeFilters = convert(options.includeFilters || [])
+    const excludeFilters = convert(options.excludeFilters || [])
 
-  static type: string = 'scan'
-
-  constructor (options: LoaderOptions, basePackage: string) {
-    this.path = options.basePackage
-    this.basePackage = basePackage
-    this.includeFilters = convert(options.includeFilters || [])
-    this.excludeFilters = convert(options.excludeFilters || [])
-  }
-
-  public load (): Promise<BeanDefinition[]> {
-    return recursiveReaddir(this.path)
+    return recursiveReaddir(path)
       .then((files: string[]) => {
         const flattenFiles = flat(files)
         let filteredFiles = filterByJavascriptFiles(flattenFiles)
-        filteredFiles = this.applyFilters(filteredFiles)
+        filteredFiles = this.applyFilters(filteredFiles, includeFilters, excludeFilters)
         const result = []
         for (const file of filteredFiles) {
           let module1
@@ -48,7 +43,7 @@ export default class ComponentScanLoader implements Loader {
             // skip file
             continue
           }
-          const clazz = file.replace(this.basePackage, '.')
+          const clazz = file.replace(basePackage, '.')
           if (module1 && Reflect.getMetadata(idSym, module1)) {
             const beanDefinition = getBeanDefinition(module1, clazz)
             result.push(beanDefinition)
@@ -58,16 +53,23 @@ export default class ComponentScanLoader implements Loader {
       })
   }
 
-  public static isRelevant (options: LoaderOptions) {
+  public isRelevant (options: LoaderOptions) {
     return options.componentScan
   }
 
-  private applyFilters (files: string[]): string[] {
+  public type (): string {
+    return 'scan'
+  }
+
+  private applyFilters (
+    files: string[],
+    includeFilters: Filter[],
+    excludeFilters: Filter[]): string[] {
     let filtered = files
-    for (const filter of this.includeFilters) {
+    for (const filter of includeFilters) {
       filtered = filtered.filter((def) => filter.applies(def))
     }
-    for (const filter of this.excludeFilters) {
+    for (const filter of excludeFilters) {
       filtered = filtered.filter((def) => !filter.applies(def))
     }
     return filtered
@@ -88,6 +90,7 @@ function getBeanDefinition (module1, clazz): BeanDefinition {
   const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
   const inject = Reflect.getMetadata(injectSym, module1)
+  const configurationProperties = Reflect.getMetadata(configurationPropertiesSym, module1)
   const beanDefinition = new BeanDefinition(id)
   beanDefinition.class = clazz
   beanDefinition.properties = dependencies
@@ -96,6 +99,7 @@ function getBeanDefinition (module1, clazz): BeanDefinition {
   beanDefinition.options = {
     inject
   }
+  beanDefinition.configurationProperties = configurationProperties
   return beanDefinition
 }
 

@@ -7,9 +7,9 @@ test('should read xml configuration file and register beans', (t) => {
 
   const file = path.join(__dirname, '../../../testdata/xml/config.xml')
 
-  const xmlFileResolver = new XmlFileLoader({ file }, null)
+  const xmlFileResolver = new XmlFileLoader()
 
-  return xmlFileResolver.load()
+  return xmlFileResolver.load({ file }, null)
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
@@ -45,8 +45,8 @@ test('should read xml configuration file and register beans', (t) => {
 test('isRelevant', t => {
   t.plan(2)
 
-  t.ok(XmlFileLoader.isRelevant({ file: '.xml' }))
-  t.notOk(XmlFileLoader.isRelevant({ file: '.json' }))
+  t.ok(new XmlFileLoader().isRelevant({ file: '.xml' }))
+  t.notOk(new XmlFileLoader().isRelevant({ file: '.json' }))
 })
 
 test('should reject on error', (t) => {
@@ -54,9 +54,9 @@ test('should reject on error', (t) => {
 
   const file = path.join(__dirname, '../../../testdata/json/configa.json')
 
-  const xmlFileLoader = new XmlFileLoader({ file }, null)
+  const xmlFileLoader = new XmlFileLoader()
 
-  return xmlFileLoader.load()
+  return xmlFileLoader.load({ file }, null)
     .catch((err) => {
       t.ok(err)
     })
@@ -68,9 +68,9 @@ test('should trigger scan from xml #2', (t) => {
   const file = path.join(__dirname, '../../../testdata/xml/config6.xml')
   const basePackage = path.join(__dirname, '../../../testdata')
 
-  const xmlFileResolver = new XmlFileLoader({ file, basePackage }, basePackage)
+  const xmlFileResolver = new XmlFileLoader()
 
-  return xmlFileResolver.load()
+  return xmlFileResolver.load({ file, basePackage }, basePackage)
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
@@ -79,7 +79,8 @@ test('should trigger scan from xml #2', (t) => {
           class: './scan1.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -87,7 +88,8 @@ test('should trigger scan from xml #2', (t) => {
           class: './scan2.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -95,7 +97,8 @@ test('should trigger scan from xml #2', (t) => {
           class: './scan3.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: [ 'test6' ] },
@@ -103,7 +106,8 @@ test('should trigger scan from xml #2', (t) => {
           class: './scan4.js',
           properties: [],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -111,7 +115,8 @@ test('should trigger scan from xml #2', (t) => {
           class: './test7.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service'
+          type: 'service',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -119,7 +124,8 @@ test('should trigger scan from xml #2', (t) => {
           class: './test8.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service'
+          type: 'service',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -127,7 +133,17 @@ test('should trigger scan from xml #2', (t) => {
           class: './test9.js',
           properties: [],
           scope: 'singleton',
-          type: 'controller'
+          type: 'controller',
+          configurationProperties: undefined
+        },
+        {
+          options: { inject: undefined },
+          id: 'scan5',
+          class: './configurationProperties/configurationProperties.js',
+          properties: [],
+          scope: 'singleton',
+          type: 'component',
+          configurationProperties: { prefix: 'test', properties: [ 'property1', 'property2' ] }
         }
       ])
     })
@@ -139,9 +155,9 @@ test('should trigger scan from xml', (t) => {
   const file = path.join(__dirname, '../../../testdata/xml/config5.xml')
   const basePackage = path.join(__dirname, '../../../testdata')
 
-  const xmlFileResolver = new XmlFileLoader({ file, basePackage }, basePackage)
+  const xmlFileResolver = new XmlFileLoader()
 
-  return xmlFileResolver.load()
+  return xmlFileResolver.load({ file, basePackage }, basePackage)
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
@@ -150,7 +166,8 @@ test('should trigger scan from xml', (t) => {
           class: './scan1.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -158,7 +175,8 @@ test('should trigger scan from xml', (t) => {
           class: './scan2.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -166,7 +184,8 @@ test('should trigger scan from xml', (t) => {
           class: './scan3.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: [ 'test6' ] },
@@ -174,7 +193,8 @@ test('should trigger scan from xml', (t) => {
           class: './scan4.js',
           properties: [],
           scope: 'singleton',
-          type: 'component'
+          type: 'component',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -182,7 +202,8 @@ test('should trigger scan from xml', (t) => {
           class: './test7.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service'
+          type: 'service',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -190,7 +211,8 @@ test('should trigger scan from xml', (t) => {
           class: './test8.js',
           properties: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service'
+          type: 'service',
+          configurationProperties: undefined
         },
         {
           options: { inject: undefined },
@@ -198,7 +220,17 @@ test('should trigger scan from xml', (t) => {
           class: './test9.js',
           properties: [],
           scope: 'singleton',
-          type: 'controller'
+          type: 'controller',
+          configurationProperties: undefined
+        },
+        {
+          options: { inject: undefined },
+          id: 'scan5',
+          class: './configurationProperties/configurationProperties.js',
+          properties: [],
+          scope: 'singleton',
+          type: 'component',
+          configurationProperties: { prefix: 'test', properties: [ 'property1', 'property2' ] }
         }
       ])
     })

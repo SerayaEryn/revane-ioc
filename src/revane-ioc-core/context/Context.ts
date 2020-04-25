@@ -5,6 +5,10 @@ import Container from './Container'
 import BeanDefinedTwiceError from './errors/BeanDefinedTwiceError'
 import ContextNotInitializedError from './errors/ContextNotInitializedError'
 import BeanTypeRegistry from './BeanTypeRegistry'
+import { ContextPlugin } from './ContextPlugin'
+import Loader from '../Loader'
+import { BeanProvider } from './BeanProvider'
+import { ConfigurationProvider } from './ConfigurationProvider'
 
 export default class Context {
   private options: Options
@@ -12,16 +16,32 @@ export default class Context {
   private container: Container
   private initialized: boolean = false
   private beanTypeRegistry: BeanTypeRegistry
+  private plugins: Map<string, (Loader | ContextPlugin)[] | ConfigurationProvider>
 
-  constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
+  constructor (
+    options: Options,
+    beanTypeRegistry: BeanTypeRegistry,
+    plugins: Map<string, (Loader | ContextPlugin)[] | ConfigurationProvider>
+  ) {
     this.options = options
+    this.plugins = plugins
     this.beanDefinitions = new Map()
     this.beanTypeRegistry = beanTypeRegistry
   }
 
   public async initialize (): Promise<void> {
+    const configurationProvider = (this.plugins.get('configuration') || [])[0] as ConfigurationProvider
+    let configuration
+    if (configurationProvider) {
+      await configurationProvider.init()
+      configuration = configurationProvider.provide()
+    }
+    for (const contextPlugin of this.plugins.get('contextInitialization') as ContextPlugin[] || []) {
+      this.beanDefinitions = await contextPlugin.plugin(
+        this.beanDefinitions, new BeanProvider(this))
+    }
     const entries = [...this.beanDefinitions.values()]
-    this.container = new Container(entries, this.beanTypeRegistry, this.options)
+    this.container = new Container(entries, this.beanTypeRegistry, configuration)
     await this.container.initialize()
     this.beanDefinitions = null
     this.initialized = true

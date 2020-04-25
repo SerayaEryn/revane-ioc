@@ -7,9 +7,9 @@ test('should read json configuration file and register beans', (t) => {
 
   const file = path.join(__dirname, '../../../testdata/json/config.json')
 
-  const jsonFileResolver = new JsonFileLoader({ file }, null)
+  const jsonFileResolver = new JsonFileLoader()
 
-  return jsonFileResolver.load()
+  return jsonFileResolver.load({ file }, null)
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
@@ -32,9 +32,9 @@ test('should reject on error', (t) => {
 
   const file = path.join(__dirname, '../../../testdata/json/configa.json')
 
-  const jsonFileResolver = new JsonFileLoader({ file }, null)
+  const jsonFileResolver = new JsonFileLoader()
 
-  return jsonFileResolver.load()
+  return jsonFileResolver.load({ file }, null)
     .catch((err) => {
       t.ok(err)
     })
@@ -43,6 +43,6 @@ test('should reject on error', (t) => {
 test('isRelevant', t => {
   t.plan(2)
 
-  t.ok(JsonFileLoader.isRelevant({ file: '.json' }))
-  t.notOk(JsonFileLoader.isRelevant({ file: '.xml' }))
+  t.ok(new JsonFileLoader().isRelevant({ file: '.json' }))
+  t.notOk(new JsonFileLoader().isRelevant({ file: '.xml' }))
 })
