@@ -182,7 +182,7 @@ test('should tearDown', async (t) => {
   const revane = new Revane(options)
   await revane.initialize()
   const bean = await revane.get('xml2')
-  await revane.tearDown()
+  await revane.close()
   t.ok(bean.destroyed)
 })
 
@@ -448,6 +448,6 @@ test('should get components', async (t) => {
   t.ok(beans[1].test6)
   t.ok(beans[2].test6)
   t.ok(beans[3].arg)
-  t.ok(beans[4].test6)
+  t.ok(beans[4])
   t.strictEquals(6, beans.length)
 })

@@ -1,6 +1,6 @@
 import { LoadingStrategy } from './loading/LoadingStrategy'
 import { JsonLoadingStrategy } from './loading/JsonLoadingStrategy'
-import { Configuration } from '../revane-ioc-core/context/Configuration'
+import { Configuration } from './Configuration'
 
 export class ConfigurationOptions {
   profile: string

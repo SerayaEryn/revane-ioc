@@ -3,25 +3,18 @@ import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
 
 export default class PrototypeBean extends AbstractBean {
   public static scope: string = 'prototype'
-  public isClass: boolean
-  public type: string
-  private clazz: string
   public entry: BeanDefinition
-  private dependencies: any
+  private callback: (instance: any) => Promise<void>
 
-  constructor (clazz, entry, isClass, dependencies) {
-    super()
-    this.type = entry.type
-    this.clazz = clazz
-    this.isClass = isClass
+  constructor (entry: BeanDefinition) {
+    super(entry)
     this.entry = entry
-    this.dependencies = dependencies
   }
 
   public async getInstance (): Promise<any> {
-    const instance = await this.createInstance(this.clazz, this.dependencies)
-    for (const key of Object.keys(this.dependencies.configurationPropertyValues || {})) {
-      instance[key] = this.dependencies.configurationPropertyValues[key]
+    const instance = await this.createInstance()
+    if (this.callback) {
+      await this.callback(instance)
     }
     if (instance.postConstruct) {
       await instance.postConstruct()
@@ -31,5 +24,13 @@ export default class PrototypeBean extends AbstractBean {
 
   public async init (): Promise<void> {
     return Promise.resolve()
+  }
+
+  public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {
+    this.callback = callback
+  }
+
+  public id (): string {
+    return this.entry.id
   }
 }

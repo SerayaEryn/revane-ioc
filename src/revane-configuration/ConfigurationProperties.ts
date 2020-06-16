@@ -6,7 +6,7 @@ export type ConfigurationPropertiesOptions = {
   prefix: string
 }
 
-export function createConfigurationPropertiesDecorator () {
+function createConfigurationPropertiesDecorator () {
   return function decoratoteConfigurationProperties (options: ConfigurationPropertiesOptions) {
     return function define (Class) {
       const tree = getSyntaxTree(Class)
@@ -25,4 +25,10 @@ export function createConfigurationPropertiesDecorator () {
 function getSyntaxTree (Class): any {
   const functionAsString = Class.toString()
   return Parser.extend(classFields).parse(functionAsString)
+}
+
+const ConfigurationProperties = createConfigurationPropertiesDecorator()
+
+export {
+  ConfigurationProperties
 }

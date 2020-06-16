@@ -16,6 +16,14 @@ export default class JsonFileLoader implements Loader {
         }
       })
     })
+      .then((beanDefinitions: any[]) => {
+        return beanDefinitions.map((rawBeanDefinition) => {
+          const beanDefinition = new BeanDefinition(rawBeanDefinition.id)
+          beanDefinition.class = rawBeanDefinition.class
+          beanDefinition.dependencyIds = rawBeanDefinition.properties || []
+          return beanDefinition
+        })
+      })
   }
 
   public isRelevant (options: LoaderOptions): boolean {

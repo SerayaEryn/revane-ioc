@@ -4,10 +4,10 @@ import * as fastXmlParser from 'fast-xml-parser'
 import * as fileSystem from 'fs'
 import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
-import { Property } from '../../revane-ioc-core/context/Container'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { join } from 'path'
 import ComponentScanLoader from './ComponentScanLoader'
+import { Property } from '../../revane-ioc-core/Property'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -115,7 +115,7 @@ export default class XmlFileLoader implements Loader {
       beanDefinition.type = bean.attr.type
     }
     const ref = bean.ref
-    beanDefinition.properties = this.getProperties(ref)
+    beanDefinition.dependencyIds = this.getProperties(ref)
     return beanDefinition
   }
 

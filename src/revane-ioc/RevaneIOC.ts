@@ -1,6 +1,6 @@
 import CoreOptions, { LoaderOptions, RegexFilter } from '../revane-ioc-core/Options'
 import RevaneCore from '../revane-ioc-core/RevaneIOCCore'
-import DefaultBeanTypeRegistry from '../revane-ioc-core/context/DefaultBeanTypeRegistry'
+import DefaultBeanTypeRegistry from '../revane-ioc-core/context/bean/DefaultBeanTypeRegistry'
 
 import JsonFileLoader from './loaders/JsonFileLoader'
 import XmlFileLoader from './loaders/XmlFileLoader'
@@ -12,7 +12,6 @@ import Options from './Options'
 import NotInitializedError from './NotInitializedError'
 import BeanDefinition from '../revane-ioc-core/BeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
-import { BeanProvider } from '../revane-ioc-core/context/BeanProvider'
 import {
   Configuration,
   Repository,
@@ -20,13 +19,15 @@ import {
   Component,
   Controller,
   Scope,
-  Inject,
-  Bean,
-  ConfigurationProperties
+  Bean
 } from './decorators/Decorators'
 import { ConfigurationContextPlugin } from '../revane-configuration/ConfigurationContextPlugin'
-import { ConfigurationOptions } from '../revane-configuration/RevaneConfiguration'
+import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
+import { ConfigurationPropertiesPostProcessor } from '../revane-configuration/ConfigurationPropertiesPostProcessor'
+import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/ConfigurationPropertiesPreProcessor'
+import { ApplicationContext } from '../revane-ioc-core/ApplicationContext'
+import { ConfigurationProperties } from '../revane-configuration/ConfigurationProperties'
 
 export {
   BeanDefinition,
@@ -36,18 +37,17 @@ export {
   JsonFileLoader,
   RegexFilter,
   Options,
-  BeanProvider,
   LoaderOptions,
   Repository,
   Service,
   Component,
   Controller,
   Scope,
-  Inject,
   Bean,
   Configuration,
   ConfigurationProperties,
-  ContextPlugin
+  ContextPlugin,
+  ApplicationContext
 }
 
 export default class RevaneIOC {
@@ -72,7 +72,7 @@ export default class RevaneIOC {
     const coreOptions: CoreOptions = this.prepareCoreOptions(this.options)
     const beanTypeRegistry = this.beanTypeRegistry()
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
-    this.addDefaultPlugins()
+    await this.addDefaultPlugins()
     this.addPlugins()
     await this.revaneCore.initialize()
     this.initialized = true
@@ -98,11 +98,11 @@ export default class RevaneIOC {
     return this.revaneCore.getByType(type)
   }
 
-  public async tearDown (): Promise<void> {
-    await this.revaneCore.tearDown()
+  public async close (): Promise<void> {
+    await this.revaneCore.close()
   }
 
-  private addDefaultPlugins () {
+  private async addDefaultPlugins () {
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
@@ -110,6 +110,24 @@ export default class RevaneIOC {
     const configurationContextPlugin = new ConfigurationContextPlugin(configOptions)
     this.revaneCore.addPlugin('contextInitialization', configurationContextPlugin)
     this.revaneCore.addPlugin('configuration', configurationContextPlugin)
+    const configuration = new RevaneConfiguration(
+      new ConfigurationOptions(
+        this.options.profile,
+        this.options.configuration.directory,
+        this.options.configuration.required,
+        this.options.configuration.disabled
+      )
+    )
+    await configuration.init()
+    if (!this.options.configuration.disabled) {
+      this.revaneCore.addPlugin(
+        'beanFactoryPostProcessor',
+        new ConfigurationPropertiesPostProcessor(
+          configuration
+        )
+      )
+      this.revaneCore.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
+    }
   }
 
   private addPlugins () {

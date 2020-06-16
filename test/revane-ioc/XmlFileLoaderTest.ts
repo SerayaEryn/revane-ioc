@@ -13,26 +13,26 @@ test('should read xml configuration file and register beans', (t) => {
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
-          options: {},
+          dependencies: [],
           id: 'xml1',
           class: './xml/xml1.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton'
         },
         {
-          options: {},
+          dependencies: [],
           id: 'xml2',
           class: './xml/xml2',
-          properties: [{
+          dependencyIds: [{
             ref: 'xml1'
           }],
           scope: 'singleton'
         },
         {
-          options: {},
+          dependencies: [],
           id: 'xml3',
           class: './xml/xml3',
-          properties: [
+          dependencyIds: [
             { ref: 'xml1' },
             { ref: 'xml2' }
           ],
@@ -74,76 +74,68 @@ test('should trigger scan from xml #2', (t) => {
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan1',
           class: './scan1.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan2',
           class: './scan2.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan3',
           class: './scan3.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: [ 'test6' ] },
+          dependencies: [],
           id: 'scan4',
           class: './scan4.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'test7',
           class: './test7.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service',
-          configurationProperties: undefined
+          type: 'service'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'test8',
           class: './test8.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service',
-          configurationProperties: undefined
+          type: 'service'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'test9',
           class: './test9.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton',
-          type: 'controller',
-          configurationProperties: undefined
+          type: 'controller'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan5',
           class: './configurationProperties/configurationProperties.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: { prefix: 'test', properties: [ 'property1', 'property2' ] }
+          type: 'component'
         }
       ])
     })
@@ -161,76 +153,68 @@ test('should trigger scan from xml', (t) => {
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan1',
           class: './scan1.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan2',
           class: './scan2.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan3',
           class: './scan3.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: [ 'test6' ] },
+          dependencies: [],
           id: 'scan4',
           class: './scan4.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: undefined
+          type: 'component'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'test7',
           class: './test7.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service',
-          configurationProperties: undefined
+          type: 'service'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'test8',
           class: './test8.js',
-          properties: [ { ref: 'test6' } ],
+          dependencyIds: [ { ref: 'test6' } ],
           scope: 'singleton',
-          type: 'service',
-          configurationProperties: undefined
+          type: 'service'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'test9',
           class: './test9.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton',
-          type: 'controller',
-          configurationProperties: undefined
+          type: 'controller'
         },
         {
-          options: { inject: undefined },
+          dependencies: [],
           id: 'scan5',
           class: './configurationProperties/configurationProperties.js',
-          properties: [],
+          dependencyIds: [],
           scope: 'singleton',
-          type: 'component',
-          configurationProperties: { prefix: 'test', properties: [ 'property1', 'property2' ] }
+          type: 'component'
         }
       ])
     })

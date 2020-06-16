@@ -7,9 +7,18 @@
       "bin/test/**",
       "bin/src/revane-ioc-core/Loader.js",
       "bin/src/revane-ioc-core/BeanLoaderRegistry.js",
-      "bin/src/revane-ioc-core/context/BeanTypeRegistry.js",
+      "bin/src/revane-ioc-core/context/bean/BeanTypeRegistry.js",
       "bin/src/revane-ioc-core/context/bean/Bean.js",
-      "bin/src/revane-ioc/loaders/Filter.js"
+      "bin/src/revane-ioc-core/context/ContextPlugin.js",
+      "bin/src/revane-ioc-core/ApplicationContext.js",
+      "bin/src/revane-ioc-core/Property.js",
+      "bin/src/revane-ioc-core/BeanTypeRegistry.js",
+      "bin/src/revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js",
+      "bin/src/revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js",
+      "bin/src/revane-ioc/loaders/Filter.js",
+      "bin/src/revane-configuration/loading/LoadingStrategy.js",
+      "bin/src/revane-configuration/Configuration.js",
+      "bin/src/revane-configuration/ConfigurationProvider.js"
   ],
   "reporter": [
     "lcov",

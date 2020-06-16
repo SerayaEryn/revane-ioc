@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 import * as test from 'tape-catch'
-import { Scope, Service, Inject } from '../../src/revane-ioc/RevaneIOC'
+import { Scope, Service } from '../../src/revane-ioc/RevaneIOC'
 import {
-  scopeSym, idSym, dependenciesSym, injectSym
+  scopeSym, idSym, dependenciesSym
 } from '../../src/revane-ioc/decorators/Symbols'
 
 test('should add scope and service meta data', t => {
@@ -41,26 +41,4 @@ test('should add scope and service meta data', t => {
 
   t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'testClass')
   t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
-})
-
-test('should add injected dependencies', t => {
-  t.plan(1)
-  class TestClass {}
-
-  Inject('test1')(
-  TestClass
-  )
-
-  t.deepEquals(Reflect.getMetadata(injectSym, TestClass), ['test1'])
-})
-
-test('should add injected dependencies as list', t => {
-  t.plan(1)
-  class TestClass {}
-
-  Inject(['test1'])(
-  TestClass
-  )
-
-  t.deepEquals(Reflect.getMetadata(injectSym, TestClass), ['test1'])
 })

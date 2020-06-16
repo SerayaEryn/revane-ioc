@@ -12,12 +12,10 @@ import {
   idSym,
   typeSym,
   scopeSym,
-  dependenciesSym,
-  injectSym,
-  configurationPropertiesSym
+  dependenciesSym
 } from '../decorators/Symbols'
-import { Property } from '../../revane-ioc-core/context/Container'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
+import { Property } from '../../revane-ioc-core/Property'
 
 const filterByType = {
   regex: RegexFilter
@@ -89,17 +87,11 @@ function getBeanDefinition (module1, clazz): BeanDefinition {
   const type = Reflect.getMetadata(typeSym, module1)
   const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
-  const inject = Reflect.getMetadata(injectSym, module1)
-  const configurationProperties = Reflect.getMetadata(configurationPropertiesSym, module1)
   const beanDefinition = new BeanDefinition(id)
   beanDefinition.class = clazz
-  beanDefinition.properties = dependencies
+  beanDefinition.dependencyIds = dependencies
   beanDefinition.scope = scope
   beanDefinition.type = type
-  beanDefinition.options = {
-    inject
-  }
-  beanDefinition.configurationProperties = configurationProperties
   return beanDefinition
 }
 

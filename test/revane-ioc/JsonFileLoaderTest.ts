@@ -13,15 +13,16 @@ test('should read json configuration file and register beans', (t) => {
     .then((beanDefinitions) => {
       t.deepEqual(beanDefinitions, [
         {
+          dependencies: [],
           id: 'json1',
-          class: './json/json1.js'
+          class: './json/json1.js',
+          dependencyIds: []
         },
         {
+          dependencies: [],
           id: 'json2',
           class: './json/json2',
-          properties: [{
-            ref: 'json1'
-          }]
+          dependencyIds: [ { ref: 'json1' } ]
         }
       ])
     })
