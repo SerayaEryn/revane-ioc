@@ -1,5 +1,4 @@
 import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
-import BeanDefinition from './BeanDefinition'
 import { DefaultApplicationContext } from './DefaultApplicationContext'
 import Bean from './context/bean/Bean'
 import InvalidScopeError from './context/errors/InvalidScopeError'
@@ -12,6 +11,7 @@ import BeanDefinedTwiceError from './context/errors/BeanDefinedTwiceError'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
 import { Property } from './Property'
 import { ContextPlugin } from './context/ContextPlugin'
+import { BeanDefinition } from './BeanDefinition'
 
 export class BeanFactory {
   private preProcessors: BeanFactoryPreProcessor[]

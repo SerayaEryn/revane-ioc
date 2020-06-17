@@ -13,19 +13,19 @@ export default class ValueBean implements Bean {
   }
 
   public async init (): Promise<any> {
-    return Promise.resolve()
+    // empty
   }
 
   public async getInstance (): Promise<any> {
     return this.value
   }
 
-  public postConstruct (): Promise<any> {
-    return Promise.resolve()
+  public async postConstruct (): Promise<any> {
+    // empty
   }
 
-  public preDestroy (): Promise<any> {
-    return Promise.resolve()
+  public async preDestroy (): Promise<any> {
+    // empty
   }
 
   public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {

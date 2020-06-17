@@ -1,12 +1,12 @@
 'use strict'
 
 import * as fileSystem from 'fs'
-import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 
 export default class JsonFileLoader implements Loader {
-  public load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
+  public load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
     return new Promise((resolve, reject) => {
       fileSystem.readFile(options.file, (error, data) => {
         if (error) {
@@ -18,7 +18,7 @@ export default class JsonFileLoader implements Loader {
     })
       .then((beanDefinitions: any[]) => {
         return beanDefinitions.map((rawBeanDefinition) => {
-          const beanDefinition = new BeanDefinition(rawBeanDefinition.id)
+          const beanDefinition = new DefaultBeanDefinition(rawBeanDefinition.id)
           beanDefinition.class = rawBeanDefinition.class
           beanDefinition.dependencyIds = rawBeanDefinition.properties || []
           return beanDefinition

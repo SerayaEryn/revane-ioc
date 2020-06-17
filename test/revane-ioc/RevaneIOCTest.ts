@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as test from 'tape-catch'
 import Revane, { LoaderOptions } from '../../src/revane-ioc/RevaneIOC'
 import Loader from '../../src/revane-ioc-core/Loader'
-import BeanDefinition from '../../src/revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../src/revane-ioc-core/DefaultBeanDefinition'
 
 test('should read json configuration file and register beans', async (t) => {
   t.plan(3)
@@ -26,6 +26,126 @@ test('should read json configuration file and register beans', async (t) => {
   t.ok(bean2.json1)
 })
 
+test('should throw error on unknown id', async (t) => {
+  t.plan(1)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+  try {
+    await revane.get('blub')
+  } catch (err) {
+    t.strictEquals(err.code, 'REV_ERR_NOT_FOUND')
+  }
+})
+
+test('should throw error if not initialized #1', async (t) => {
+  t.plan(1)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  try {
+    await revane.get('blub')
+  } catch (err) {
+    t.strictEquals(err.code, 'REV_ERR_NOT_INITIALIZED')
+  }
+})
+
+test('should throw error if not initialized #2', async (t) => {
+  t.plan(1)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  try {
+    await revane.getByType('controller')
+  } catch (err) {
+    t.strictEquals(err.code, 'REV_ERR_NOT_INITIALIZED')
+  }
+})
+
+test('should throw error if not initialized #3', async (t) => {
+  t.plan(1)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  try {
+    await revane.getMultiple(['test6'])
+  } catch (err) {
+    t.strictEquals(err.code, 'REV_ERR_NOT_INITIALIZED')
+  }
+})
+
+test('should use parent context', async (t) => {
+  t.plan(5)
+
+  const options1 = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane1 = new Revane(options1)
+
+  const options2 = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    componentScan: false,
+    loaderOptions: [
+      { file: path.join(__dirname, '../../../testdata/json/config4.json') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane2 = new Revane(options2)
+  await revane1.initialize()
+  await revane2.initialize()
+  revane1.setParent(revane2)
+  const bean1 = await revane1.get('json1')
+  const bean2 = await revane1.get('json2')
+
+  t.ok(bean1)
+  t.ok(bean2)
+  t.ok(bean2.json1)
+  const bean6 = await revane1.get('test6')
+  const bean12 = await revane1.get('test12')
+  t.ok(bean6)
+  t.ok(bean12)
+})
+
 test('should use loader from Plugin', (t) => {
   t.plan(1)
 
@@ -36,7 +156,7 @@ test('should use loader from Plugin', (t) => {
     isRelevant (options: LoaderOptions): boolean {
       return true
     }
-    load (): Promise<BeanDefinition[]> {
+    load (): Promise<DefaultBeanDefinition[]> {
       throw new Error('Method not implemented.')
     }
   }
@@ -449,5 +569,5 @@ test('should get components', async (t) => {
   t.ok(beans[2].test6)
   t.ok(beans[3].arg)
   t.ok(beans[4])
-  t.strictEquals(6, beans.length)
+  t.strictEquals(7, beans.length)
 })

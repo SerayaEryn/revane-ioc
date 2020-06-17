@@ -1,7 +1,7 @@
 import DefaultBeanLoaderRegistry from './DefaultBeanLoaderRegistry'
 import Options from './Options'
-import BeanDefinition from './BeanDefinition'
 import Loader from './Loader'
+import { BeanDefinition } from './BeanDefinition'
 
 export default class BeanLoader {
   private beanResolverRegistry: DefaultBeanLoaderRegistry

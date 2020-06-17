@@ -10,7 +10,7 @@ import PrototypeBean from './bean/PrototypeBean'
 import SingletonBean from './bean/SingletonBean'
 import Options from './Options'
 import NotInitializedError from './NotInitializedError'
-import BeanDefinition from '../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
 import {
   Configuration,
@@ -28,9 +28,10 @@ import { ConfigurationPropertiesPostProcessor } from '../revane-configuration/Co
 import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/ConfigurationPropertiesPreProcessor'
 import { ApplicationContext } from '../revane-ioc-core/ApplicationContext'
 import { ConfigurationProperties } from '../revane-configuration/ConfigurationProperties'
+import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy'
 
 export {
-  BeanDefinition,
+  DefaultBeanDefinition as BeanDefinition,
   Loader,
   XmlFileLoader,
   ComponentScanLoader,
@@ -102,6 +103,14 @@ export default class RevaneIOC {
     await this.revaneCore.close()
   }
 
+  public setParent (parent: RevaneIOC): void {
+    this.revaneCore.setParent(parent.getContext())
+  }
+
+  public getContext (): ApplicationContext {
+    return this.revaneCore.getContext()
+  }
+
   private async addDefaultPlugins () {
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
@@ -115,7 +124,10 @@ export default class RevaneIOC {
         this.options.profile,
         this.options.configuration.directory,
         this.options.configuration.required,
-        this.options.configuration.disabled
+        this.options.configuration.disabled,
+        [
+          new JsonLoadingStrategy()
+        ]
       )
     )
     await configuration.init()
@@ -171,7 +183,8 @@ export default class RevaneIOC {
       options.profile,
       options.configuration.directory,
       options.configuration.required,
-      options.configuration.disabled
+      options.configuration.disabled,
+      [ new JsonLoadingStrategy() ]
     )
   }
 

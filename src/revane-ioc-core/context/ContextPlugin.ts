@@ -1,5 +1,5 @@
-import BeanDefinition from '../BeanDefinition'
+import DefaultBeanDefinition from '../DefaultBeanDefinition'
 
 export interface ContextPlugin {
-  plugin (beanDefinitions: BeanDefinition[]): Promise<BeanDefinition[]>
+  plugin (beanDefinitions: DefaultBeanDefinition[]): Promise<DefaultBeanDefinition[]>
 }

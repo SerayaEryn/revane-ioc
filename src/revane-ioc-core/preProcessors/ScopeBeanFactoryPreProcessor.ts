@@ -1,6 +1,6 @@
 import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor'
-import BeanDefinition from '../BeanDefinition'
 import Options from '../Options'
+import { BeanDefinition } from '../BeanDefinition'
 
 export class ScopeBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   private options: Options

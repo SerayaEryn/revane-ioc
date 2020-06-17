@@ -1,13 +1,13 @@
 import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor'
-import BeanDefinition from '../BeanDefinition'
+import DefaultBeanDefinition from '../DefaultBeanDefinition'
 
 export class ModuleLoaderBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
-  async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
+  async preProcess (beanDefinition: DefaultBeanDefinition): Promise<DefaultBeanDefinition[]> {
     beanDefinition.classConstructor = this.getClass(beanDefinition)
     return [ beanDefinition ]
   }
 
-  private getClass (entry: BeanDefinition): any {
+  private getClass (entry: DefaultBeanDefinition): any {
     if (entry.instance) {
       return entry.instance
     }

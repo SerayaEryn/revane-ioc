@@ -1,6 +1,6 @@
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
 import { RevaneConfiguration, ConfigurationOptions } from './RevaneConfiguration'
-import BeanDefinition from '../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import { Configuration } from './Configuration'
 import { ConfigurationProvider } from './ConfigurationProvider'
 
@@ -13,12 +13,12 @@ export class ConfigurationContextPlugin implements ContextPlugin, ConfigurationP
   }
 
   async plugin (
-    beanDefinitions: BeanDefinition[]
-  ): Promise<BeanDefinition[]> {
+    beanDefinitions: DefaultBeanDefinition[]
+  ): Promise<DefaultBeanDefinition[]> {
     if (beanDefinitions.filter((beanDefinition) => beanDefinition.id === 'configuration').length === 0 && !this.options.disabled) {
       this.configuration = new RevaneConfiguration(this.options)
       await this.configuration.init()
-      const configuration = new BeanDefinition('configuration')
+      const configuration = new DefaultBeanDefinition('configuration')
       configuration.instance = this.configuration
       configuration.scope = 'singleton'
       beanDefinitions.push(configuration)

@@ -2,7 +2,7 @@
 
 import * as flat from 'array.prototype.flat'
 import 'reflect-metadata'
-import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Filter from './Filter'
 import RegexFilter from './RegexFilter'
 import Loader from '../../revane-ioc-core/Loader'
@@ -22,7 +22,7 @@ const filterByType = {
 }
 
 export default class ComponentScanLoader implements Loader {
-  public load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
+  public load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
     const path = options.basePackage
     const includeFilters = convert(options.includeFilters || [])
     const excludeFilters = convert(options.excludeFilters || [])
@@ -82,12 +82,12 @@ function getClazz (file: string): any {
   return module1
 }
 
-function getBeanDefinition (module1, clazz): BeanDefinition {
+function getBeanDefinition (module1, clazz): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
   const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
-  const beanDefinition = new BeanDefinition(id)
+  const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.class = clazz
   beanDefinition.dependencyIds = dependencies
   beanDefinition.scope = scope

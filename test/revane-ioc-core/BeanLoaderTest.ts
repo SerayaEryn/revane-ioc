@@ -1,13 +1,13 @@
 import * as test from 'tape-catch'
 import BeanLoader from '../../src/revane-ioc-core/BeanLoader'
 import Loader from '../../src/revane-ioc-core/Loader'
-import BeanDefinition from '../../src/revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../src/revane-ioc-core/DefaultBeanDefinition'
 
 test('should reject on errors in loaders', async (t) => {
   t.plan(1)
 
   class MockedLoader implements Loader {
-    load (): Promise<BeanDefinition[]> {
+    load (): Promise<DefaultBeanDefinition[]> {
       throw new Error('booom')
     }
 

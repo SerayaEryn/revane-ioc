@@ -1,7 +1,7 @@
 import Loader from './Loader'
-import BeanDefinition from './BeanDefinition'
 import BeanLoaderRegistry from './BeanLoaderRegistry'
 import { LoaderOptions } from '../revane-ioc/RevaneIOC'
+import { BeanDefinition } from './BeanDefinition'
 
 export default class DefaultBeanLoaderRegistry implements BeanLoaderRegistry {
   private loaders: Loader[] = []

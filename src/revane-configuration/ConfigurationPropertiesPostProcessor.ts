@@ -1,7 +1,7 @@
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
 import Bean from '../revane-ioc-core/context/bean/Bean'
-import BeanDefinition from '../revane-ioc-core/BeanDefinition'
 import { Configuration } from './Configuration'
+import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 
 export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProcessor {
   private configuration: Configuration

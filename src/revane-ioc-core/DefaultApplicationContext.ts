@@ -13,20 +13,14 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async get (id: string): Promise<any> {
-    let bean = this.beans.get(id)
-    if (!bean && this.parent) {
-      bean = await this.parent.get(id)
-    }
-    if (!bean) {
-      throw new NotFoundError(id)
-    }
+    let bean = await this.getBean(id)
     return bean.getInstance()
   }
 
   async getBean (id: string): Promise<Bean> {
     let bean = this.beans.get(id)
     if (!bean && this.parent) {
-      bean = await this.parent.get(id)
+      bean = await this.parent.getBean(id)
     }
     if (!bean) {
       throw new NotFoundError(id)

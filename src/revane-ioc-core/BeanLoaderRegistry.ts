@@ -1,6 +1,6 @@
-import BeanDefinition from './BeanDefinition'
 import Loader from './Loader'
 import { LoaderOptions } from './Options'
+import { BeanDefinition } from './BeanDefinition'
 
 export default interface BeanLoaderRegistry {
   register (loader: Loader): void

@@ -1,12 +1,18 @@
 import { LoadingStrategy } from './LoadingStrategy'
 import { promises } from 'fs'
 import { all as merge } from 'deepmerge'
+import { ConfigFileNotFound } from './ConfigFileNotFound'
 
 const { readFile } = promises
 
 export class JsonLoadingStrategy implements LoadingStrategy {
   async load (configDirectory: string, profile: string): Promise<object> {
-    const buffer1 = await readFile(`${configDirectory}/application.json`)
+    let buffer1
+    try {
+      buffer1 = await readFile(`${configDirectory}/application.json`)
+    } catch (error) {
+      throw new ConfigFileNotFound(`${configDirectory}/application.json`)
+    }
     const defaultConfig = JSON.parse(buffer1.toString())
     let profileConfig
     try {

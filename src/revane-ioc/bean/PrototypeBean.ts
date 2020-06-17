@@ -1,12 +1,12 @@
 import AbstractBean from './AbstractBean'
-import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 
 export default class PrototypeBean extends AbstractBean {
   public static scope: string = 'prototype'
-  public entry: BeanDefinition
+  public entry: DefaultBeanDefinition
   private callback: (instance: any) => Promise<void>
 
-  constructor (entry: BeanDefinition) {
+  constructor (entry: DefaultBeanDefinition) {
     super(entry)
     this.entry = entry
   }

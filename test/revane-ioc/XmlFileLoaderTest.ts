@@ -136,6 +136,14 @@ test('should trigger scan from xml #2', (t) => {
           dependencyIds: [],
           scope: 'singleton',
           type: 'component'
+        },
+        {
+          dependencies: [],
+          id: 'scan56',
+          class: './configurationProperties2/configurationProperties.js',
+          dependencyIds: [],
+          scope: 'singleton',
+          type: 'component'
         }
       ])
     })
@@ -212,6 +220,14 @@ test('should trigger scan from xml', (t) => {
           dependencies: [],
           id: 'scan5',
           class: './configurationProperties/configurationProperties.js',
+          dependencyIds: [],
+          scope: 'singleton',
+          type: 'component'
+        },
+        {
+          dependencies: [],
+          id: 'scan56',
+          class: './configurationProperties2/configurationProperties.js',
           dependencyIds: [],
           scope: 'singleton',
           type: 'component'

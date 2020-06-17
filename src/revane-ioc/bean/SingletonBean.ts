@@ -1,12 +1,12 @@
 import AbstractBean from './AbstractBean'
-import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 
 export default class SingletonBean extends AbstractBean {
   public static scope: string = 'singleton'
   private instance: any
-  private beanDefinition: BeanDefinition
+  private beanDefinition: DefaultBeanDefinition
 
-  constructor (beanDefinition: BeanDefinition) {
+  constructor (beanDefinition: DefaultBeanDefinition) {
     super(beanDefinition)
     this.beanDefinition = beanDefinition
   }

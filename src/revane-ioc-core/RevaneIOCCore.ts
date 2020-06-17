@@ -10,7 +10,6 @@ import { BeanFactory } from './BeanFactory'
 import { BeanAnnotationBeanFactoryPostProcessor } from './postProcessors/BeanAnnotationBeanFactoryPostProcessor'
 import { ModuleLoaderBeanFactoryPreProcessor } from './preProcessors/ModuleLoaderFactoryPreProcessor'
 import { ApplicationContext } from './ApplicationContext'
-import ContextNotInitializedError from './context/errors/ContextNotInitializedError'
 import { PathBeanFactoryPreProcessor } from './preProcessors/PathBeanFactoryPreProcessor'
 import { ScopeBeanFactoryPreProcessor } from './preProcessors/ScopeBeanFactoryPreProcessor'
 import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/ConfigurationPropertiesPreProcessor'
@@ -24,7 +23,6 @@ export default class RevaneIOCCore {
   private context: ApplicationContext = new DefaultApplicationContext()
   private beanTypeRegistry: BeanTypeRegistry
   private plugins: Map<string, (Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor)[]> = new Map()
-  private initialized: boolean = false
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
@@ -61,20 +59,13 @@ export default class RevaneIOCCore {
     const beanLoader = new BeanLoader(loaders)
     const beanDefinitions = await beanLoader.getBeanDefinitions(this.options)
     await beanFactory.process(flat(beanDefinitions))
-    this.initialized = true
   }
 
   public async get (id: string): Promise<any> {
-    if (!this.initialized) {
-      throw new ContextNotInitializedError()
-    }
     return this.context.get(id)
   }
 
   public async has (id: string): Promise<boolean> {
-    if (!this.initialized) {
-      throw new ContextNotInitializedError()
-    }
     return this.context.has(id)
   }
 
@@ -88,13 +79,18 @@ export default class RevaneIOCCore {
   }
 
   public async getByType (type: string): Promise<any[]> {
-    if (!this.initialized) {
-      throw new ContextNotInitializedError()
-    }
     return this.context.getByType(type)
   }
 
   public async close (): Promise<void> {
     await this.context.close()
+  }
+
+  public getContext (): ApplicationContext {
+    return this.context
+  }
+
+  public setParent (context: ApplicationContext): void {
+    this.context.setParent(context)
   }
 }

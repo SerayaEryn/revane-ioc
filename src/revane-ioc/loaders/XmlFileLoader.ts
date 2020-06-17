@@ -2,7 +2,7 @@
 
 import * as fastXmlParser from 'fast-xml-parser'
 import * as fileSystem from 'fs'
-import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { join } from 'path'
@@ -57,11 +57,11 @@ export default class XmlFileLoader implements Loader {
     this.toBeanDefinition = this.toBeanDefinition.bind(this)
   }
 
-  public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
+  public async load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
     const data = await this.loadFile(options.file)
     const result: Xml = fastXmlParser.parse(data.toString(), xmlParserOptions)
 
-    let beanDefinitions: BeanDefinition[] = []
+    let beanDefinitions: DefaultBeanDefinition[] = []
     const beans = result.beans
     if (beans['component-scan'] || beans['context:component-scan']) {
       const moreBeanDefinitions = await this.performScan(beans, basePackage)
@@ -107,8 +107,8 @@ export default class XmlFileLoader implements Loader {
     return options.file && options.file.endsWith('.xml')
   }
 
-  private toBeanDefinition (bean: XmlBean): BeanDefinition {
-    const beanDefinition = new BeanDefinition(bean.attr.id)
+  private toBeanDefinition (bean: XmlBean): DefaultBeanDefinition {
+    const beanDefinition = new DefaultBeanDefinition(bean.attr.id)
     beanDefinition.class = bean.attr.class
     beanDefinition.scope = bean.attr.scope || 'singleton'
     if (bean.attr.type) {
