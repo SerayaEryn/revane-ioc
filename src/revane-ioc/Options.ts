@@ -1,12 +1,10 @@
-import { LoaderOptions, RegexFilter } from '../revane-ioc-core/Options'
+import { LoaderOptions } from '../revane-ioc-core/Options'
 import { Loader } from './RevaneIOC'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
 
 export default class Options {
   public noRedefinition?: boolean
   public basePackage?: string
-  public includeFilters?: RegexFilter[]
-  public excludeFilters?: RegexFilter[]
   public loaderOptions?: LoaderOptions[]
   public plugins?: {
     loaders?: Loader[],

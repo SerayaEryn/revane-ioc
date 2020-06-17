@@ -451,6 +451,26 @@ test('should throw error on getMultiple if not initialized', async (t) => {
   }
 })
 
+test('should throw error on invalid scope', async (t) => {
+  t.plan(2)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/invalidScope') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  try {
+    await revane.initialize()
+  } catch (err) {
+    t.ok(err)
+    t.strictEquals(err.code, 'REV_ERR_INVALID_SCOPE')
+  }
+})
+
 test('should return multiple beans', async (t) => {
   t.plan(2)
 

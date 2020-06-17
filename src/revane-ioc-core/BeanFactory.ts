@@ -84,7 +84,7 @@ export class BeanFactory {
       await bean.postConstruct()
       return bean
     } catch (error) {
-      if (error instanceof DependencyNotFoundError) {
+      if (error instanceof DependencyNotFoundError || error instanceof InvalidScopeError) {
         throw error
       }
       throw new DependencyRegisterError(entry.id, error)
