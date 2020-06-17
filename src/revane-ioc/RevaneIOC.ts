@@ -19,7 +19,8 @@ import {
   Component,
   Controller,
   Scope,
-  Bean
+  Bean,
+  Scheduler
 } from './decorators/Decorators'
 import { ConfigurationContextPlugin } from '../revane-configuration/ConfigurationContextPlugin'
 import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
@@ -29,6 +30,10 @@ import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/Con
 import { ApplicationContext } from '../revane-ioc-core/ApplicationContext'
 import { ConfigurationProperties } from '../revane-configuration/ConfigurationProperties'
 import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy'
+import { Scheduled } from '../revane-scheduler/Scheduled'
+import { SchedulerBeanPostProcessor } from '../revane-scheduler/SchedulerBeanPostProcessor'
+import { SchedulingService } from '../revane-scheduler/SchedulingService'
+import { join } from 'path'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -43,18 +48,22 @@ export {
   Service,
   Component,
   Controller,
+  Scheduler,
   Scope,
   Bean,
   Configuration,
   ConfigurationProperties,
   ContextPlugin,
-  ApplicationContext
+  ApplicationContext,
+  Scheduled
 }
 
 export default class RevaneIOC {
   private revaneCore: RevaneCore
   private options: Options
   private initialized: boolean = false
+  private configuration: RevaneConfiguration
+  private schedulingService: SchedulingService
 
   constructor (options: Options) {
     this.options = options
@@ -67,9 +76,38 @@ export default class RevaneIOC {
     if (!this.options.plugins.contextInitialization) {
       this.options.plugins.contextInitialization = []
     }
+    if (!this.options.scheduling) {
+      this.options.scheduling = { enabled: true }
+    }
+    if (this.options.scheduling.enabled !== true) {
+      this.options.scheduling.enabled = false
+    }
+
+    this.options.profile = this.options.profile || process.env.REVANE_PROFILE
+
+    this.configuration = new RevaneConfiguration(
+      new ConfigurationOptions(
+        this.options.profile,
+        this.configPath(),
+        this.options.configuration.required,
+        this.options.configuration.disabled,
+        [
+          new JsonLoadingStrategy()
+        ]
+      )
+    )
+  }
+
+  private configPath (): string {
+    if (this.options.configuration.directory && this.options.configuration.directory.startsWith('/')) {
+      return this.options.configuration.directory
+    }
+    return join(this.options.basePackage, this.options.configuration.directory || '/config')
   }
 
   public async initialize (): Promise<void> {
+    await this.configuration.init()
+    this.loadOptionsFromConfiguration()
     const coreOptions: CoreOptions = this.prepareCoreOptions(this.options)
     const beanTypeRegistry = this.beanTypeRegistry()
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
@@ -77,6 +115,17 @@ export default class RevaneIOC {
     this.addPlugins()
     await this.revaneCore.initialize()
     this.initialized = true
+  }
+
+  private loadOptionsFromConfiguration () {
+    if (this.configuration.has('revane.scheduling.enabled')) {
+      const schedulerDisabled = this.configuration.getBoolean('revane.scheduling.enabled')
+      this.options.scheduling.enabled = schedulerDisabled
+    }
+    if (this.configuration.has('revane.main.allow-bean-definition-overriding')) {
+      const allowRedefinition = this.configuration.getBoolean('revane.main.allow-bean-definition-overriding')
+      this.options.noRedefinition = !allowRedefinition
+    }
   }
 
   public async get (id: string): Promise<any> {
@@ -100,6 +149,7 @@ export default class RevaneIOC {
   }
 
   public async close (): Promise<void> {
+    await this.schedulingService.close()
     await this.revaneCore.close()
   }
 
@@ -116,30 +166,21 @@ export default class RevaneIOC {
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
     const configOptions: ConfigurationOptions = this.prepareConfigOptions(this.options)
-    const configurationContextPlugin = new ConfigurationContextPlugin(configOptions)
+    const configurationContextPlugin = new ConfigurationContextPlugin(configOptions, this.configuration)
     this.revaneCore.addPlugin('contextInitialization', configurationContextPlugin)
     this.revaneCore.addPlugin('configuration', configurationContextPlugin)
-    const configuration = new RevaneConfiguration(
-      new ConfigurationOptions(
-        this.options.profile,
-        this.options.configuration.directory,
-        this.options.configuration.required,
-        this.options.configuration.disabled,
-        [
-          new JsonLoadingStrategy()
-        ]
-      )
-    )
-    await configuration.init()
     if (!this.options.configuration.disabled) {
       this.revaneCore.addPlugin(
         'beanFactoryPostProcessor',
-        new ConfigurationPropertiesPostProcessor(
-          configuration
-        )
+        new ConfigurationPropertiesPostProcessor(this.configuration)
       )
       this.revaneCore.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
     }
+    this.schedulingService = new SchedulingService()
+    this.revaneCore.addPlugin(
+      'beanFactoryPostProcessor',
+      new SchedulerBeanPostProcessor(this.schedulingService, this.options.scheduling.enabled)
+    )
   }
 
   private addPlugins () {

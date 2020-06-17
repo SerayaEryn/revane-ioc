@@ -8,16 +8,15 @@ export class ConfigurationContextPlugin implements ContextPlugin, ConfigurationP
   private options: ConfigurationOptions
   private configuration?: RevaneConfiguration = null
 
-  constructor (options: ConfigurationOptions) {
+  constructor (options: ConfigurationOptions, configuration: RevaneConfiguration) {
     this.options = options
+    this.configuration = configuration
   }
 
   async plugin (
     beanDefinitions: DefaultBeanDefinition[]
   ): Promise<DefaultBeanDefinition[]> {
     if (beanDefinitions.filter((beanDefinition) => beanDefinition.id === 'configuration').length === 0 && !this.options.disabled) {
-      this.configuration = new RevaneConfiguration(this.options)
-      await this.configuration.init()
       const configuration = new DefaultBeanDefinition('configuration')
       configuration.instance = this.configuration
       configuration.scope = 'singleton'

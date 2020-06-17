@@ -18,4 +18,7 @@ export default class Options {
     required?: boolean,
     disabled?: boolean
   }
+  public scheduling?: {
+    enabled: boolean
+  }
 }

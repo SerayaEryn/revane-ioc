@@ -3,6 +3,7 @@ import { Configuration } from './Configuration'
 import { NoConfigFilesFound } from './NoConfigFilesFound'
 import { KeyNotPresentInConfig } from './KeyNotPresentInConfig'
 import { TypeMismatch } from './TypeMismatch'
+import { all as merge } from 'deepmerge'
 
 export class ConfigurationOptions {
   profile: string
@@ -27,7 +28,7 @@ export class ConfigurationOptions {
 }
 
 export class RevaneConfiguration implements Configuration {
-  private values: object
+  private values: object = {}
   private options: ConfigurationOptions
 
   constructor (options: ConfigurationOptions) {
@@ -36,10 +37,12 @@ export class RevaneConfiguration implements Configuration {
 
   public async init () {
     for (const strategy of this.options.strategies) {
+      let loadedValues = {}
       try {
         const { directory: configDirectory, profile } = this.options
-        this.values = await strategy.load(configDirectory, profile)
-        return
+        loadedValues = await strategy.load(configDirectory, profile)
+        this.values = merge([ this.values, loadedValues ])
+        loadedValues = {}
       } catch (error) {
         if (error.code !== 'REV_ERR_CONFIG_FILE_NOT_FOUND') {
           throw error

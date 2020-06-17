@@ -10,12 +10,9 @@ test('should add configuration properties', async (t) => {
     loaderOptions: [
       { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties') }
     ],
-    basePackage: path.join(__dirname, '../../../testdata'),
+    basePackage: path.join(__dirname, '../../../testdata/configurationProperties'),
     componentScan: false,
-    configuration: {
-      disabled: false,
-      directory: path.join(__dirname, '../../../testdata/configurationProperties/testconfig')
-    },
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties/testconfig') },
     profile: 'test'
   }
   const revane = new Revane(options)
@@ -36,12 +33,9 @@ test('should add configuration properties #2', async (t) => {
     loaderOptions: [
       { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties2') }
     ],
-    basePackage: path.join(__dirname, '../../../testdata'),
+    basePackage: path.join(__dirname, '../../../testdata/configurationProperties2'),
     componentScan: false,
-    configuration: {
-      disabled: false,
-      directory: path.join(__dirname, '../../../testdata/configurationProperties2/testconfig')
-    },
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties2/testconfig') },
     profile: 'test'
   }
   const revane = new Revane(options)
