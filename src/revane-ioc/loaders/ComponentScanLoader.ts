@@ -16,6 +16,7 @@ import {
 } from '../decorators/Symbols'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { Property } from '../../revane-ioc-core/Property'
+import { ModuleLoadError } from './ModuleLoadError'
 
 const filterByType = {
   regex: RegexFilter
@@ -28,24 +29,21 @@ export default class ComponentScanLoader implements Loader {
     const excludeFilters = convert(options.excludeFilters || [])
 
     return recursiveReaddir(path)
+      .then(flat)
+      .then((files: string[]) => filterByJavascriptFiles(files))
       .then((files: string[]) => {
-        const flattenFiles = flat(files)
-        let filteredFiles = filterByJavascriptFiles(flattenFiles)
-        filteredFiles = this.applyFilters(filteredFiles, includeFilters, excludeFilters)
+        const filteredFiles = this.applyFilters(files, includeFilters, excludeFilters)
         const result = []
         for (const file of filteredFiles) {
           let module1
           try {
             module1 = getClazz(file)
           } catch (error) {
-            // skip file
-            continue
+            throw new ModuleLoadError(file)
           }
           const clazz = file.replace(basePackage, '.')
-          if (module1 && Reflect.getMetadata(idSym, module1)) {
-            const beanDefinition = getBeanDefinition(module1, clazz)
-            result.push(beanDefinition)
-          }
+          const beanDefinition = getBeanDefinition(module1, clazz)
+          result.push(beanDefinition)
         }
         return result
       })

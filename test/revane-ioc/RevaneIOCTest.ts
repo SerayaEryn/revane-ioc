@@ -497,7 +497,7 @@ test('should read json config file, component scan and register beans', async (t
     loaderOptions: [
       { file: path.join(__dirname, '../../../testdata/json/config.json') },
       { file: path.join(__dirname, '../../../testdata/xml/config2.xml') },
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata') }
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/scan') }
     ],
     configuration: { disabled: true },
     profile: 'test'
@@ -527,7 +527,7 @@ test('should read json config file, component scan and register beans', async (t
       },
       {
         componentScan: true,
-        basePackage: path.join(__dirname, '../../../testdata')
+        basePackage: path.join(__dirname, '../../../testdata/scan')
       }
     ],
     basePackage: path.join(__dirname, '../../../testdata'),
@@ -555,7 +555,7 @@ test('should get components', async (t) => {
     loaderOptions: [
       { file: path.join(__dirname, '../../../testdata/json/config.json') },
       { file: path.join(__dirname, '../../../testdata/xml/config2.xml') },
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata') }
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/scan') }
     ],
     configuration: { disabled: true },
     profile: 'test'
@@ -569,5 +569,5 @@ test('should get components', async (t) => {
   t.ok(beans[2].test6)
   t.ok(beans[3].arg)
   t.ok(beans[4])
-  t.strictEquals(7, beans.length)
+  t.strictEquals(5, beans.length)
 })

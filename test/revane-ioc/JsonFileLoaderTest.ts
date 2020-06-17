@@ -41,6 +41,14 @@ test('should reject on error', (t) => {
     })
 })
 
+test('should return correct type', (t) => {
+  t.plan(1)
+
+  const jsonFileResolver = new JsonFileLoader()
+
+  t.equals(jsonFileResolver.type(), 'json')
+})
+
 test('isRelevant', t => {
   t.plan(2)
 

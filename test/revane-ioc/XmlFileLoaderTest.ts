@@ -66,86 +66,13 @@ test('should trigger scan from xml #2', (t) => {
   t.plan(1)
 
   const file = path.join(__dirname, '../../../testdata/xml/config6.xml')
-  const basePackage = path.join(__dirname, '../../../testdata')
+  const basePackage = path.join(__dirname, '../../../testdata/scan')
 
   const xmlFileResolver = new XmlFileLoader()
 
   return xmlFileResolver.load({ file, basePackage }, basePackage)
     .then((beanDefinitions) => {
-      t.deepEqual(beanDefinitions, [
-        {
-          dependencies: [],
-          id: 'scan1',
-          class: './scan1.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan2',
-          class: './scan2.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan3',
-          class: './scan3.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan4',
-          class: './scan4.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'test7',
-          class: './test7.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'service'
-        },
-        {
-          dependencies: [],
-          id: 'test8',
-          class: './test8.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'service'
-        },
-        {
-          dependencies: [],
-          id: 'test9',
-          class: './test9.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'controller'
-        },
-        {
-          dependencies: [],
-          id: 'scan5',
-          class: './configurationProperties/configurationProperties.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan56',
-          class: './configurationProperties2/configurationProperties.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'component'
-        }
-      ])
+      t.deepEqual(beanDefinitions.length, 4)
     })
 })
 
@@ -153,85 +80,20 @@ test('should trigger scan from xml', (t) => {
   t.plan(1)
 
   const file = path.join(__dirname, '../../../testdata/xml/config5.xml')
-  const basePackage = path.join(__dirname, '../../../testdata')
+  const basePackage = path.join(__dirname, '../../../testdata/scan')
 
   const xmlFileResolver = new XmlFileLoader()
 
   return xmlFileResolver.load({ file, basePackage }, basePackage)
     .then((beanDefinitions) => {
-      t.deepEqual(beanDefinitions, [
-        {
-          dependencies: [],
-          id: 'scan1',
-          class: './scan1.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan2',
-          class: './scan2.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan3',
-          class: './scan3.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan4',
-          class: './scan4.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'test7',
-          class: './test7.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'service'
-        },
-        {
-          dependencies: [],
-          id: 'test8',
-          class: './test8.js',
-          dependencyIds: [ { ref: 'test6' } ],
-          scope: 'singleton',
-          type: 'service'
-        },
-        {
-          dependencies: [],
-          id: 'test9',
-          class: './test9.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'controller'
-        },
-        {
-          dependencies: [],
-          id: 'scan5',
-          class: './configurationProperties/configurationProperties.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'component'
-        },
-        {
-          dependencies: [],
-          id: 'scan56',
-          class: './configurationProperties2/configurationProperties.js',
-          dependencyIds: [],
-          scope: 'singleton',
-          type: 'component'
-        }
-      ])
+      t.deepEqual(beanDefinitions.length, 4)
     })
+})
+
+test('should return correct type', (t) => {
+  t.plan(1)
+
+  const xmlFileLoader = new XmlFileLoader()
+
+  t.equals(xmlFileLoader.type(), 'xml')
 })

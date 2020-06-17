@@ -1,6 +1,6 @@
 'use strict';
 
-const Component = require('..').Component;
+const Component = require('../../bin/src/revane-ioc/RevaneIOC').Component;
 
 class Scan3 {
   constructor(arg) {
