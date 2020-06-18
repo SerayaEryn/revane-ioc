@@ -21,7 +21,7 @@
     "url": "git+https://github.com/SerayaEryn/revane-ioc.git"
   },
   "dependencies": {
-    "acorn": "^6.4.1",
+    "acorn": "^7.3.1",
     "acorn-class-fields": "^0.3.1",
     "array.prototype.flat": "^1.2.1",
     "cron": "^1.8.2",
