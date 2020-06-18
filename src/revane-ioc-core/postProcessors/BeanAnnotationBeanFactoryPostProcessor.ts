@@ -6,6 +6,7 @@ import SingletonBean from '../../revane-ioc/bean/SingletonBean'
 export class BeanAnnotationBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
   async postProcess (beanDefinition: DefaultBeanDefinition, bean: Bean): Promise<Bean[]> {
     const classConstructor = beanDefinition.classConstructor
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const beans = classConstructor.prototype ? Reflect.getMetadata('beans', classConstructor.prototype) || [] : []
     const createdBeans: Bean[] = []
     for (const bean of beans) {

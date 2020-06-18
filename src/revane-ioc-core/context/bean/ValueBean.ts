@@ -2,7 +2,7 @@ import Bean from './Bean'
 
 export default class ValueBean implements Bean {
   public scope: string = 'value'
-  private value: any
+  private readonly value: any
 
   constructor (value: any) {
     this.value = value

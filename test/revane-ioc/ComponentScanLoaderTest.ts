@@ -1,8 +1,9 @@
 import * as path from 'path'
 import test from 'ava'
 import ComponentScanLoader from '../../src/revane-ioc/loaders/ComponentScanLoader'
+import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 
-test('should do component scan without filters', (t) => {
+test('should do component scan without filters', async (t) => {
   t.plan(8)
 
   const basePackage = path.join(__dirname, '../../../testdata/scan')
@@ -12,7 +13,7 @@ test('should do component scan without filters', (t) => {
   }
 
   const componentScanResolver = new ComponentScanLoader()
-  return componentScanResolver.load(options, basePackage)
+  return await componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 4)
       const scan1 = findDefinition(beanDefinitions, 'scan1')
@@ -29,9 +30,7 @@ test('should do component scan without filters', (t) => {
     })
 })
 
-test('should do component scan with exclude filter', (t) => {
-  t.plan(1)
-
+test('should do component scan with exclude filter', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/scan')
   const options = {
     basePackage,
@@ -43,15 +42,13 @@ test('should do component scan with exclude filter', (t) => {
   }
 
   const componentScanLoader = new ComponentScanLoader()
-  return componentScanLoader.load(options, basePackage)
+  return await componentScanLoader.load(options, basePackage)
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 0)
     })
 })
 
 test('should return correct type', (t) => {
-  t.plan(1)
-
   const componentScanLoader = new ComponentScanLoader()
 
   t.is(componentScanLoader.type(), 'scan')
@@ -83,7 +80,7 @@ test('should throw error on undefined module', async (t) => {
   }, { code: 'REV_ERR_MODULE_LOAD_ERROR' })
 })
 
-test('should do component scan with include filter', (t) => {
+test('should do component scan with include filter', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/scan')
   const options = {
     basePackage,
@@ -95,13 +92,13 @@ test('should do component scan with include filter', (t) => {
   }
 
   const componentScanResolver = new ComponentScanLoader()
-  return componentScanResolver.load(options, basePackage)
+  return await componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 4)
     })
 })
 
-function findDefinition (definitions, name) {
+function findDefinition (definitions, name): BeanDefinition {
   for (const definition of definitions) {
     if (definition.id === name) {
       return definition

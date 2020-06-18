@@ -4,24 +4,21 @@ import Loader from './Loader'
 import { BeanDefinition } from './BeanDefinition'
 
 export default class BeanLoader {
-  private beanResolverRegistry: DefaultBeanLoaderRegistry
-  private loaders: Loader[]
+  private readonly beanResolverRegistry: DefaultBeanLoaderRegistry
+  private readonly loaders: Loader[]
 
   constructor (loaders: Loader[]) {
     this.loaders = loaders
     this.beanResolverRegistry = new DefaultBeanLoaderRegistry()
   }
 
-  public getBeanDefinitions (options: Options): Promise<BeanDefinition[][]> {
-    try {
-      this.prepareBeanResolverRegistry(options)
-      return this.beanResolverRegistry.get(options.loaderOptions, options.basePackage)
-    } catch (err) {
-      return Promise.reject(err)
-    }
+  public async getBeanDefinitions (options: Options): Promise<BeanDefinition[][]> {
+    this.prepareBeanResolverRegistry(options)
+    return await this.beanResolverRegistry.get(options.loaderOptions, options.basePackage)
   }
 
   private prepareBeanResolverRegistry (options: Options): void {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     for (const optionsForResolver of options.loaderOptions || []) {
       for (const loader of this.loaders) {
         if (loader.isRelevant(optionsForResolver)) {

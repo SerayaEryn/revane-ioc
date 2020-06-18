@@ -6,10 +6,10 @@ import Loader from '../../revane-ioc-core/Loader'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 
 export default class JsonFileLoader implements Loader {
-  public load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
-    return new Promise((resolve, reject) => {
+  public async load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
+    return await new Promise((resolve, reject) => {
       fileSystem.readFile(options.file, (error, data) => {
-        if (error) {
+        if (error != null) {
           reject(error)
         } else {
           resolve(JSON.parse(data.toString()))
@@ -20,6 +20,7 @@ export default class JsonFileLoader implements Loader {
         return beanDefinitions.map((rawBeanDefinition) => {
           const beanDefinition = new DefaultBeanDefinition(rawBeanDefinition.id)
           beanDefinition.class = rawBeanDefinition.class
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           beanDefinition.dependencyIds = rawBeanDefinition.properties || []
           return beanDefinition
         })
@@ -27,7 +28,7 @@ export default class JsonFileLoader implements Loader {
   }
 
   public isRelevant (options: LoaderOptions): boolean {
-    return options.file && options.file.endsWith('.json')
+    return options.file?.endsWith('.json')
   }
 
   public type (): string {

@@ -13,12 +13,23 @@ function createConfigurationPropertiesDecorator () {
       const properties: string[] = tree.body[0].body.body
         .filter((node) => node.type === 'FieldDefinition')
         .map((node) => node.key.name)
-      Reflect.defineMetadata(configurationPropertiesSym, {
-        prefix: options.prefix,
-        properties
-      }, Class)
+      Reflect.defineMetadata(
+        configurationPropertiesSym,
+        new ConfigurationPropertiesData(options.prefix, properties),
+        Class
+      )
       return Class
     }
+  }
+}
+
+export class ConfigurationPropertiesData {
+  public prefix: string
+  public properties: string[]
+
+  constructor (prefix: string, properties: string[]) {
+    this.prefix = prefix
+    this.properties = properties
   }
 }
 

@@ -4,7 +4,7 @@ import { Configuration } from './Configuration'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 
 export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProcessor {
-  private configuration: Configuration
+  private readonly configuration: Configuration
 
   constructor (configuration: Configuration) {
     this.configuration = configuration
@@ -15,19 +15,21 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
       const configurationPropertyValues = {}
       if (this.configuration != null) {
         const configurationProperties = beanDefinition.configurationProperties
-        if (configurationProperties) {
+        if (configurationProperties != null) {
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           for (const configurationProperty of configurationProperties.properties || []) {
-            const key = configurationProperties.prefix + '.' + configurationProperty
+            const key = `${configurationProperties.prefix}.${configurationProperty}`
             if (this.configuration.has(key)) {
               configurationPropertyValues[configurationProperty] = this.configuration.get(key)
             }
           }
         }
       }
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       for (const key of Object.keys(configurationPropertyValues || {})) {
         instance[key] = configurationPropertyValues[key]
       }
     })
-    return [ bean ]
+    return [bean]
   }
 }

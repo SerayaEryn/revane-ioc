@@ -1,9 +1,8 @@
 export class ConfigFileNotFound extends Error {
-  public code: string
+  public code: string = 'REV_ERR_CONFIG_FILE_NOT_FOUND'
 
-  constructor (file) {
+  constructor (file: string) {
     super(`${file} not found`)
-    this.code = 'REV_ERR_CONFIG_FILE_NOT_FOUND'
     Error.captureStackTrace(this, ConfigFileNotFound)
   }
 }

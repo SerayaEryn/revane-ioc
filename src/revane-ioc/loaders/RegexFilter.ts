@@ -3,7 +3,7 @@
 import Filter from './Filter'
 
 export default class RegexFilter implements Filter {
-  private regex: RegExp
+  private readonly regex: RegExp
 
   constructor (options: any) {
     this.regex = new RegExp(options.regex)

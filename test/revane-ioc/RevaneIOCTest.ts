@@ -1,6 +1,6 @@
 import * as path from 'path'
 import test from 'ava'
-import Revane, { LoaderOptions } from '../../src/revane-ioc/RevaneIOC'
+import Revane, { LoaderOptions, BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 import Loader from '../../src/revane-ioc-core/Loader'
 import DefaultBeanDefinition from '../../src/revane-ioc-core/DefaultBeanDefinition'
 
@@ -143,17 +143,17 @@ test('should use parent context', async (t) => {
   t.truthy(bean12)
 })
 
-test('should use loader from Plugin', (t) => {
-  t.plan(1)
-
+test('should use loader from Plugin', async (t) => {
   class FakeLoader implements Loader {
     type (): string {
       return 'json'
     }
+
     isRelevant (options: LoaderOptions): boolean {
       return true
     }
-    load (): Promise<DefaultBeanDefinition[]> {
+
+    async load (): Promise<DefaultBeanDefinition[]> {
       throw new Error('Method not implemented.')
     }
   }
@@ -165,13 +165,13 @@ test('should use loader from Plugin', (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     plugins: {
-      loaders: [ new FakeLoader() ]
+      loaders: [new FakeLoader()]
     },
     configuration: { disabled: true },
     profile: 'test'
   }
   const revane = new Revane(options)
-  return revane.initialize()
+  return await revane.initialize()
     .catch((error) => {
       t.is(error.message, 'Method not implemented.')
     })
@@ -303,7 +303,7 @@ test('should tearDown', async (t) => {
   t.truthy(bean.destroyed)
 })
 
-test('should read not reject on missing paths', (t) => {
+test('should read not reject on missing paths', async (t) => {
   t.plan(1)
 
   const options = {
@@ -312,15 +312,13 @@ test('should read not reject on missing paths', (t) => {
     profile: 'test'
   }
   const revane = new Revane(options)
-  return revane.initialize()
+  return await revane.initialize()
     .then(() => {
       t.pass()
     })
 })
 
-test('should read json config file and reject on missing dependency', (t) => {
-  t.plan(2)
-
+test('should read json config file and reject on missing dependency', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
@@ -330,16 +328,14 @@ test('should read json config file and reject on missing dependency', (t) => {
     profile: 'test'
   }
   const revane = new Revane(options)
-  return revane.initialize()
+  return await revane.initialize()
     .catch((err) => {
       t.truthy(err)
       t.is(err.code, 'REV_ERR_DEPENDENCY_NOT_FOUND')
     })
 })
 
-test('should reject error on unknown configuration file ending', (t) => {
-  t.plan(2)
-
+test('should reject error on unknown configuration file ending', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
@@ -349,25 +345,27 @@ test('should reject error on unknown configuration file ending', (t) => {
     profile: 'test'
   }
   const revane = new Revane(options)
-  return revane.initialize()
+  return await revane.initialize()
     .catch((err) => {
       t.truthy(err)
       t.is(err.code, 'REV_ERR_UNKNOWN_ENDING')
     })
 })
 
-test('should not reject on custom file ending from loader', (t) => {
-  t.plan(1)
+test('should not reject on custom file ending from loader', async (t) => {
   class TestLoader implements Loader {
+    static type = 'test'
+
     type (): string {
       return 'test'
     }
+
     isRelevant (options: LoaderOptions): boolean {
-      return options.file && options.file.endsWith('test')
+      return options.file?.endsWith('test')
     }
-    static type = 'test'
-    load () {
-      return Promise.resolve([])
+
+    async load (): Promise<BeanDefinition[]> {
+      return []
     }
   }
 
@@ -376,12 +374,12 @@ test('should not reject on custom file ending from loader', (t) => {
     loaderOptions: [
       { file: path.join(__dirname, '../../../testdata/json/config2.test') }
     ],
-    plugins: { loaders: [ new TestLoader() ] },
+    plugins: { loaders: [new TestLoader()] },
     configuration: { disabled: true },
     profile: 'test'
   }
   const revane = new Revane(options)
-  return revane.initialize()
+  return await revane.initialize()
     .then(() => {
       t.pass()
     })
@@ -537,7 +535,7 @@ test('should return multiple beans', async (t) => {
   }
   const revane = new Revane(options)
   await revane.initialize()
-  const [ json1, json2 ] = await revane.getMultiple(['json1', 'json2'])
+  const [json1, json2] = await revane.getMultiple(['json1', 'json2'])
   t.truthy(json1)
   t.truthy(json2)
 })

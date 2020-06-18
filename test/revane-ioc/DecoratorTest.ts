@@ -6,12 +6,9 @@ import {
 } from '../../src/revane-ioc/decorators/Symbols'
 
 test('should add scope and service meta data', t => {
-  class TestClass {}
-
-  Scope('prototype')(
-  Service()(
-  TestClass
-  ))
+  @Scope('prototype')
+  @Service()
+  class TestClass {} // eslint-disable-line
 
   t.is(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
   t.is(Reflect.getMetadata(idSym, TestClass), 'testClass')
@@ -19,12 +16,9 @@ test('should add scope and service meta data', t => {
 })
 
 test('should add scope and service meta data #2', t => {
-  class TestClass {}
-
-  Scope('prototype')(
-  Service({ id: 'test' })(
-  TestClass
-  ))
+  @Scope('prototype')
+  @Service({ id: 'test' })
+  class TestClass {} // eslint-disable-line
 
   t.is(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
   t.is(Reflect.getMetadata(idSym, TestClass), 'test')

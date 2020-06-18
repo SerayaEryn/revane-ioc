@@ -1,5 +1,5 @@
 export type RegexFilter = {
-  type: string,
+  type: string
   regex: string
 }
 

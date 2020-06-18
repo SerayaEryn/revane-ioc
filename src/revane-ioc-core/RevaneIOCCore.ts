@@ -17,18 +17,18 @@ import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor
 
 export default class RevaneIOCCore {
   protected options: Options
-  private context: ApplicationContext = new DefaultApplicationContext()
-  private beanTypeRegistry: BeanTypeRegistry
-  private plugins: Map<string, (Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor)[]> = new Map()
+  private readonly context: ApplicationContext = new DefaultApplicationContext()
+  private readonly beanTypeRegistry: BeanTypeRegistry
+  private readonly plugins: Map<string, Array<Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor>> = new Map()
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
     this.beanTypeRegistry = beanTypeRegistry
   }
 
-  public addPlugin (name: string, plugin: Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor) {
+  public addPlugin (name: string, plugin: Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor): void {
     let pluginsByName = this.plugins.get(name)
-    if (!pluginsByName) {
+    if (pluginsByName == null) {
       pluginsByName = []
     }
     pluginsByName.push(plugin)
@@ -41,6 +41,7 @@ export default class RevaneIOCCore {
         new ScopeBeanFactoryPreProcessor(this.options),
         new PathBeanFactoryPreProcessor(this.options),
         new ModuleLoaderBeanFactoryPreProcessor(),
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         ...(this.plugins.get('beanFactoryPreProcessor') || []) as BeanFactoryPreProcessor[]
       ],
       [
@@ -59,11 +60,11 @@ export default class RevaneIOCCore {
   }
 
   public async get (id: string): Promise<any> {
-    return this.context.get(id)
+    return await this.context.get(id)
   }
 
   public async has (id: string): Promise<boolean> {
-    return this.context.has(id)
+    return await this.context.has(id)
   }
 
   public async getMultiple (ids: string[]): Promise<any[]> {
@@ -76,7 +77,7 @@ export default class RevaneIOCCore {
   }
 
   public async getByType (type: string): Promise<any[]> {
-    return this.context.getByType(type)
+    return await this.context.getByType(type)
   }
 
   public async close (): Promise<void> {

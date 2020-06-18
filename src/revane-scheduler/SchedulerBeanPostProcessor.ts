@@ -6,8 +6,8 @@ import { NoCronPatternProvided } from './NoCronPatternProvided'
 import { InvalidCronPatternProvided } from './InvalidCronPatternProvided'
 
 export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
-  private schedulingService: SchedulingService
-  private enabled: boolean
+  private readonly schedulingService: SchedulingService
+  private readonly enabled: boolean
 
   constructor (schedulingService: SchedulingService, enabled: boolean) {
     this.schedulingService = schedulingService
@@ -15,10 +15,10 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
   }
 
   public async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<Bean[]> {
-    if (this.enabled && beanDefinition.classConstructor.prototype) {
+    if (this.enabled && beanDefinition.classConstructor.prototype != null) {
       const scheduled = Reflect.getMetadata('scheduled', beanDefinition.classConstructor.prototype)
-      if (scheduled) {
-        if (!scheduled.cronPattern) {
+      if (scheduled != null) {
+        if (scheduled.cronPattern == null) {
           throw new NoCronPatternProvided()
         }
         if (typeof scheduled.cronPattern !== 'string') {
@@ -29,6 +29,6 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
         this.schedulingService.schedule(scheduled.cronPattern, functionToSchedule)
       }
     }
-    return [ bean ]
+    return [bean]
   }
 }

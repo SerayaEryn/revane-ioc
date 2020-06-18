@@ -1,9 +1,9 @@
 import { Loader, LoaderOptions, BeanDefinition } from '../revane-ioc/RevaneIOC'
 import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
-import { ConfigurationOptions, RevaneConfiguration } from './RevaneConfiguration'
+import { RevaneConfiguration } from './RevaneConfiguration'
 
 export class ConfigurationLoader implements Loader {
-  private configuration?: RevaneConfiguration = null
+  private readonly configuration?: RevaneConfiguration = null
 
   constructor (configuration: RevaneConfiguration) {
     this.configuration = configuration
@@ -13,7 +13,7 @@ export class ConfigurationLoader implements Loader {
     const configuration = new DefaultBeanDefinition('configuration')
     configuration.instance = this.configuration
     configuration.scope = 'singleton'
-    return [ configuration ]
+    return [configuration]
   }
 
   public type (): string {

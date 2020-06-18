@@ -5,6 +5,7 @@ import { dependenciesSym, idSym, typeSym } from './Symbols'
 
 export function createComponentDecorator (type: string) {
   return function decoratoteComponent (options?: Options | string | any) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (typeof options === 'string' || options === undefined || options.id || options.dependencies) {
       return function define (Class) {
         let opts: Options
@@ -13,13 +14,14 @@ export function createComponentDecorator (type: string) {
           id = options
           opts = new Options()
         } else {
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           opts = options || new Options()
           id = opts.id
         }
 
         const tree = getSyntaxTree(Class)
 
-        if (!id) {
+        if (id == null) {
           id = getId(tree)
         }
         const dependencies = getDependencies(tree, opts)
@@ -41,18 +43,18 @@ export function createComponentDecorator (type: string) {
   }
 }
 
-function getSyntaxTree (Class) {
+function getSyntaxTree (Class): any {
   const functionAsString = Class.toString()
   return Parser.extend(classFields).parse(functionAsString)
 }
 
-function getId (tree) {
-  const className = tree.body[0].id.name
+function getId (tree): string {
+  const className: string = tree.body[0].id.name
   return className.substring(0, 1).toLowerCase() + className.substring(1)
 }
 
-function getDependencies (tree, options: Options) {
-  if (options.dependencies) {
+function getDependencies (tree, options: Options): string[] {
+  if (options.dependencies != null) {
     return options.dependencies
   }
 
@@ -65,6 +67,6 @@ function getDependencies (tree, options: Options) {
   return []
 }
 
-function isConstructor (funktion) {
-  return funktion.key && funktion.key.name === 'constructor'
+function isConstructor (funktion): boolean {
+  return funktion.key?.name === 'constructor'
 }

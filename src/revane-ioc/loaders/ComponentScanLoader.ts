@@ -17,15 +17,18 @@ import {
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { Property } from '../../revane-ioc-core/Property'
 import { ModuleLoadError } from './ModuleLoadError'
+import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
 
 const filterByType = {
   regex: RegexFilter
 }
 
 export default class ComponentScanLoader implements Loader {
-  public load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
+  public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
     const path = options.basePackage
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const includeFilters = convert(options.includeFilters || [])
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const excludeFilters = convert(options.excludeFilters || [])
 
     return recursiveReaddir(path)
@@ -49,7 +52,7 @@ export default class ComponentScanLoader implements Loader {
       })
   }
 
-  public isRelevant (options: LoaderOptions) {
+  public isRelevant (options: LoaderOptions): boolean {
     return options.componentScan
   }
 
@@ -73,8 +76,8 @@ export default class ComponentScanLoader implements Loader {
 }
 
 function getClazz (file: string): any {
-  let module1 = require(file)
-  if (module1.default) {
+  const module1: any = require(file) // eslint-disable-line
+  if (module1.default != null) {
     return module1.default
   }
   return module1
@@ -83,6 +86,7 @@ function getClazz (file: string): any {
 function getBeanDefinition (module1, clazz): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
   const beanDefinition = new DefaultBeanDefinition(id)

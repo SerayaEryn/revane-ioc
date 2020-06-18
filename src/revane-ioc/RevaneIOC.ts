@@ -34,6 +34,7 @@ import { SchedulerBeanPostProcessor } from '../revane-scheduler/SchedulerBeanPos
 import { SchedulingService } from '../revane-scheduler/SchedulingService'
 import { join } from 'path'
 import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader'
+import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -62,27 +63,28 @@ export default class RevaneIOC {
   private revaneCore: RevaneCore
   private options: Options
   private initialized: boolean = false
-  private configuration: RevaneConfiguration
+  private readonly configuration: RevaneConfiguration
   private schedulingService: SchedulingService
 
   constructor (options: Options) {
     this.options = options
-    if (!this.options.plugins) {
+    if (this.options.plugins == null) {
       this.options.plugins = {}
     }
-    if (!this.options.plugins.loaders) {
+    if (this.options.plugins.loaders == null) {
       this.options.plugins.loaders = []
     }
-    if (!this.options.scheduling) {
+    if (this.options.scheduling == null) {
       this.options.scheduling = { enabled: true }
     }
-    if (this.options.scheduling.enabled !== true) {
+    if (!this.options.scheduling.enabled) {
       this.options.scheduling.enabled = false
     }
     if (this.options.noRedefinition === undefined) {
       this.options.noRedefinition = true
     }
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.options.profile = this.options.profile || process.env.REVANE_PROFILE
 
     this.configuration = new RevaneConfiguration(
@@ -99,9 +101,10 @@ export default class RevaneIOC {
   }
 
   private configPath (): string {
-    if (this.options.configuration.directory && this.options.configuration.directory.startsWith('/')) {
+    if (this.options.configuration.directory?.startsWith('/')) {
       return this.options.configuration.directory
     }
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     return join(this.options.basePackage, this.options.configuration.directory || '/config')
   }
 
@@ -117,7 +120,7 @@ export default class RevaneIOC {
     this.initialized = true
   }
 
-  private loadOptionsFromConfiguration () {
+  private loadOptionsFromConfiguration (): void {
     if (this.configuration.has('revane.scheduling.enabled')) {
       const schedulerDisabled = this.configuration.getBoolean('revane.scheduling.enabled')
       this.options.scheduling.enabled = schedulerDisabled
@@ -130,22 +133,22 @@ export default class RevaneIOC {
 
   public async get (id: string): Promise<any> {
     this.checkIfInitialized()
-    return this.revaneCore.get(id)
+    return await this.revaneCore.get(id)
   }
 
   public async has (id: string): Promise<boolean> {
     this.checkIfInitialized()
-    return this.revaneCore.has(id)
+    return await this.revaneCore.has(id)
   }
 
   public async getMultiple (ids: string[]): Promise<any[]> {
     this.checkIfInitialized()
-    return this.revaneCore.getMultiple(ids)
+    return await this.revaneCore.getMultiple(ids)
   }
 
   public async getByType (type: string): Promise<any[]> {
     this.checkIfInitialized()
-    return this.revaneCore.getByType(type)
+    return await this.revaneCore.getByType(type)
   }
 
   public async close (): Promise<void> {
@@ -161,12 +164,15 @@ export default class RevaneIOC {
     return this.revaneCore.getContext()
   }
 
-  private async addDefaultPlugins () {
+  private async addDefaultPlugins (): Promise<void> {
     if (!this.options.configuration.disabled) {
       this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
     }
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
     if (!this.options.configuration.disabled) {
       this.revaneCore.addPlugin(
@@ -182,7 +188,7 @@ export default class RevaneIOC {
     )
   }
 
-  private addPlugins () {
+  private addPlugins (): void {
     for (const loader of this.options.plugins.loaders) {
       if (!['xml', 'json', 'scan'].includes(loader.type())) {
         this.revaneCore.addPlugin('loader', loader)
@@ -199,7 +205,7 @@ export default class RevaneIOC {
     return null
   }
 
-  private beanTypeRegistry () {
+  private beanTypeRegistry (): BeanTypeRegistry {
     const beanTypeRegistry = new DefaultBeanTypeRegistry()
     beanTypeRegistry.register(SingletonBean)
     beanTypeRegistry.register(PrototypeBean)
@@ -208,6 +214,7 @@ export default class RevaneIOC {
 
   private prepareCoreOptions (options: Options): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     coreOptions.loaderOptions = options.loaderOptions || []
     this.checkForUnknownEndings(coreOptions.loaderOptions)
 
@@ -225,7 +232,7 @@ export default class RevaneIOC {
       new XmlFileLoader(), new JsonFileLoader(), new ComponentScanLoader()
     ].concat(this.options.plugins.loaders)
     for (const file of files) {
-      const relevant: Array<boolean> = []
+      const relevant: boolean[] = []
       for (const loader of loaders) {
         relevant.push(loader.isRelevant(file))
       }

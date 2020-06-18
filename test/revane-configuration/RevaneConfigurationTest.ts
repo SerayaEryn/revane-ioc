@@ -10,7 +10,7 @@ test('Should load values', async (t) => {
     '.',
     false,
     false,
-    [ testLoadingStrategy ]
+    [testLoadingStrategy]
   ))
   await config.init()
   t.true(config.getBoolean('test.bool'))
@@ -62,7 +62,7 @@ test('Should pass error from strategy', async (t) => {
     '.',
     true,
     false,
-    [ new FailingLoadingStrategy() ]
+    [new FailingLoadingStrategy()]
   ))
   try {
     await config.init()
@@ -72,19 +72,19 @@ test('Should pass error from strategy', async (t) => {
 })
 
 class TestLoadingStrategy implements LoadingStrategy {
-  load (configDirectory: string, profile: string): Promise<object> {
-    return Promise.resolve({
+  async load (configDirectory: string, profile: string): Promise<object> {
+    return {
       test: {
         int: 42,
         str: 'test',
         bool: true
       }
-    })
+    }
   }
 }
 
 class FailingLoadingStrategy implements LoadingStrategy {
-  load (configDirectory: string, profile: string): Promise<object> {
-    return Promise.reject(new Error('boooom'))
+  async load (configDirectory: string, profile: string): Promise<object> {
+    throw new Error('boooom')
   }
 }

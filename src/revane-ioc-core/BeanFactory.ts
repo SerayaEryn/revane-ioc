@@ -13,12 +13,11 @@ import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
 
 export class BeanFactory {
-  private preProcessors: BeanFactoryPreProcessor[]
-  private postProcessors: BeanFactoryPostProcessor[]
-  private context: DefaultApplicationContext
-  private beanTypeRegistry: BeanTypeRegistry
-  private options: Options
-  private plugins: Map<string, any>
+  private readonly preProcessors: BeanFactoryPreProcessor[]
+  private readonly postProcessors: BeanFactoryPostProcessor[]
+  private readonly context: DefaultApplicationContext
+  private readonly beanTypeRegistry: BeanTypeRegistry
+  private readonly options: Options
 
   constructor (
     preProcessors: BeanFactoryPreProcessor[],
@@ -33,7 +32,6 @@ export class BeanFactory {
     this.context = context
     this.beanTypeRegistry = beanTypeRegistry
     this.options = options
-    this.plugins = plugins
   }
 
   async process (beanDefinitions: BeanDefinition[]): Promise<void> {
@@ -45,7 +43,7 @@ export class BeanFactory {
     const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
     for (const preProcessedBeanDefinition of allPreProcessedBeanDefinitions) {
       const exitingBeanDefininaton = processedBeanDefinitions.get(preProcessedBeanDefinition.id)
-      if (exitingBeanDefininaton && this.options.noRedefinition) {
+      if (exitingBeanDefininaton != null && this.options.noRedefinition) {
         throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
       }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
@@ -55,7 +53,7 @@ export class BeanFactory {
     }
   }
 
-  private async postProcess (bean: Bean, beanDefinition: BeanDefinition) {
+  private async postProcess (bean: Bean, beanDefinition: BeanDefinition): Promise<Bean[]> {
     let postProcessedBeanDefinitions: Bean[] = []
     for (const postProcessor of this.postProcessors) {
       const postProcessed = await postProcessor.postProcess(beanDefinition, bean)
@@ -65,7 +63,7 @@ export class BeanFactory {
   }
 
   private async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
-    let preProcessedBeanDefinitions: BeanDefinition[] = [ beanDefinition ]
+    let preProcessedBeanDefinitions: BeanDefinition[] = [beanDefinition]
     for (const preProcessor of this.preProcessors) {
       let arr: BeanDefinition[] = []
       for (const preProcessedBeanDefinition of preProcessedBeanDefinitions) {
@@ -95,8 +93,8 @@ export class BeanFactory {
     beanDefinitions: BeanDefinition[]
   ): Promise<Bean> {
     const BeanForScope = this.beanTypeRegistry.get(entry.scope)
-    if (BeanForScope) {
-      return this.createBeanForScope(BeanForScope, entry, beanDefinitions)
+    if (BeanForScope != null) {
+      return await this.createBeanForScope(BeanForScope, entry, beanDefinitions)
     }
     throw new InvalidScopeError(entry.scope)
   }
@@ -134,11 +132,11 @@ export class BeanFactory {
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<Bean> {
-    if (property.value) {
+    if (property.value != null) {
       return new ValueBean(property.value)
     }
     await this.ensureDependencyIsPresent(property, parentId, beanDefinitions)
-    return this.context.getBean(property.ref)
+    return await this.context.getBean(property.ref)
   }
 
   private async ensureDependencyIsPresent (
@@ -152,7 +150,7 @@ export class BeanFactory {
   }
 
   private async hasDependency (id: string): Promise<boolean> {
-    return this.context.has(id)
+    return await this.context.has(id)
   }
 
   private async registerDependency (

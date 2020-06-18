@@ -1,9 +1,9 @@
 import { CronJob } from 'cron'
 
 export class SchedulingService {
-  private jobs: CronJob[] = []
+  private readonly jobs: CronJob[] = []
 
-  public schedule (cronPattern: string, functionToSchedule: Function) {
+  public schedule (cronPattern: string, functionToSchedule: Function): void {
     const job = new CronJob(
       cronPattern,
       function test () {
@@ -20,7 +20,7 @@ export class SchedulingService {
     this.jobs.push(job)
   }
 
-  public close () {
+  public close (): void {
     for (const job of this.jobs) {
       job.stop()
     }

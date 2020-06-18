@@ -4,16 +4,17 @@ import DefaultBeanDefinition from '../DefaultBeanDefinition'
 export class ModuleLoaderBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   async preProcess (beanDefinition: DefaultBeanDefinition): Promise<DefaultBeanDefinition[]> {
     beanDefinition.classConstructor = this.getClass(beanDefinition)
-    return [ beanDefinition ]
+    return [beanDefinition]
   }
 
   private getClass (entry: DefaultBeanDefinition): any {
-    if (entry.instance) {
+    if (entry.instance != null) {
       return entry.instance
     }
-    if (entry.path) {
+    if (entry.path != null) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const Clazz = require(entry.path)
-      if (Clazz.default) {
+      if (Clazz.default != null) {
         return Clazz.default
       }
       return Clazz

@@ -4,7 +4,7 @@ import NotFoundError from './context/errors/NotFoundError'
 
 export class DefaultApplicationContext implements ApplicationContext {
   private parent: ApplicationContext
-  private beans: Map<string, Bean> = new Map()
+  private readonly beans: Map<string, Bean> = new Map()
 
   put (beans: Bean[]): void {
     for (const bean of beans) {
@@ -13,16 +13,16 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async get (id: string): Promise<any> {
-    let bean = await this.getBean(id)
-    return bean.getInstance()
+    const bean = await this.getBean(id)
+    return await bean.getInstance()
   }
 
   async getBean (id: string): Promise<Bean> {
     let bean = this.beans.get(id)
-    if (!bean && this.parent) {
+    if (bean == null && this.parent != null) {
       bean = await this.parent.getBean(id)
     }
-    if (!bean) {
+    if (bean == null) {
       throw new NotFoundError(id)
     }
     return bean

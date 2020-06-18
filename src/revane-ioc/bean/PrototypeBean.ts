@@ -13,17 +13,17 @@ export default class PrototypeBean extends AbstractBean {
 
   public async getInstance (): Promise<any> {
     const instance = await this.createInstance()
-    if (this.callback) {
+    if (this.callback != null) {
       await this.callback(instance)
     }
-    if (instance.postConstruct) {
+    if (instance.postConstruct != null) {
       await instance.postConstruct()
     }
     return instance
   }
 
   public async init (): Promise<void> {
-    return Promise.resolve()
+    return await Promise.resolve()
   }
 
   public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {

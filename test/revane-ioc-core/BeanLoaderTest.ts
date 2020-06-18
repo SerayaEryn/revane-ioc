@@ -7,7 +7,7 @@ test('should reject on errors in loaders', async (t) => {
   t.plan(1)
 
   class MockedLoader implements Loader {
-    load (): Promise<DefaultBeanDefinition[]> {
+    async load (): Promise<DefaultBeanDefinition[]> {
       throw new Error('booom')
     }
 
@@ -20,7 +20,7 @@ test('should reject on errors in loaders', async (t) => {
     }
   }
 
-  const beanLoader = new BeanLoader([ new MockedLoader() ])
+  const beanLoader = new BeanLoader([new MockedLoader()])
 
   try {
     await beanLoader.getBeanDefinitions({

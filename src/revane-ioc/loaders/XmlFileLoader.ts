@@ -8,6 +8,7 @@ import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { join } from 'path'
 import ComponentScanLoader from './ComponentScanLoader'
 import { Property } from '../../revane-ioc-core/Property'
+import { BeanDefinition } from '../RevaneIOC'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -32,7 +33,7 @@ type XmlAttribute = {
   class?: string
   scope?: string
   type?: string
-  id?: string,
+  id?: string
   'base-package'?: string
 }
 
@@ -42,7 +43,7 @@ type XmlBean = {
 }
 
 type XmlBeans = {
-  bean?: XmlBean[] | XmlBean,
+  bean?: XmlBean[] | XmlBean
   'context:component-scan'?: XmlBean
 }
 
@@ -63,12 +64,12 @@ export default class XmlFileLoader implements Loader {
 
     let beanDefinitions: DefaultBeanDefinition[] = []
     const beans = result.beans
-    if (beans['component-scan'] || beans['context:component-scan']) {
+    if (beans['component-scan'] != null || beans['context:component-scan'] != null) {
       const moreBeanDefinitions = await this.performScan(beans, basePackage)
       beanDefinitions = beanDefinitions.concat(moreBeanDefinitions)
     }
 
-    if (!beans.bean) {
+    if (beans.bean == null) {
       return beanDefinitions
     }
     if (Array.isArray(beans.bean)) {
@@ -83,10 +84,10 @@ export default class XmlFileLoader implements Loader {
     return 'xml'
   }
 
-  private async loadFile (file: string) {
-    return new Promise((resolve, reject) => {
-      fileSystem.readFile(file, (error, data) => {
-        if (error) {
+  private async loadFile (file: string): Promise<Buffer> {
+    return await new Promise((resolve, reject) => {
+      fileSystem.readFile(file, (error, data: Buffer) => {
+        if (error != null) {
           reject(error)
         } else {
           resolve(data)
@@ -95,23 +96,25 @@ export default class XmlFileLoader implements Loader {
     })
   }
 
-  private async performScan (beans: XmlBeans, basePackage: string) {
+  private async performScan (beans: XmlBeans, basePackage: string): Promise<BeanDefinition[]> {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const componentScan = beans['component-scan'] || beans['context:component-scan']
     const relativePath = componentScan.attr['base-package']
     const directory = join(basePackage, relativePath)
     const componentScanLoader = new ComponentScanLoader()
-    return componentScanLoader.load({ basePackage: directory }, basePackage)
+    return await componentScanLoader.load({ basePackage: directory }, basePackage)
   }
 
   public isRelevant (options: LoaderOptions): boolean {
-    return options.file && options.file.endsWith('.xml')
+    return options.file?.endsWith('.xml')
   }
 
   private toBeanDefinition (bean: XmlBean): DefaultBeanDefinition {
     const beanDefinition = new DefaultBeanDefinition(bean.attr.id)
     beanDefinition.class = bean.attr.class
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     beanDefinition.scope = bean.attr.scope || 'singleton'
-    if (bean.attr.type) {
+    if (bean.attr.type != null) {
       beanDefinition.type = bean.attr.type
     }
     const ref = bean.ref
@@ -121,7 +124,7 @@ export default class XmlFileLoader implements Loader {
 
   private getProperties (ref: XmlReference): Property[] {
     let properties: Property[] = []
-    if (ref) {
+    if (ref != null) {
       if (Array.isArray(ref)) {
         properties = ref.map(toReference)
       } else {
@@ -133,7 +136,7 @@ export default class XmlFileLoader implements Loader {
 }
 
 function toReference (ref: XmlReference): Property {
-  if (ref.attr.bean) {
+  if (ref.attr.bean != null) {
     return { ref: ref.attr.bean }
   } else {
     return { value: ref.attr.value }

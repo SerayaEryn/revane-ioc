@@ -6,6 +6,6 @@ export class ConfigurationPropertiesPreProcessor implements BeanFactoryPreProces
   async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
     const configurationProperties = Reflect.getMetadata(configurationPropertiesSym, beanDefinition.classConstructor)
     beanDefinition.configurationProperties = configurationProperties
-    return [ beanDefinition ]
+    return [beanDefinition]
   }
 }

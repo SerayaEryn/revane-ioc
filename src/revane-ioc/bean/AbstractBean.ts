@@ -2,7 +2,7 @@ import Bean from '../../revane-ioc-core/context/bean/Bean'
 import { BeanDefinition } from '../RevaneIOC'
 
 export default abstract class AbstractBean implements Bean {
-  protected entry
+  protected entry: BeanDefinition
   public scope: string
 
   constructor (entry: BeanDefinition) {
@@ -26,8 +26,10 @@ export default abstract class AbstractBean implements Bean {
     }
     let instance = null
     if (this.entry.isClass()) {
+      // eslint-disable-next-line new-cap
       instance = new this.entry.classConstructor(...parameters)
     } else {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       instance = this.entry.classConstructor || this.entry.instance
     }
     return instance
@@ -35,11 +37,11 @@ export default abstract class AbstractBean implements Bean {
 
   public abstract async init (): Promise<void>
 
-  public postConstruct (): Promise<any> {
-    return Promise.resolve()
+  public async postConstruct (): Promise<any> {
+    return await Promise.resolve()
   }
 
-  public preDestroy (): Promise<any> {
-    return Promise.resolve()
+  public async preDestroy (): Promise<any> {
+    return await Promise.resolve()
   }
 }

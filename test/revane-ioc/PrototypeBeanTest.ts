@@ -5,7 +5,7 @@ import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 test('should class postConstruct on instance', async (t) => {
   t.plan(1)
 
-  const Clazz = require('../../../testdata/test6')
+  const Clazz = require('../../../testdata/test6') // eslint-disable-line
 
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz
@@ -18,7 +18,7 @@ test('should class postConstruct on instance', async (t) => {
 test('should handle missing postConstruct on instance', async (t) => {
   t.plan(1)
 
-  const Clazz = require('../../../testdata/test1')
+  const Clazz = require('../../../testdata/test1') // eslint-disable-line
 
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz
@@ -30,7 +30,7 @@ test('should handle missing postConstruct on instance', async (t) => {
 test('should return Promise on preDestroy()', async (t) => {
   t.plan(1)
 
-  const Clazz = require('../../../testdata/test6')
+  const Clazz = require('../../../testdata/test6') // eslint-disable-line
 
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz
@@ -42,7 +42,7 @@ test('should return Promise on preDestroy()', async (t) => {
 })
 
 test('should return Promise on postConstruct()', async (t) => {
-  const Clazz = require('../../../testdata/test6')
+  const Clazz = require('../../../testdata/test6') // eslint-disable-line
 
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz

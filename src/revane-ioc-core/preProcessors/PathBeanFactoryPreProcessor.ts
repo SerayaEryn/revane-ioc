@@ -4,17 +4,17 @@ import Options from '../Options'
 import { join } from 'path'
 
 export class PathBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
-  private options: Options
+  private readonly options: Options
 
   constructor (options: Options) {
     this.options = options
   }
 
   public async preProcess (beanDefinition: DefaultBeanDefinition): Promise<DefaultBeanDefinition[]> {
-    if (beanDefinition.class) {
+    if (beanDefinition.class != null) {
       beanDefinition.path = this.getPath(beanDefinition)
     }
-    return [ beanDefinition ]
+    return [beanDefinition]
   }
 
   private getPath (beanDefinition: DefaultBeanDefinition): string {

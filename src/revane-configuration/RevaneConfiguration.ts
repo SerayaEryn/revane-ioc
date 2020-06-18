@@ -29,19 +29,19 @@ export class ConfigurationOptions {
 
 export class RevaneConfiguration implements Configuration {
   private values: object = {}
-  private options: ConfigurationOptions
+  private readonly options: ConfigurationOptions
 
   constructor (options: ConfigurationOptions) {
     this.options = options
   }
 
-  public async init () {
+  public async init (): Promise<void> {
     for (const strategy of this.options.strategies) {
       let loadedValues = {}
       try {
         const { directory: configDirectory, profile } = this.options
         loadedValues = await strategy.load(configDirectory, profile)
-        this.values = merge([ this.values, loadedValues ])
+        this.values = merge([this.values, loadedValues])
         loadedValues = {}
       } catch (error) {
         if (error.code !== 'REV_ERR_CONFIG_FILE_NOT_FOUND') {
@@ -58,7 +58,7 @@ export class RevaneConfiguration implements Configuration {
     const parts = key.split('.')
     let values = this.values
     for (const part of parts) {
-      if (!values) {
+      if (values == null) {
         throw new KeyNotPresentInConfig(key)
       }
       values = values[part]
@@ -94,7 +94,7 @@ export class RevaneConfiguration implements Configuration {
     const parts = key.split('.')
     let values = this.values
     for (const part of parts) {
-      if (!values) {
+      if (values == null) {
         return false
       }
       values = values[part]

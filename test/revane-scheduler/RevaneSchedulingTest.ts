@@ -68,8 +68,8 @@ test('Should not schedule tasks', async (t) => {
   t.pass()
 })
 
-function wait () {
-  return new Promise((resolve) => {
+async function wait (): Promise<void> {
+  return await new Promise((resolve) => {
     setTimeout(resolve, 1100)
   })
 }
