@@ -1,5 +1,5 @@
 import * as path from 'path'
-import * as test from 'tape-catch'
+import test from 'ava'
 import ComponentScanLoader from '../../src/revane-ioc/loaders/ComponentScanLoader'
 
 test('should do component scan without filters', (t) => {
@@ -14,20 +14,19 @@ test('should do component scan without filters', (t) => {
   const componentScanResolver = new ComponentScanLoader()
   return componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 4)
+      t.is(beanDefinitions.length, 4)
       const scan1 = findDefinition(beanDefinitions, 'scan1')
-      t.strictEquals(scan1.scope, 'singleton')
+      t.is(scan1.scope, 'singleton')
       const scan2 = findDefinition(beanDefinitions, 'scan2')
-      t.strictEquals(scan2.scope, 'singleton')
-      t.deepEquals(scan1.dependencyIds, [{ ref: 'test6' }])
+      t.is(scan2.scope, 'singleton')
+      t.deepEqual(scan1.dependencyIds, [{ ref: 'test6' }])
       const scan3 = findDefinition(beanDefinitions, 'scan3')
-      t.strictEquals(scan3.scope, 'singleton')
-      t.deepEquals(scan3.dependencyIds, [{ ref: 'test6' }])
+      t.is(scan3.scope, 'singleton')
+      t.deepEqual(scan3.dependencyIds, [{ ref: 'test6' }])
       const scan4 = findDefinition(beanDefinitions, 'scan4')
-      t.strictEquals(scan4.scope, 'singleton')
-      t.deepEquals(scan4.dependencyIds, [])
+      t.is(scan4.scope, 'singleton')
+      t.deepEqual(scan4.dependencyIds, [])
     })
-    .catch((err) => t.error(err))
 })
 
 test('should do component scan with exclude filter', (t) => {
@@ -46,7 +45,7 @@ test('should do component scan with exclude filter', (t) => {
   const componentScanLoader = new ComponentScanLoader()
   return componentScanLoader.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 0)
+      t.is(beanDefinitions.length, 0)
     })
 })
 
@@ -55,12 +54,10 @@ test('should return correct type', (t) => {
 
   const componentScanLoader = new ComponentScanLoader()
 
-  t.strictEquals(componentScanLoader.type(), 'scan')
+  t.is(componentScanLoader.type(), 'scan')
 })
 
-test('should throw error on require error', (t) => {
-  t.plan(1)
-
+test('should throw error on require error', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/loadFailure')
   const options = {
     basePackage,
@@ -68,13 +65,12 @@ test('should throw error on require error', (t) => {
   }
 
   const componentScanResolver = new ComponentScanLoader()
-  return componentScanResolver.load(options, basePackage)
-    .catch((error) => t.equals(error.code, 'REV_ERR_MODULE_LOAD_ERROR'))
+  await t.throwsAsync(async () => {
+    await componentScanResolver.load(options, basePackage)
+  }, { code: 'REV_ERR_MODULE_LOAD_ERROR' })
 })
 
-test('should throw error on undefined module', (t) => {
-  t.plan(1)
-
+test('should throw error on undefined module', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/loadFailure2')
   const options = {
     basePackage,
@@ -82,13 +78,12 @@ test('should throw error on undefined module', (t) => {
   }
 
   const componentScanResolver = new ComponentScanLoader()
-  return componentScanResolver.load(options, basePackage)
-    .catch((error) => t.equals(error.code, 'REV_ERR_MODULE_LOAD_ERROR'))
+  await t.throwsAsync(async () => {
+    await componentScanResolver.load(options, basePackage)
+  }, { code: 'REV_ERR_MODULE_LOAD_ERROR' })
 })
 
 test('should do component scan with include filter', (t) => {
-  t.plan(1)
-
   const basePackage = path.join(__dirname, '../../../testdata/scan')
   const options = {
     basePackage,
@@ -102,9 +97,8 @@ test('should do component scan with include filter', (t) => {
   const componentScanResolver = new ComponentScanLoader()
   return componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.strictEquals(beanDefinitions.length, 4)
+      t.is(beanDefinitions.length, 4)
     })
-    .catch((err) => t.error(err))
 })
 
 function findDefinition (definitions, name) {

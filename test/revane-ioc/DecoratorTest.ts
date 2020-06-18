@@ -1,12 +1,11 @@
 import 'reflect-metadata'
-import * as test from 'tape-catch'
+import test from 'ava'
 import { Scope, Service } from '../../src/revane-ioc/RevaneIOC'
 import {
   scopeSym, idSym, dependenciesSym
 } from '../../src/revane-ioc/decorators/Symbols'
 
 test('should add scope and service meta data', t => {
-  t.plan(3)
   class TestClass {}
 
   Scope('prototype')(
@@ -14,13 +13,12 @@ test('should add scope and service meta data', t => {
   TestClass
   ))
 
-  t.strictEquals(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
-  t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'testClass')
-  t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
+  t.is(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
+  t.is(Reflect.getMetadata(idSym, TestClass), 'testClass')
+  t.deepEqual(Reflect.getMetadata(dependenciesSym, TestClass), [])
 })
 
-test('should add scope and service meta data', t => {
-  t.plan(3)
+test('should add scope and service meta data #2', t => {
   class TestClass {}
 
   Scope('prototype')(
@@ -28,17 +26,15 @@ test('should add scope and service meta data', t => {
   TestClass
   ))
 
-  t.strictEquals(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
-  t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'test')
-  t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
+  t.is(Reflect.getMetadata(scopeSym, TestClass), 'prototype')
+  t.is(Reflect.getMetadata(idSym, TestClass), 'test')
+  t.deepEqual(Reflect.getMetadata(dependenciesSym, TestClass), [])
 })
 
-test('should add scope and service meta data', t => {
-  t.plan(2)
-
+test('should add scope and service meta data #3', t => {
   @Service
   class TestClass {}
 
-  t.strictEquals(Reflect.getMetadata(idSym, TestClass), 'testClass')
-  t.deepEquals(Reflect.getMetadata(dependenciesSym, TestClass), [])
+  t.is(Reflect.getMetadata(idSym, TestClass), 'testClass')
+  t.deepEqual(Reflect.getMetadata(dependenciesSym, TestClass), [])
 })

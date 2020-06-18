@@ -1,5 +1,5 @@
 import * as path from 'path'
-import * as test from 'tape-catch'
+import test from 'ava'
 import Revane from '../../src/revane-ioc/RevaneIOC'
 import { RevaneConfiguration } from '../../src/revane-configuration/RevaneConfiguration'
 
@@ -19,11 +19,11 @@ test('should add configuration properties', async (t) => {
   await revane.initialize()
 
   const configuration: RevaneConfiguration = await revane.get('configuration')
-  t.equals(configuration.getString('test.property1'), 'hello world')
-  t.equals(configuration.getNumber('test.property2'), 43)
+  t.is(configuration.getString('test.property1'), 'hello world')
+  t.is(configuration.getNumber('test.property2'), 43)
   const configurationProperties = await revane.get('scan5')
-  t.equals(configurationProperties.property1, 'hello world')
-  t.equals(configurationProperties.property2, 43)
+  t.is(configurationProperties.property1, 'hello world')
+  t.is(configurationProperties.property2, 43)
 })
 
 test('should add configuration properties #2', async (t) => {
@@ -42,11 +42,11 @@ test('should add configuration properties #2', async (t) => {
   await revane.initialize()
 
   const configuration: RevaneConfiguration = await revane.get('configuration')
-  t.equals(configuration.getString('test.property1'), 'hello world')
-  t.equals(configuration.getNumber('test.property2'), 44)
+  t.is(configuration.getString('test.property1'), 'hello world')
+  t.is(configuration.getNumber('test.property2'), 44)
   const configurationProperties = await revane.get('scan56')
-  t.equals(configurationProperties.property1, 'hello world')
-  t.equals(configurationProperties.property2, 44)
+  t.is(configurationProperties.property1, 'hello world')
+  t.is(configurationProperties.property2, 44)
 })
 
 test('should add configuration properties #3', async (t) => {
@@ -65,9 +65,9 @@ test('should add configuration properties #3', async (t) => {
   await revane.initialize()
 
   const configuration: RevaneConfiguration = await revane.get('configuration')
-  t.equals(configuration.getString('test.property1'), 'hello world')
-  t.equals(configuration.getNumber('test.property2'), 44)
+  t.is(configuration.getString('test.property1'), 'hello world')
+  t.is(configuration.getNumber('test.property2'), 44)
   const configurationProperties = await revane.get('scan56')
-  t.equals(configurationProperties.property1, 'hello world')
-  t.equals(configurationProperties.property2, 44)
+  t.is(configurationProperties.property1, 'hello world')
+  t.is(configurationProperties.property2, 44)
 })

@@ -1,4 +1,4 @@
-import * as test from 'tape-catch'
+import test from 'ava'
 import { LoadingStrategy } from '../../src/revane-configuration/loading/LoadingStrategy'
 import { RevaneConfiguration, ConfigurationOptions } from '../../src/revane-configuration/RevaneConfiguration'
 
@@ -13,29 +13,29 @@ test('Should load values', async (t) => {
     [ testLoadingStrategy ]
   ))
   await config.init()
-  t.ok(config.getBoolean('test.bool'))
-  t.equals(config.getString('test.str'), 'test')
-  t.equals(config.getNumber('test.int'), 42)
-  t.notOk(config.has('blub.bla'))
+  t.true(config.getBoolean('test.bool'))
+  t.is(config.getString('test.str'), 'test')
+  t.is(config.getNumber('test.int'), 42)
+  t.false(config.has('blub.bla'))
   try {
     config.getString('blub.bla')
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_KEY_NOT_PRESENT_IN_CONFIG')
+    t.is(error.code, 'REV_ERR_KEY_NOT_PRESENT_IN_CONFIG')
   }
   try {
     config.getNumber('test.str')
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_KEY_TYPE_MISMATCH')
+    t.is(error.code, 'REV_ERR_KEY_TYPE_MISMATCH')
   }
   try {
     config.getBoolean('test.str')
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_KEY_TYPE_MISMATCH')
+    t.is(error.code, 'REV_ERR_KEY_TYPE_MISMATCH')
   }
   try {
     config.getString('test.int')
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_KEY_TYPE_MISMATCH')
+    t.is(error.code, 'REV_ERR_KEY_TYPE_MISMATCH')
   }
 })
 
@@ -51,7 +51,7 @@ test('Should throw error if no config files', async (t) => {
   try {
     await config.init()
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_NO_CONFIG_FILES_FOUND')
+    t.is(error.code, 'REV_ERR_NO_CONFIG_FILES_FOUND')
   }
 })
 
@@ -67,7 +67,7 @@ test('Should pass error from strategy', async (t) => {
   try {
     await config.init()
   } catch (error) {
-    t.equals(error.message, 'boooom')
+    t.is(error.message, 'boooom')
   }
 })
 

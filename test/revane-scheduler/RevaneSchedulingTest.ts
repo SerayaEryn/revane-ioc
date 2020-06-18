@@ -1,10 +1,8 @@
-import * as test from 'tape-catch'
+import test from 'ava'
 import * as path from 'path'
 import RevaneIOC from '../../src/revane-ioc/RevaneIOC'
 
 test('Should schedule task', async (t) => {
-  t.plan(1)
-
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
@@ -17,13 +15,11 @@ test('Should schedule task', async (t) => {
   await revane.initialize()
 
   await wait()
-  t.ok((await revane.get('scan56')).executed)
+  t.true((await revane.get('scan56')).executed)
   await revane.close()
 })
 
 test('Should schedule task #2', async (t) => {
-  t.plan(1)
-
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-invalid1'),
     loaderOptions: [
@@ -36,13 +32,11 @@ test('Should schedule task #2', async (t) => {
   try {
     await revane.initialize()
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_INVALID_CRON_PATTERN_PROVIDED')
+    t.is(error.code, 'REV_ERR_INVALID_CRON_PATTERN_PROVIDED')
   }
 })
 
 test('Should schedule task #3', async (t) => {
-  t.plan(1)
-
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-invalid2'),
     loaderOptions: [
@@ -52,16 +46,15 @@ test('Should schedule task #3', async (t) => {
     profile: 'test'
   }
   const revane = new RevaneIOC(options)
+
   try {
     await revane.initialize()
   } catch (error) {
-    t.equals(error.code, 'REV_ERR_NO_CRON_PATTERN_PROVIDED')
+    t.is(error.code, 'REV_ERR_NO_CRON_PATTERN_PROVIDED')
   }
 })
 
 test('Should not schedule tasks', async (t) => {
-  t.plan(1)
-
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-invalid3'),
     loaderOptions: [

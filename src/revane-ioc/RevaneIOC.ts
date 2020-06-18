@@ -149,7 +149,7 @@ export default class RevaneIOC {
   }
 
   public async close (): Promise<void> {
-    await this.schedulingService.close()
+    this.schedulingService.close()
     await this.revaneCore.close()
   }
 
