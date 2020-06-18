@@ -6,6 +6,5 @@ export interface ApplicationContext {
   has (id: string): Promise<boolean>
   getByType (type: string): Promise<any[]>
   setParent (context: ApplicationContext): void
-  refresh (): Promise<void>
   close (): Promise<void>
 }

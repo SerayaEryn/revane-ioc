@@ -12,9 +12,6 @@ import { ModuleLoaderBeanFactoryPreProcessor } from './preProcessors/ModuleLoade
 import { ApplicationContext } from './ApplicationContext'
 import { PathBeanFactoryPreProcessor } from './preProcessors/PathBeanFactoryPreProcessor'
 import { ScopeBeanFactoryPreProcessor } from './preProcessors/ScopeBeanFactoryPreProcessor'
-import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/ConfigurationPropertiesPreProcessor'
-import { ConfigurationPropertiesPostProcessor } from '../revane-configuration/ConfigurationPropertiesPostProcessor'
-import { ConfigurationProvider } from '../revane-configuration/ConfigurationProvider'
 import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
 
@@ -48,7 +45,7 @@ export default class RevaneIOCCore {
       ],
       [
         new BeanAnnotationBeanFactoryPostProcessor(),
-        ...(this.plugins.get('beanFactoryPostProcessor') || []) as BeanFactoryPostProcessor[]
+        ...this.plugins.get('beanFactoryPostProcessor') as BeanFactoryPostProcessor[]
       ],
       this.context as DefaultApplicationContext,
       this.beanTypeRegistry,

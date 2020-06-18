@@ -10,7 +10,6 @@ import Options from './Options'
 import BeanDefinedTwiceError from './context/errors/BeanDefinedTwiceError'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
 import { Property } from './Property'
-import { ContextPlugin } from './context/ContextPlugin'
 import { BeanDefinition } from './BeanDefinition'
 
 export class BeanFactory {
@@ -38,20 +37,17 @@ export class BeanFactory {
   }
 
   async process (beanDefinitions: BeanDefinition[]): Promise<void> {
-    for (const contextPlugin of this.plugins.get('contextInitialization') as ContextPlugin[] || []) {
-      beanDefinitions = await contextPlugin.plugin(beanDefinitions)
-    }
-    const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
     let allPreProcessedBeanDefinitions = []
     for (const beanDefinition of beanDefinitions) {
-      const exitingBeanDefininaton = processedBeanDefinitions.get(beanDefinition.id)
-      if (exitingBeanDefininaton && this.options.noRedefinition) {
-        throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
-      }
       const preProcessedBeanDefinitions = await this.preProcess(beanDefinition)
       allPreProcessedBeanDefinitions = allPreProcessedBeanDefinitions.concat(preProcessedBeanDefinitions)
     }
+    const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
     for (const preProcessedBeanDefinition of allPreProcessedBeanDefinitions) {
+      const exitingBeanDefininaton = processedBeanDefinitions.get(preProcessedBeanDefinition.id)
+      if (exitingBeanDefininaton && this.options.noRedefinition) {
+        throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
+      }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
       const bean = await this.registerBean(preProcessedBeanDefinition, beanDefinitions)
       const postProcessedBeans = await this.postProcess(bean, preProcessedBeanDefinition)
@@ -69,10 +65,13 @@ export class BeanFactory {
   }
 
   private async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
-    let preProcessedBeanDefinitions: BeanDefinition[] = []
+    let preProcessedBeanDefinitions: BeanDefinition[] = [ beanDefinition ]
     for (const preProcessor of this.preProcessors) {
-      const preProcessed = await preProcessor.preProcess(beanDefinition)
-      preProcessedBeanDefinitions = preProcessedBeanDefinitions.concat(preProcessed)
+      let arr: BeanDefinition[] = []
+      for (const preProcessedBeanDefinition of preProcessedBeanDefinitions) {
+        arr = await preProcessor.preProcess(preProcessedBeanDefinition)
+      }
+      preProcessedBeanDefinitions = arr
     }
     return preProcessedBeanDefinitions
   }

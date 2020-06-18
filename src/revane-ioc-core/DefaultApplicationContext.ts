@@ -47,10 +47,6 @@ export class DefaultApplicationContext implements ApplicationContext {
     this.parent = context
   }
 
-  async refresh (): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
-
   async close (): Promise<void> {
     for (const bean of this.beans.values()) {
       await bean.preDestroy()

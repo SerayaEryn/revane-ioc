@@ -14,7 +14,10 @@ test('should read json configuration file and register beans', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    scheduling: {
+      enabled: false
+    }
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -469,6 +472,62 @@ test('should throw error on invalid scope', async (t) => {
     t.ok(err)
     t.strictEquals(err.code, 'REV_ERR_INVALID_SCOPE')
   }
+})
+
+test('should throw error if dependency throws error', async (t) => {
+  t.plan(2)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/dependencyError') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  try {
+    await revane.initialize()
+  } catch (err) {
+    t.ok(err)
+    t.strictEquals(err.code, 'REV_ERR_DEPENDENCY_REGISTER')
+  }
+})
+
+test('should throw error if bean was defined twice', async (t) => {
+  t.plan(2)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/definedTwice') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  try {
+    await revane.initialize()
+  } catch (err) {
+    t.ok(err)
+    t.strictEquals(err.code, 'REV_ERR_DEFINED_TWICE')
+  }
+})
+
+test('should not throw error if bean redefinition is allowed', async (t) => {
+  t.plan(1)
+
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata/definedTwice2'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/definedTwice2') }
+    ],
+    configuration: { disabled: false },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+  t.ok(revane.has('scan1'))
 })
 
 test('should return multiple beans', async (t) => {

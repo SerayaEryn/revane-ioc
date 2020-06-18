@@ -19,7 +19,6 @@
       "bin/src/revane-ioc/loaders/Filter.js",
       "bin/src/revane-configuration/loading/LoadingStrategy.js",
       "bin/src/revane-configuration/Configuration.js",
-      "bin/src/revane-configuration/ConfigurationProvider.js",
       "bin/src/revane-configuration/BeanDefinition.js"
   ],
   "reporter": [

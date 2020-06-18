@@ -22,7 +22,6 @@ import {
   Bean,
   Scheduler
 } from './decorators/Decorators'
-import { ConfigurationContextPlugin } from '../revane-configuration/ConfigurationContextPlugin'
 import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
 import { ConfigurationPropertiesPostProcessor } from '../revane-configuration/ConfigurationPropertiesPostProcessor'
@@ -34,6 +33,7 @@ import { Scheduled } from '../revane-scheduler/Scheduled'
 import { SchedulerBeanPostProcessor } from '../revane-scheduler/SchedulerBeanPostProcessor'
 import { SchedulingService } from '../revane-scheduler/SchedulingService'
 import { join } from 'path'
+import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -73,14 +73,14 @@ export default class RevaneIOC {
     if (!this.options.plugins.loaders) {
       this.options.plugins.loaders = []
     }
-    if (!this.options.plugins.contextInitialization) {
-      this.options.plugins.contextInitialization = []
-    }
     if (!this.options.scheduling) {
       this.options.scheduling = { enabled: true }
     }
     if (this.options.scheduling.enabled !== true) {
       this.options.scheduling.enabled = false
+    }
+    if (this.options.noRedefinition === undefined) {
+      this.options.noRedefinition = true
     }
 
     this.options.profile = this.options.profile || process.env.REVANE_PROFILE
@@ -162,13 +162,12 @@ export default class RevaneIOC {
   }
 
   private async addDefaultPlugins () {
+    if (!this.options.configuration.disabled) {
+      this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
+    }
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
-    const configOptions: ConfigurationOptions = this.prepareConfigOptions(this.options)
-    const configurationContextPlugin = new ConfigurationContextPlugin(configOptions, this.configuration)
-    this.revaneCore.addPlugin('contextInitialization', configurationContextPlugin)
-    this.revaneCore.addPlugin('configuration', configurationContextPlugin)
     if (!this.options.configuration.disabled) {
       this.revaneCore.addPlugin(
         'beanFactoryPostProcessor',
@@ -188,9 +187,6 @@ export default class RevaneIOC {
       if (!['xml', 'json', 'scan'].includes(loader.type())) {
         this.revaneCore.addPlugin('loader', loader)
       }
-    }
-    for (const plugin of this.options.plugins.contextInitialization) {
-      this.revaneCore.addPlugin('contextInitialization', plugin)
     }
   }
 
@@ -214,19 +210,14 @@ export default class RevaneIOC {
     const coreOptions: CoreOptions = new CoreOptions()
     coreOptions.loaderOptions = options.loaderOptions || []
     this.checkForUnknownEndings(coreOptions.loaderOptions)
+
+    if (!this.options.configuration.disabled) {
+      coreOptions.loaderOptions.push({ file: 'config' })
+    }
     coreOptions.defaultScope = 'singleton'
     coreOptions.basePackage = options.basePackage
+    coreOptions.noRedefinition = options.noRedefinition
     return coreOptions
-  }
-
-  private prepareConfigOptions (options: Options): ConfigurationOptions {
-    return new ConfigurationOptions(
-      options.profile,
-      options.configuration.directory,
-      options.configuration.required,
-      options.configuration.disabled,
-      [ new JsonLoadingStrategy() ]
-    )
   }
 
   private checkForUnknownEndings (files: LoaderOptions[]): void {

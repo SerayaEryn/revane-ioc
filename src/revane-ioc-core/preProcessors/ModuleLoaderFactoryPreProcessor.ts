@@ -18,6 +18,6 @@ export class ModuleLoaderBeanFactoryPreProcessor implements BeanFactoryPreProces
       }
       return Clazz
     }
-    return null
+    throw new Error(`no constructor or instance available for ${entry.id}`)
   }
 }
