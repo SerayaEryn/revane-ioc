@@ -2,14 +2,14 @@
 
 import * as fastXmlParser from 'fast-xml-parser'
 import * as fileSystem from 'fs'
-import BeanDefinition from '../../revane-ioc-core/BeanDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
-import { Property } from '../../revane-ioc-core/context/Container'
 import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { join } from 'path'
 import ComponentScanLoader from './ComponentScanLoader'
+import { Property } from '../../revane-ioc-core/Property'
 
-const options = {
+const xmlParserOptions = {
   allowBooleanAttributes: false,
   attrNodeName: 'attr',
   attributeNamePrefix: '',
@@ -51,24 +51,20 @@ type Xml = {
 }
 
 export default class XmlFileLoader implements Loader {
-  private path: string
   static type: string = 'xml'
-  private basePackage: string
 
-  constructor (options: LoaderOptions, basePackage: string) {
-    this.path = options.file
-    this.basePackage = basePackage
+  constructor () {
     this.toBeanDefinition = this.toBeanDefinition.bind(this)
   }
 
-  public async load (): Promise<BeanDefinition[]> {
-    const data = await this.loadFile()
-    const result: Xml = fastXmlParser.parse(data.toString(), options)
+  public async load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
+    const data = await this.loadFile(options.file)
+    const result: Xml = fastXmlParser.parse(data.toString(), xmlParserOptions)
 
-    let beanDefinitions: BeanDefinition[] = []
+    let beanDefinitions: DefaultBeanDefinition[] = []
     const beans = result.beans
     if (beans['component-scan'] || beans['context:component-scan']) {
-      const moreBeanDefinitions = await this.performScan(beans)
+      const moreBeanDefinitions = await this.performScan(beans, basePackage)
       beanDefinitions = beanDefinitions.concat(moreBeanDefinitions)
     }
 
@@ -83,9 +79,13 @@ export default class XmlFileLoader implements Loader {
     return beanDefinitions
   }
 
-  private async loadFile () {
+  public type (): string {
+    return 'xml'
+  }
+
+  private async loadFile (file: string) {
     return new Promise((resolve, reject) => {
-      fileSystem.readFile(this.path, (error, data) => {
+      fileSystem.readFile(file, (error, data) => {
         if (error) {
           reject(error)
         } else {
@@ -95,29 +95,27 @@ export default class XmlFileLoader implements Loader {
     })
   }
 
-  private async performScan (beans: XmlBeans) {
+  private async performScan (beans: XmlBeans, basePackage: string) {
     const componentScan = beans['component-scan'] || beans['context:component-scan']
     const relativePath = componentScan.attr['base-package']
-    const directory = join(this.basePackage, relativePath)
-    const componentScanLoader = new ComponentScanLoader({
-      basePackage: directory
-    }, this.basePackage)
-    return componentScanLoader.load()
+    const directory = join(basePackage, relativePath)
+    const componentScanLoader = new ComponentScanLoader()
+    return componentScanLoader.load({ basePackage: directory }, basePackage)
   }
 
-  public static isRelevant (options: LoaderOptions): boolean {
+  public isRelevant (options: LoaderOptions): boolean {
     return options.file && options.file.endsWith('.xml')
   }
 
-  private toBeanDefinition (bean: XmlBean): BeanDefinition {
-    const beanDefinition = new BeanDefinition(bean.attr.id)
+  private toBeanDefinition (bean: XmlBean): DefaultBeanDefinition {
+    const beanDefinition = new DefaultBeanDefinition(bean.attr.id)
     beanDefinition.class = bean.attr.class
     beanDefinition.scope = bean.attr.scope || 'singleton'
     if (bean.attr.type) {
       beanDefinition.type = bean.attr.type
     }
     const ref = bean.ref
-    beanDefinition.properties = this.getProperties(ref)
+    beanDefinition.dependencyIds = this.getProperties(ref)
     return beanDefinition
   }
 

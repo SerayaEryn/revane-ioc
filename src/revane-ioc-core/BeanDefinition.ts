@@ -1,18 +1,16 @@
-import BeanOptions from './BeanOptions'
-import { Property } from './context/Container'
+import Bean from './context/bean/Bean'
+import { Property } from './Property'
 
-export default class BeanDefinition {
-  public class: string
-  public id: string
-  public type: string
-  public properties: Property[]
-  public loadAfter?: Property[]
-  public path: string
-  public scope: string
-  public options: BeanOptions = new BeanOptions()
-  public instance?: any
-
-  constructor (id: string) {
-    this.id = id
-  }
+export interface BeanDefinition {
+  class: string
+  id: string
+  type: string
+  dependencyIds: Property[]
+  loadAfter?: Property[]
+  path: string
+  scope: string
+  instance?: any
+  classConstructor?: any
+  dependencies: Bean[]
+  isClass (): boolean
 }

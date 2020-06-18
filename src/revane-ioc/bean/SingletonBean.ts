@@ -1,24 +1,22 @@
 import AbstractBean from './AbstractBean'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 
 export default class SingletonBean extends AbstractBean {
   public static scope: string = 'singleton'
-  protected isClass: boolean
-  public type: string
-  private instance
-  private dependencies: any
-  private Clazz: any
+  private instance: any
+  private beanDefinition: DefaultBeanDefinition
 
-  constructor (Clazz, entry, isClass, dependencies) {
-    super()
-    this.type = entry.type
-    this.isClass = isClass
-    this.type = entry.type
-    this.Clazz = Clazz
-    this.dependencies = dependencies
+  constructor (beanDefinition: DefaultBeanDefinition) {
+    super(beanDefinition)
+    this.beanDefinition = beanDefinition
+  }
+
+  public id (): string {
+    return this.beanDefinition.id
   }
 
   public async init (): Promise<void> {
-    this.instance = await this.createInstance(this.Clazz, this.dependencies)
+    this.instance = await this.createInstance()
   }
 
   public async getInstance (): Promise<any> {
@@ -36,5 +34,9 @@ export default class SingletonBean extends AbstractBean {
       return this.instance.preDestroy()
     }
     return Promise.resolve()
+  }
+
+  public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {
+    await callback(this.instance)
   }
 }

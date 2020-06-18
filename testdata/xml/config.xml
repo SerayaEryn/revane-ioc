@@ -1,5 +1,3 @@
-<?xml version="1" encoding="utf-8">
-
 <beans>
   <bean id="xml1" class="./xml/xml1.js"/>
   <bean id="xml2" class="./xml/xml2">

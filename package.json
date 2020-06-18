@@ -4,15 +4,15 @@
   "description": "inversion of control framework",
   "main": "index.js",
   "scripts": {
-    "unit": "tape bin/test/**/*.test.js bin/test/**/*Test.js | tspec",
-    "test": "npm run lint && npm run compile && npm run unit",
+    "unit": "ava bin/test/**/*",
+    "test": "npm run lint && npm run unit",
     "lint": "tslint --project tsconfig.json --config tslint.yaml",
-    "coverage": "npm run compile && nyc npm run unit",
+    "coverage": "npm run compile && nyc npm test",
     "compile": "tsc -d",
     "prepublish": "npm run compile -s"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=12.13.0"
   },
   "author": "Denis Fäcke",
   "license": "MIT",
@@ -21,8 +21,11 @@
     "url": "git+https://github.com/SerayaEryn/revane-ioc.git"
   },
   "dependencies": {
+    "acorn": "^6.4.1",
+    "acorn-class-fields": "^0.3.1",
     "array.prototype.flat": "^1.2.1",
-    "esprima": "^4.0.0",
+    "cron": "^1.8.2",
+    "deepmerge": "^4.2.2",
     "fast-xml-parser": "^3.12.5",
     "recursive-readdir": "^2.2.2",
     "reflect-metadata": "^0.1.12",
@@ -31,10 +34,8 @@
   "devDependencies": {
     "@types/express": "^4.11.1",
     "@types/node": "^14.0.0",
+    "ava": "^3.9.0",
     "nyc": "^15.0.0",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.9.1",
-    "tape-catch": "^1.0.6",
     "ts-node": "^8.6.2",
     "tslint": "^6.0.0",
     "tslint-config-standard": "^9.0.0",

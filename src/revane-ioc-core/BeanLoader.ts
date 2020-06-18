@@ -1,12 +1,13 @@
 import DefaultBeanLoaderRegistry from './DefaultBeanLoaderRegistry'
 import Options from './Options'
-import BeanDefinition from './BeanDefinition'
+import Loader from './Loader'
+import { BeanDefinition } from './BeanDefinition'
 
 export default class BeanLoader {
   private beanResolverRegistry: DefaultBeanLoaderRegistry
-  private loaders: any[]
+  private loaders: Loader[]
 
-  constructor (loaders: any[]) {
+  constructor (loaders: Loader[]) {
     this.loaders = loaders
     this.beanResolverRegistry = new DefaultBeanLoaderRegistry()
   }
@@ -14,7 +15,7 @@ export default class BeanLoader {
   public getBeanDefinitions (options: Options): Promise<BeanDefinition[][]> {
     try {
       this.prepareBeanResolverRegistry(options)
-      return this.beanResolverRegistry.get()
+      return this.beanResolverRegistry.get(options.loaderOptions, options.basePackage)
     } catch (err) {
       return Promise.reject(err)
     }
@@ -22,9 +23,9 @@ export default class BeanLoader {
 
   private prepareBeanResolverRegistry (options: Options): void {
     for (const optionsForResolver of options.loaderOptions || []) {
-      for (const Loader of this.loaders) {
-        if (Loader.isRelevant(optionsForResolver)) {
-          this.beanResolverRegistry.register(new Loader(optionsForResolver, options.basePackage))
+      for (const loader of this.loaders) {
+        if (loader.isRelevant(optionsForResolver)) {
+          this.beanResolverRegistry.register(loader)
         }
       }
     }

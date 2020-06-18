@@ -1,22 +1,29 @@
-import * as test from 'tape-catch'
+import test from 'ava'
 import ValueBean from '../../src/revane-ioc-core/context/bean/ValueBean'
 
-test('should return Promise on postContruct()', (t) => {
-  t.plan(1)
-
+test('should return Promise on postContruct()', async (t) => {
   const bean = new ValueBean('test')
 
-  bean.postConstruct()
-    .then(() => t.pass())
-    .catch((err) => t.error(err))
+  await bean.postConstruct()
+  t.pass()
 })
 
-test('should return Promise on preDestroy()', (t) => {
-  t.plan(1)
-
+test('should return Promise on preDestroy()', async (t) => {
   const bean = new ValueBean('test')
 
-  bean.preDestroy()
-    .then(() => t.pass())
-    .catch((err) => t.error(err))
+  await bean.preDestroy()
+  t.pass()
+})
+
+test('should return null for id', async (t) => {
+  const bean = new ValueBean('test')
+  await bean.init()
+  await bean.postConstruct()
+  await bean.preDestroy()
+  await bean.executeOnInstance(async () => {
+    // ...
+  })
+
+  t.is(bean.id(), null)
+  t.is(bean.type(), null)
 })

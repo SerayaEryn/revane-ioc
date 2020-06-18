@@ -1,23 +1,32 @@
 import BeanLoader from './BeanLoader'
-import Context from './context/Context'
 import Options from './Options'
 import Loader from './Loader'
 
 import * as flat from 'array.prototype.flat'
-import BeanTypeRegistry from './context/BeanTypeRegistry'
+import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
+import { ContextPlugin } from './context/ContextPlugin'
+import { DefaultApplicationContext } from './DefaultApplicationContext'
+import { BeanFactory } from './BeanFactory'
+import { BeanAnnotationBeanFactoryPostProcessor } from './postProcessors/BeanAnnotationBeanFactoryPostProcessor'
+import { ModuleLoaderBeanFactoryPreProcessor } from './preProcessors/ModuleLoaderFactoryPreProcessor'
+import { ApplicationContext } from './ApplicationContext'
+import { PathBeanFactoryPreProcessor } from './preProcessors/PathBeanFactoryPreProcessor'
+import { ScopeBeanFactoryPreProcessor } from './preProcessors/ScopeBeanFactoryPreProcessor'
+import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
+import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
 
 export default class RevaneIOCCore {
   protected options: Options
-  private context: Context
+  private context: ApplicationContext = new DefaultApplicationContext()
   private beanTypeRegistry: BeanTypeRegistry
-  private plugins: Map<string, (any | Loader)[]> = new Map()
+  private plugins: Map<string, (Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor)[]> = new Map()
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
     this.beanTypeRegistry = beanTypeRegistry
   }
 
-  public addPlugin (name: string, plugin: any | Loader) {
+  public addPlugin (name: string, plugin: Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor) {
     let pluginsByName = this.plugins.get(name)
     if (!pluginsByName) {
       pluginsByName = []
@@ -27,12 +36,26 @@ export default class RevaneIOCCore {
   }
 
   public async initialize (): Promise<void> {
-    this.context = new Context(this.options, this.beanTypeRegistry)
-    const loaders = this.plugins.get('loader')
+    const beanFactory = new BeanFactory(
+      [
+        new ScopeBeanFactoryPreProcessor(this.options),
+        new PathBeanFactoryPreProcessor(this.options),
+        new ModuleLoaderBeanFactoryPreProcessor(),
+        ...(this.plugins.get('beanFactoryPreProcessor') || []) as BeanFactoryPreProcessor[]
+      ],
+      [
+        new BeanAnnotationBeanFactoryPostProcessor(),
+        ...this.plugins.get('beanFactoryPostProcessor') as BeanFactoryPostProcessor[]
+      ],
+      this.context as DefaultApplicationContext,
+      this.beanTypeRegistry,
+      this.options,
+      this.plugins
+    )
+    const loaders: Loader[] = this.plugins.get('loader') as Loader[]
     const beanLoader = new BeanLoader(loaders)
     const beanDefinitions = await beanLoader.getBeanDefinitions(this.options)
-    this.context.addBeanDefinitions(flat(beanDefinitions))
-    await this.context.initialize()
+    await beanFactory.process(flat(beanDefinitions))
   }
 
   public async get (id: string): Promise<any> {
@@ -44,14 +67,27 @@ export default class RevaneIOCCore {
   }
 
   public async getMultiple (ids: string[]): Promise<any[]> {
-    return this.context.getMultiple(ids)
+    const beans = []
+    for (const id of ids) {
+      const bean = await this.get(id)
+      beans.push(bean)
+    }
+    return beans
   }
 
   public async getByType (type: string): Promise<any[]> {
     return this.context.getByType(type)
   }
 
-  public async tearDown (): Promise<void> {
-    await this.context.tearDown()
+  public async close (): Promise<void> {
+    await this.context.close()
+  }
+
+  public getContext (): ApplicationContext {
+    return this.context
+  }
+
+  public setParent (context: ApplicationContext): void {
+    this.context.setParent(context)
   }
 }

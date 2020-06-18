@@ -1,26 +1,38 @@
 import Bean from './Bean'
 
 export default class ValueBean implements Bean {
-  public type: string = 'value'
+  public scope: string = 'value'
   private value: any
 
   constructor (value: any) {
     this.value = value
   }
 
+  public id (): string {
+    return null
+  }
+
   public async init (): Promise<any> {
-    return Promise.resolve()
+    // empty
   }
 
   public async getInstance (): Promise<any> {
     return this.value
   }
 
-  public postConstruct (): Promise<any> {
-    return Promise.resolve()
+  public async postConstruct (): Promise<any> {
+    // empty
   }
 
-  public preDestroy (): Promise<any> {
-    return Promise.resolve()
+  public async preDestroy (): Promise<any> {
+    // empty
+  }
+
+  public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {
+    await callback(null)
+  }
+
+  public type (): string {
+    return null
   }
 }
