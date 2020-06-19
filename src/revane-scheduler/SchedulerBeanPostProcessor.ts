@@ -15,8 +15,9 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
   }
 
   public async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<Bean[]> {
-    if (this.enabled && beanDefinition.classConstructor.prototype != null) {
-      const scheduled = Reflect.getMetadata('scheduled', beanDefinition.classConstructor.prototype)
+    const { classConstructor } = beanDefinition
+    if (this.enabled && classConstructor.prototype != null) {
+      const scheduled = Reflect.getMetadata('scheduled', classConstructor.prototype)
       if (scheduled != null) {
         if (scheduled.cronPattern == null) {
           throw new NoCronPatternProvided()
@@ -25,11 +26,16 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
           throw new InvalidCronPatternProvided(scheduled.cronPattern)
         }
         const instance = await bean.getInstance()
-        const asyncFunction = instance[scheduled.propertyKey].constructor.name === 'AsyncFunction'
-        const functionToSchedule = instance[scheduled.propertyKey].bind(instance)
-        this.schedulingService.schedule(scheduled.cronPattern, functionToSchedule, asyncFunction)
+        const { propertyKey, cronPattern } = scheduled
+        const isAsyncFunction = this.isAsyncFunction(instance[propertyKey])
+        const functionToSchedule = instance[propertyKey].bind(instance)
+        this.schedulingService.schedule(cronPattern, functionToSchedule, isAsyncFunction)
       }
     }
     return [bean]
+  }
+
+  private isAsyncFunction (f: Function): boolean {
+    return f.constructor.name === 'AsyncFunction'
   }
 }

@@ -7,28 +7,31 @@ export class TaskScheduler {
   public schedule (
     cronPattern: string,
     functionToSchedule: Function,
-    asyncFunction: boolean
+    isAsyncFunction: boolean
   ): void {
-    const { errorHandler } = this
     const job = new CronJob(
       cronPattern,
-      function test () {
-        if (asyncFunction) {
-          functionToSchedule()
-            .catch(errorHandler)
-        } else {
-          try {
-            functionToSchedule()
-          } catch (error) {
-            errorHandler(error)
-          }
-        }
+      () => {
+        this.executeTask(isAsyncFunction, functionToSchedule)
       },
       null,
       true,
       'UTC'
     )
     this.jobs.push(job)
+  }
+
+  private executeTask (asyncFunction: boolean, functionToSchedule: Function): void {
+    if (asyncFunction) {
+      functionToSchedule()
+        .catch(this.errorHandler)
+    } else {
+      try {
+        functionToSchedule()
+      } catch (error) {
+        this.errorHandler(error)
+      }
+    }
   }
 
   public close (): void {
