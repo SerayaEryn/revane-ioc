@@ -1,15 +1,15 @@
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
 import Bean from '../revane-ioc-core/context/bean/Bean'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
-import { SchedulingService } from './SchedulingService'
+import { TaskScheduler } from './TaskScheduler'
 import { NoCronPatternProvided } from './NoCronPatternProvided'
 import { InvalidCronPatternProvided } from './InvalidCronPatternProvided'
 
 export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
-  private readonly schedulingService: SchedulingService
+  private readonly schedulingService: TaskScheduler
   private readonly enabled: boolean
 
-  constructor (schedulingService: SchedulingService, enabled: boolean) {
+  constructor (schedulingService: TaskScheduler, enabled: boolean) {
     this.schedulingService = schedulingService
     this.enabled = enabled
   }
@@ -25,8 +25,9 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
           throw new InvalidCronPatternProvided(scheduled.cronPattern)
         }
         const instance = await bean.getInstance()
+        const asyncFunction = instance[scheduled.propertyKey].constructor.name === 'AsyncFunction'
         const functionToSchedule = instance[scheduled.propertyKey].bind(instance)
-        this.schedulingService.schedule(scheduled.cronPattern, functionToSchedule)
+        this.schedulingService.schedule(scheduled.cronPattern, functionToSchedule, asyncFunction)
       }
     }
     return [bean]

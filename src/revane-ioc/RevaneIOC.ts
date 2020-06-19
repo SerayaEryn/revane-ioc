@@ -31,10 +31,11 @@ import { ConfigurationProperties } from '../revane-configuration/ConfigurationPr
 import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy'
 import { Scheduled } from '../revane-scheduler/Scheduled'
 import { SchedulerBeanPostProcessor } from '../revane-scheduler/SchedulerBeanPostProcessor'
-import { SchedulingService } from '../revane-scheduler/SchedulingService'
+import { TaskScheduler } from '../revane-scheduler/TaskScheduler'
 import { join } from 'path'
 import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader'
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
+import { SchedulerLoader } from '../revane-scheduler/SchedulerLoader'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -64,7 +65,7 @@ export default class RevaneIOC {
   private options: Options
   private initialized: boolean = false
   private readonly configuration: RevaneConfiguration
-  private schedulingService: SchedulingService
+  private readonly taskScheduler: TaskScheduler = new TaskScheduler()
 
   constructor (options: Options) {
     this.options = options
@@ -152,7 +153,7 @@ export default class RevaneIOC {
   }
 
   public async close (): Promise<void> {
-    this.schedulingService.close()
+    this.taskScheduler.close()
     await this.revaneCore.close()
   }
 
@@ -168,6 +169,7 @@ export default class RevaneIOC {
     if (!this.options.configuration.disabled) {
       this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
     }
+    this.revaneCore.addPlugin('loader', new SchedulerLoader(this.taskScheduler))
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -181,10 +183,9 @@ export default class RevaneIOC {
       )
       this.revaneCore.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
     }
-    this.schedulingService = new SchedulingService()
     this.revaneCore.addPlugin(
       'beanFactoryPostProcessor',
-      new SchedulerBeanPostProcessor(this.schedulingService, this.options.scheduling.enabled)
+      new SchedulerBeanPostProcessor(this.taskScheduler, this.options.scheduling.enabled)
     )
   }
 
@@ -221,6 +222,7 @@ export default class RevaneIOC {
     if (!this.options.configuration.disabled) {
       coreOptions.loaderOptions.push({ file: 'config' })
     }
+    coreOptions.loaderOptions.push({ file: 'taskScheduler' })
     coreOptions.defaultScope = 'singleton'
     coreOptions.basePackage = options.basePackage
     coreOptions.noRedefinition = options.noRedefinition

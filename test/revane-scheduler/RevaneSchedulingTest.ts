@@ -1,6 +1,7 @@
 import test from 'ava'
 import * as path from 'path'
 import RevaneIOC from '../../src/revane-ioc/RevaneIOC'
+import { SchedulerLoader } from '../../src/revane-scheduler/SchedulerLoader'
 
 test('Should schedule task', async (t) => {
   const options = {
@@ -66,6 +67,27 @@ test('Should not schedule tasks', async (t) => {
   const revane = new RevaneIOC(options)
   await revane.initialize()
   t.pass()
+})
+
+test('Should handle error in scheduled task', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/scheduler-throws'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws') }
+    ],
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws/testconfig') },
+    profile: 'test'
+  }
+  const revane = new RevaneIOC(options)
+  await revane.initialize()
+  await wait()
+  const errorHandler = await revane.get('errorHandler')
+  t.true(errorHandler.handledError)
+})
+
+test('schedulerLoader should return correct type', (t) => {
+  const loader = new SchedulerLoader(null)
+  t.is(loader.type(), 'taskScheduler')
 })
 
 async function wait (): Promise<void> {
