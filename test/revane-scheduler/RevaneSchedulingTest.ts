@@ -85,6 +85,37 @@ test('Should handle error in scheduled task', async (t) => {
   t.true(errorHandler.handledError)
 })
 
+test('Should handle error in scheduled async task', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/scheduler-throws3'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws3') }
+    ],
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws3/testconfig') },
+    profile: 'test'
+  }
+  const revane = new RevaneIOC(options)
+  await revane.initialize()
+  await wait()
+  const errorHandler = await revane.get('errorHandler')
+  t.true(errorHandler.handledError)
+})
+
+test('Should handle error in scheduled task with default handler', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/scheduler-throws2'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws2') }
+    ],
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws2/testconfig') },
+    profile: 'test'
+  }
+  const revane = new RevaneIOC(options)
+  await revane.initialize()
+  await wait()
+  t.pass()
+})
+
 test('schedulerLoader should return correct type', (t) => {
   const loader = new SchedulerLoader(null)
   t.is(loader.type(), 'taskScheduler')
