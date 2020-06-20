@@ -17,7 +17,9 @@ import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { Property } from '../../revane-ioc-core/Property'
 import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
-import { readFile } from 'fs/promises'
+import { promises } from 'fs'
+
+const { readFile } = promises
 
 const filterByType = {
   regex: RegexFilter
