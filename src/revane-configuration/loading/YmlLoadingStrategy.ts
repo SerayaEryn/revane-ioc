@@ -3,6 +3,7 @@ import { promises } from 'fs'
 import { all as merge } from 'deepmerge'
 import { ConfigFileNotFound } from './ConfigFileNotFound'
 import { safeLoad } from 'js-yaml'
+import { replaceEnvironmentVariables } from './EnvironmentLoader'
 
 const { readFile } = promises
 
@@ -14,11 +15,11 @@ export class YmlLoadingStrategy implements LoadingStrategy {
     } catch (error) {
       throw new ConfigFileNotFound(`${configDirectory}/application.yml`)
     }
-    const defaultConfig = safeLoad(buffer1.toString())
+    const defaultConfig = safeLoad(replaceEnvironmentVariables(buffer1.toString()))
     let profileConfig
     try {
       const buffer2 = await readFile(`${configDirectory}/application-${profile}.yml`)
-      profileConfig = safeLoad(buffer2.toString())
+      profileConfig = safeLoad(replaceEnvironmentVariables(buffer2.toString()))
     } catch (ignore) {
       profileConfig = {}
     }

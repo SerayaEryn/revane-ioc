@@ -117,3 +117,27 @@ test('should add configuration properties from yaml #2', async (t) => {
   t.is(configurationProperties.property1, 'hello world')
   t.is(configurationProperties.property2, 43)
 })
+
+test('should add configuration properties from yaml and replace env vars', async (t) => {
+  t.plan(4)
+
+  process.env.A_ENV_VAR = 'a env var'
+  const options = {
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml3') }
+    ],
+    basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml3'),
+    componentScan: false,
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesYml3/testconfig') },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+
+  const configuration: RevaneConfiguration = await revane.get('configuration')
+  t.is(configuration.getString('test.property1'), 'hello world')
+  t.is(configuration.getString('test.property2'), 'a env var')
+  const configurationProperties = await revane.get('scan56')
+  t.is(configurationProperties.property1, 'hello world')
+  t.is(configurationProperties.property2, 'a env var')
+})

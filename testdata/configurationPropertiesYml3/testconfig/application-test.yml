@@ -1,0 +1,2 @@
+test:
+  property2: ${A_ENV_VAR}
