@@ -6,7 +6,7 @@ import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 test('should do component scan without filters', async (t) => {
   t.plan(8)
 
-  const basePackage = path.join(__dirname, '../../../testdata/scan')
+  const basePackage = path.join(__dirname, '../../testdata/scan')
   const options = {
     basePackage,
     componentScan: true
@@ -31,7 +31,7 @@ test('should do component scan without filters', async (t) => {
 })
 
 test('should do component scan with exclude filter', async (t) => {
-  const basePackage = path.join(__dirname, '../../../testdata/scan')
+  const basePackage = path.join(__dirname, '../../testdata/scan')
   const options = {
     basePackage,
     excludeFilters: [{
@@ -81,7 +81,7 @@ test('should throw error on undefined module', async (t) => {
 })
 
 test('should do component scan with include filter', async (t) => {
-  const basePackage = path.join(__dirname, '../../../testdata/scan')
+  const basePackage = path.join(__dirname, '../../testdata/scan')
   const options = {
     basePackage,
     includeFilters: [{

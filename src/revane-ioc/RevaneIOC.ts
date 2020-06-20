@@ -37,6 +37,7 @@ import { join } from 'path'
 import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader'
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
 import { SchedulerLoader } from '../revane-scheduler/SchedulerLoader'
+import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -100,7 +101,8 @@ export default class RevaneIOC {
         this.options.configuration?.required || false,
         this.options.autoConfiguration || this.options.configuration.disabled,
         [
-          new JsonLoadingStrategy()
+          new JsonLoadingStrategy(),
+          new YmlLoadingStrategy()
         ]
       )
     )

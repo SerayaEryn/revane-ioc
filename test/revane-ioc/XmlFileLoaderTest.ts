@@ -32,7 +32,7 @@ test('should reject on error', async (t) => {
 
 test('should trigger scan from xml #2', async (t) => {
   const file = path.join(__dirname, '../../../testdata/xml/config6.xml')
-  const basePackage = path.join(__dirname, '../../../testdata/scan')
+  const basePackage = path.join(__dirname, '../../testdata/scan')
 
   const xmlFileResolver = new XmlFileLoader()
 
@@ -44,7 +44,7 @@ test('should trigger scan from xml #2', async (t) => {
 
 test('should trigger scan from xml', async (t) => {
   const file = path.join(__dirname, '../../../testdata/xml/config5.xml')
-  const basePackage = path.join(__dirname, '../../../testdata/scan')
+  const basePackage = path.join(__dirname, '../../testdata/scan')
 
   const xmlFileResolver = new XmlFileLoader()
 
