@@ -1,12 +1,12 @@
 import Bean from './context/bean/Bean'
 import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
-import * as uid from 'uid-safe'
+import { randomBytes } from 'crypto'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string
   public id: string
-  public uid: string = uid.sync(16)
+  public uid: string = uid()
   public type: string
   public dependencyIds: Property[]
   public loadAfter?: Property[]
@@ -31,4 +31,8 @@ export default class DefaultBeanDefinition implements BeanDefinition {
       return typeof this.classConstructor === 'function'
     }
   }
+}
+
+function uid (): string {
+  return randomBytes(32).toString('hex')
 }

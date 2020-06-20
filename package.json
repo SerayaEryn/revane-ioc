@@ -23,14 +23,12 @@
   "dependencies": {
     "acorn": "^7.3.1",
     "acorn-class-fields": "^0.3.1",
-    "array.prototype.flat": "^1.2.1",
     "cron": "^1.8.2",
     "deepmerge": "^4.2.2",
     "fast-xml-parser": "^3.12.5",
     "recursive-readdir": "^2.2.2",
     "reflect-metadata": "^0.1.12",
-    "tslib": "^2.0.0",
-    "uid-safe": "^2.1.5"
+    "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
