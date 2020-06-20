@@ -1,6 +1,5 @@
 'use strict'
 
-import * as flat from 'array.prototype.flat'
 import 'reflect-metadata'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Filter from './Filter'
@@ -18,6 +17,7 @@ import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { Property } from '../../revane-ioc-core/Property'
 import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
+import { readFile } from 'fs/promises'
 
 const filterByType = {
   regex: RegexFilter
@@ -30,26 +30,24 @@ export default class ComponentScanLoader implements Loader {
     const includeFilters = convert(options.includeFilters || [])
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const excludeFilters = convert(options.excludeFilters || [])
-
-    return recursiveReaddir(path)
-      .then(flat)
-      .then((files: string[]) => filterByJavascriptFiles(files))
-      .then((files: string[]) => {
-        const filteredFiles = this.applyFilters(files, includeFilters, excludeFilters)
-        const result = []
-        for (const file of filteredFiles) {
-          let module1
-          try {
-            module1 = getClazz(file)
-          } catch (error) {
-            throw new ModuleLoadError(file)
-          }
-          const clazz = file.replace(basePackage, '.')
-          const beanDefinition = getBeanDefinition(module1, clazz)
-          result.push(beanDefinition)
-        }
-        return result
-      })
+    const files = await recursiveReaddir(path)
+    const flatFiles = files.flat()
+    const filesFilteredByJavascript = filterByJavascriptFiles(flatFiles)
+    const filesFilteredByPackage = await this.filterByPackage(filesFilteredByJavascript, basePackage)
+    const filteredFiles = this.applyFilters(filesFilteredByPackage, includeFilters, excludeFilters)
+    const result: BeanDefinition[] = []
+    for (const file of filteredFiles) {
+      let module1
+      try {
+        module1 = getClazz(file)
+      } catch (error) {
+        throw new ModuleLoadError(file)
+      }
+      const clazz = file.replace(basePackage, '.')
+      const beanDefinition = getBeanDefinition(module1, clazz)
+      result.push(beanDefinition)
+    }
+    return result
   }
 
   public isRelevant (options: LoaderOptions): boolean {
@@ -72,6 +70,32 @@ export default class ComponentScanLoader implements Loader {
       filtered = filtered.filter((def) => !filter.applies(def))
     }
     return filtered
+  }
+
+  private async filterByPackage (files: string[], basePackage: string): Promise<string[]> {
+    const filteredFiles = []
+    for (const file of files) {
+      if (this.isInsideNodeModules(file, basePackage)) {
+        if (await this.moduleDependsOnRevane(file, basePackage)) {
+          filteredFiles.push(file)
+        }
+      } else {
+        filteredFiles.push(file)
+      }
+    }
+    return filteredFiles
+  }
+
+  private async moduleDependsOnRevane (file: string, basePackage: string): Promise<boolean> {
+    const moduleName = file.replace(`${basePackage}/node_modules/`, '').split('/')[0]
+    const packageJsonPath = `${basePackage}/node_modules/${moduleName}/package.json`
+    const buffer = await readFile(packageJsonPath)
+    const packageJson = JSON.parse(buffer.toString())
+    return packageJson.dependencies?.revane != null
+  }
+
+  private isInsideNodeModules (file: string, basePackage: string): boolean {
+    return file.replace(basePackage, '').startsWith('/node_modules')
   }
 }
 

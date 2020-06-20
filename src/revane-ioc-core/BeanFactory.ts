@@ -35,13 +35,17 @@ export class BeanFactory {
   }
 
   async process (beanDefinitions: BeanDefinition[]): Promise<void> {
-    let allPreProcessedBeanDefinitions = []
-    for (const beanDefinition of beanDefinitions) {
-      const preProcessedBeanDefinitions = await this.preProcess(beanDefinition)
-      allPreProcessedBeanDefinitions = allPreProcessedBeanDefinitions.concat(preProcessedBeanDefinitions)
+    let preprocessed = []
+    for (const preProcessor of this.preProcessors) {
+      let allPreProcessedBeanDefinitions = []
+      for (const beanDefinition of beanDefinitions) {
+        const preProcessedBeanDefinitions = await preProcessor.preProcess(beanDefinition, allPreProcessedBeanDefinitions)
+        allPreProcessedBeanDefinitions = allPreProcessedBeanDefinitions.concat(preProcessedBeanDefinitions)
+      }
+      preprocessed = allPreProcessedBeanDefinitions
     }
     const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
-    for (const preProcessedBeanDefinition of allPreProcessedBeanDefinitions) {
+    for (const preProcessedBeanDefinition of preprocessed) {
       const exitingBeanDefininaton = processedBeanDefinitions.get(preProcessedBeanDefinition.id)
       if (exitingBeanDefininaton != null && this.options.noRedefinition) {
         throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
@@ -60,18 +64,6 @@ export class BeanFactory {
       postProcessedBeanDefinitions = postProcessedBeanDefinitions.concat(postProcessed)
     }
     return postProcessedBeanDefinitions
-  }
-
-  private async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
-    let preProcessedBeanDefinitions: BeanDefinition[] = [beanDefinition]
-    for (const preProcessor of this.preProcessors) {
-      let arr: BeanDefinition[] = []
-      for (const preProcessedBeanDefinition of preProcessedBeanDefinitions) {
-        arr = await preProcessor.preProcess(preProcessedBeanDefinition)
-      }
-      preProcessedBeanDefinitions = arr
-    }
-    return preProcessedBeanDefinitions
   }
 
   private async registerBean (entry: BeanDefinition, beanDefinitions: BeanDefinition[]): Promise<Bean> {

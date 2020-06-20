@@ -11,7 +11,7 @@ export default class Options {
 
   public profile: string
 
-  public configuration: {
+  public configuration?: {
     directory?: string
     required?: boolean
     disabled?: boolean
@@ -20,4 +20,6 @@ export default class Options {
   public scheduling?: {
     enabled: boolean
   }
+
+  public autoConfiguration?: boolean
 }

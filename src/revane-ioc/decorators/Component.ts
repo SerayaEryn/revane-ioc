@@ -4,7 +4,7 @@ import * as classFields from 'acorn-class-fields'
 import { dependenciesSym, idSym, typeSym } from './Symbols'
 
 export function createComponentDecorator (type: string) {
-  return function decoratoteComponent (options?: Options | string | any) {
+  return function decorateComponent (options?: Options | string | any) {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (typeof options === 'string' || options === undefined || options.id || options.dependencies) {
       return function define (Class) {

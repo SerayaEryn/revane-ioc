@@ -98,7 +98,49 @@ test('should do component scan with include filter', async (t) => {
     })
 })
 
-function findDefinition (definitions, name): BeanDefinition {
+test('should do component scan but exclude node module without dependency on revane', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata/componentScan1')
+  const options = {
+    basePackage,
+    componentScan: true
+  }
+
+  const componentScanResolver = new ComponentScanLoader()
+  return await componentScanResolver.load(options, basePackage)
+    .then((beanDefinitions) => {
+      t.is(beanDefinitions.length, 0)
+    })
+})
+
+test('should do component scan but exclude node module without dependency on revane #2', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata/componentScan3')
+  const options = {
+    basePackage,
+    componentScan: true
+  }
+
+  const componentScanResolver = new ComponentScanLoader()
+  return await componentScanResolver.load(options, basePackage)
+    .then((beanDefinitions) => {
+      t.is(beanDefinitions.length, 0)
+    })
+})
+
+test('should do component scan and detect node module with dependency on revane', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata/componentScan2')
+  const options = {
+    basePackage,
+    componentScan: true
+  }
+
+  const componentScanResolver = new ComponentScanLoader()
+  return await componentScanResolver.load(options, basePackage)
+    .then((beanDefinitions) => {
+      t.is(beanDefinitions.length, 1)
+    })
+})
+
+function findDefinition (definitions: BeanDefinition[], name: string): BeanDefinition {
   for (const definition of definitions) {
     if (definition.id === name) {
       return definition

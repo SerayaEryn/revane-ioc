@@ -14,6 +14,7 @@ import { PathBeanFactoryPreProcessor } from './preProcessors/PathBeanFactoryPreP
 import { ScopeBeanFactoryPreProcessor } from './preProcessors/ScopeBeanFactoryPreProcessor'
 import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
+import { ConditionalsBeanFactoryPreProcessor } from './preProcessors/ConditionalsBeanFactoryPreProcessor'
 
 export default class RevaneIOCCore {
   protected options: Options
@@ -41,6 +42,7 @@ export default class RevaneIOCCore {
         new ScopeBeanFactoryPreProcessor(this.options),
         new PathBeanFactoryPreProcessor(this.options),
         new ModuleLoaderBeanFactoryPreProcessor(),
+        new ConditionalsBeanFactoryPreProcessor(),
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         ...(this.plugins.get('beanFactoryPreProcessor') || []) as BeanFactoryPreProcessor[]
       ],

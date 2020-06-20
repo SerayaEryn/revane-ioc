@@ -20,7 +20,8 @@ import {
   Controller,
   Scope,
   Bean,
-  Scheduler
+  Scheduler,
+  ConditionalOnMissingBean
 } from './decorators/Decorators'
 import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
@@ -57,7 +58,8 @@ export {
   ConfigurationProperties,
   ContextPlugin,
   ApplicationContext,
-  Scheduled
+  Scheduled,
+  ConditionalOnMissingBean
 }
 
 export default class RevaneIOC {
@@ -81,8 +83,11 @@ export default class RevaneIOC {
     if (!this.options.scheduling.enabled) {
       this.options.scheduling.enabled = false
     }
-    if (this.options.noRedefinition === undefined) {
+    if (this.options.noRedefinition == null) {
       this.options.noRedefinition = true
+    }
+    if (this.options.autoConfiguration == null) {
+      this.options.autoConfiguration = false
     }
 
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -92,8 +97,8 @@ export default class RevaneIOC {
       new ConfigurationOptions(
         this.options.profile,
         this.configPath(),
-        this.options.configuration.required,
-        this.options.configuration.disabled,
+        this.options.configuration?.required || false,
+        this.options.autoConfiguration || this.options.configuration.disabled,
         [
           new JsonLoadingStrategy()
         ]
@@ -102,11 +107,11 @@ export default class RevaneIOC {
   }
 
   private configPath (): string {
-    if (this.options.configuration.directory?.startsWith('/')) {
+    if (this.options.configuration?.directory?.startsWith('/')) {
       return this.options.configuration.directory
     }
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    return join(this.options.basePackage, this.options.configuration.directory || '/config')
+    return join(this.options.basePackage, this.options.configuration?.directory || '/config')
   }
 
   public async initialize (): Promise<void> {
@@ -166,7 +171,7 @@ export default class RevaneIOC {
   }
 
   private async addDefaultPlugins (): Promise<void> {
-    if (!this.options.configuration.disabled) {
+    if (!this.options.configuration?.disabled) {
       this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
     }
     this.revaneCore.addPlugin('loader', new SchedulerLoader(this.taskScheduler))
@@ -176,7 +181,7 @@ export default class RevaneIOC {
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
-    if (!this.options.configuration.disabled) {
+    if (!this.options.configuration?.disabled) {
       this.revaneCore.addPlugin(
         'beanFactoryPostProcessor',
         new ConfigurationPropertiesPostProcessor(this.configuration)
@@ -219,10 +224,16 @@ export default class RevaneIOC {
     coreOptions.loaderOptions = options.loaderOptions || []
     this.checkForUnknownEndings(coreOptions.loaderOptions)
 
-    if (!this.options.configuration.disabled) {
+    if (!this.options.configuration?.disabled) {
       coreOptions.loaderOptions.push({ file: 'config' })
     }
     coreOptions.loaderOptions.push({ file: 'taskScheduler' })
+    if (this.options.autoConfiguration) {
+      coreOptions.loaderOptions.push({
+        componentScan: true,
+        basePackage: this.options.basePackage
+      })
+    }
     coreOptions.defaultScope = 'singleton'
     coreOptions.basePackage = options.basePackage
     coreOptions.noRedefinition = options.noRedefinition

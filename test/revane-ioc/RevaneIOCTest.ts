@@ -29,6 +29,20 @@ test('should read json configuration file and register beans', async (t) => {
   t.truthy(bean2.json1)
 })
 
+test('should use auto configuration', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/autoConfig'),
+    profile: 'test',
+    autoConfiguration: true
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+  const configuration = await revane.get('configuration')
+  await revane.get('taskScheduler')
+  await revane.get('test')
+  t.true(configuration.get('test'))
+})
+
 test('should throw error on unknown id', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
@@ -519,12 +533,38 @@ test('should not throw error if bean redefinition is allowed', async (t) => {
   }
   const revane = new Revane(options)
   await revane.initialize()
-  t.truthy(revane.has('scan1'))
+  t.truthy(await revane.has('scan1'))
+})
+
+test('should not create conditional bean if not missing', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean1'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean1') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+  t.truthy(await revane.has('conditionalOnMissingBean'))
+})
+
+test('should create conditional bean if missing', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean2'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean2') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+  t.truthy(await revane.has('conditionalOnMissingBean'))
 })
 
 test('should return multiple beans', async (t) => {
-  t.plan(2)
-
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [

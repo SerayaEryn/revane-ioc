@@ -4,6 +4,7 @@ import { Property } from './Property'
 export interface BeanDefinition {
   class: string
   id: string
+  uid: string
   type: string
   dependencyIds: Property[]
   loadAfter?: Property[]
@@ -12,5 +13,6 @@ export interface BeanDefinition {
   instance?: any
   classConstructor?: any
   dependencies: Bean[]
+  conditionalOnMissingBean?: string
   isClass (): boolean
 }
