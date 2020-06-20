@@ -1,6 +1,6 @@
 {
   "name": "revane-ioc",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "description": "inversion of control framework",
   "main": "bin/src/revane-ioc/RevaneIOC.js",
   "scripts": {
