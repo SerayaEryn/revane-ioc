@@ -2,7 +2,6 @@ import BeanLoader from './BeanLoader'
 import Options from './Options'
 import Loader from './Loader'
 
-import * as flat from 'array.prototype.flat'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import { ContextPlugin } from './context/ContextPlugin'
 import { DefaultApplicationContext } from './DefaultApplicationContext'
@@ -57,8 +56,8 @@ export default class RevaneIOCCore {
     )
     const loaders: Loader[] = this.plugins.get('loader') as Loader[]
     const beanLoader = new BeanLoader(loaders)
-    const beanDefinitions = await beanLoader.getBeanDefinitions(this.options)
-    await beanFactory.process(flat(beanDefinitions))
+    const beanDefinitions: any = await beanLoader.getBeanDefinitions(this.options)
+    await beanFactory.process(beanDefinitions.flat())
   }
 
   public async get (id: string): Promise<any> {
