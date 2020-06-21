@@ -1,0 +1,3 @@
+revane:
+  logging:
+    enabled: false

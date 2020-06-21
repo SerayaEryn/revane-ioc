@@ -1,0 +1,4 @@
+revane:
+  logging:
+    path: '.'
+    rootLevel: WARN

@@ -38,6 +38,7 @@ import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
 import { SchedulerLoader } from '../revane-scheduler/SchedulerLoader'
 import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
+import { LoggingOptions, LogFactory, Logger, LoggingLoader } from '../revane-logging/RevaneLogging'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -60,7 +61,9 @@ export {
   ContextPlugin,
   ApplicationContext,
   Scheduled,
-  ConditionalOnMissingBean
+  ConditionalOnMissingBean,
+  Logger,
+  LogFactory
 }
 
 export default class RevaneIOC {
@@ -91,7 +94,6 @@ export default class RevaneIOC {
       this.options.autoConfiguration = false
     }
 
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.options.profile = this.options.profile || process.env.REVANE_PROFILE
 
     this.configuration = new RevaneConfiguration(
@@ -112,7 +114,6 @@ export default class RevaneIOC {
     if (this.options.configuration?.directory?.startsWith('/')) {
       return this.options.configuration.directory
     }
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     return join(this.options.basePackage, this.options.configuration?.directory || '/config')
   }
 
@@ -137,6 +138,33 @@ export default class RevaneIOC {
       const allowRedefinition = this.configuration.getBoolean('revane.main.allow-bean-definition-overriding')
       this.options.noRedefinition = !allowRedefinition
     }
+  }
+
+  private loggingOptions (): LoggingOptions {
+    let rootLevel = 'INFO'
+    if (this.configuration.has('revane.logging.rootLevel')) {
+      rootLevel = this.configuration.getString('revane.logging.rootLevel')
+    }
+    let levels = {}
+    if (this.configuration.has('revane.logging.level')) {
+      levels = this.configuration.get('revane.logging.level')
+    }
+    let file = null
+    if (this.configuration.has('revane.logging.file')) {
+      file = this.configuration.getString('revane.logging.file')
+    }
+    let path = null
+    if (this.configuration.has('revane.logging.path')) {
+      path = this.configuration.getString('revane.logging.path')
+    }
+    const options: LoggingOptions = {
+      basePackage: this.options.basePackage,
+      rootLevel,
+      levels,
+      file,
+      path
+    }
+    return options
   }
 
   public async get (id: string): Promise<any> {
@@ -177,11 +205,8 @@ export default class RevaneIOC {
       this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
     }
     this.revaneCore.addPlugin('loader', new SchedulerLoader(this.taskScheduler))
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
     if (!this.options.configuration?.disabled) {
       this.revaneCore.addPlugin(
@@ -194,6 +219,16 @@ export default class RevaneIOC {
       'beanFactoryPostProcessor',
       new SchedulerBeanPostProcessor(this.taskScheduler, this.options.scheduling.enabled)
     )
+    if (this.isLoggingEnabled()) {
+      this.revaneCore.addPlugin('loader', new LoggingLoader(this.loggingOptions()))
+    }
+  }
+
+  private isLoggingEnabled (): boolean {
+    const loggingEnabled = this.configuration.has('revane.logging.enabled')
+    return !loggingEnabled ||
+    (loggingEnabled &&
+      this.configuration.getBoolean('revane.logging.enabled'))
   }
 
   private addPlugins (): void {
@@ -222,12 +257,14 @@ export default class RevaneIOC {
 
   private prepareCoreOptions (options: Options): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     coreOptions.loaderOptions = options.loaderOptions || []
     this.checkForUnknownEndings(coreOptions.loaderOptions)
 
     if (!this.options.configuration?.disabled) {
       coreOptions.loaderOptions.push({ file: 'config' })
+    }
+    if (this.isLoggingEnabled()) {
+      coreOptions.loaderOptions.push({ file: 'logging' })
     }
     coreOptions.loaderOptions.push({ file: 'taskScheduler' })
     if (this.options.autoConfiguration) {

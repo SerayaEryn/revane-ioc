@@ -43,7 +43,7 @@ export default class ComponentScanLoader implements Loader {
       try {
         module1 = getClazz(file)
       } catch (error) {
-        throw new ModuleLoadError(file)
+        throw new ModuleLoadError(file, error)
       }
       if (Reflect.getMetadata(idSym, module1) == null) {
         continue

@@ -1,0 +1,6 @@
+revane:
+  logging:
+    path: '.'
+    rootLevel: TRACE
+    level:
+      test: DEBUG

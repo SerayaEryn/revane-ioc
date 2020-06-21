@@ -2,3 +2,7 @@ node_modules/*
 coverage
 .nyc_output
 bin
+testdata/logging2/test.log
+testdata/logging3/revane.log
+testdata/logging4/revane.log
+testdata/logging5/revane.log
