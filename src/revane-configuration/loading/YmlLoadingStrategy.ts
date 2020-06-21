@@ -1,9 +1,9 @@
 import { LoadingStrategy } from './LoadingStrategy'
 import { promises } from 'fs'
-import { all as merge } from 'deepmerge'
 import { ConfigFileNotFound } from './ConfigFileNotFound'
 import { safeLoad } from 'js-yaml'
 import { replaceEnvironmentVariables } from './EnvironmentLoader'
+import { deepMerge } from '../../revane-utils/Deepmerge'
 
 const { readFile } = promises
 
@@ -23,6 +23,6 @@ export class YmlLoadingStrategy implements LoadingStrategy {
     } catch (ignore) {
       profileConfig = {}
     }
-    return merge([defaultConfig, profileConfig])
+    return deepMerge(defaultConfig, profileConfig)
   }
 }
