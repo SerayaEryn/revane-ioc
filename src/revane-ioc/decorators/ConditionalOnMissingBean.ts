@@ -1,4 +1,5 @@
 import { conditionalOnMissingBeanSym } from './Symbols'
+import { Reflect } from '../../revane-utils/Reflect'
 
 export function createConditionalOnMissingBeanDecorator (): Function {
   return function decorateWithOptions (maybeTarget?): Function | any {

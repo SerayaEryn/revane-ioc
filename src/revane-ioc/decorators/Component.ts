@@ -2,10 +2,10 @@ import Options from './Options'
 import { Parser } from 'acorn'
 import * as classFields from 'acorn-class-fields'
 import { dependenciesSym, idSym, typeSym } from './Symbols'
+import { Reflect } from '../../revane-utils/Reflect'
 
 export function createComponentDecorator (type: string) {
   return function decorateComponent (options?: Options | string | any) {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (typeof options === 'string' || options === undefined || options.id || options.dependencies) {
       return function define (Class) {
         let opts: Options
@@ -14,7 +14,6 @@ export function createComponentDecorator (type: string) {
           id = options
           opts = new Options()
         } else {
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           opts = options || new Options()
           id = opts.id
         }

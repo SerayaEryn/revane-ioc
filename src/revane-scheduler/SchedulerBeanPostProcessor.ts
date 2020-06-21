@@ -4,6 +4,7 @@ import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { TaskScheduler } from './TaskScheduler'
 import { NoCronPatternProvided } from './NoCronPatternProvided'
 import { InvalidCronPatternProvided } from './InvalidCronPatternProvided'
+import { Reflect } from '../revane-utils/Reflect'
 
 export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
   private readonly schedulingService: TaskScheduler

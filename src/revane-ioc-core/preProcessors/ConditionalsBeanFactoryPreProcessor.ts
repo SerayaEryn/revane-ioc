@@ -1,6 +1,7 @@
 import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor'
 import { BeanDefinition } from '../BeanDefinition'
 import { conditionalOnMissingBeanSym } from '../../revane-ioc/decorators/Symbols'
+import { Reflect } from '../../revane-utils/Reflect'
 
 export class ConditionalsBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   public async preProcess (

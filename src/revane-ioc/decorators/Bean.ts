@@ -1,3 +1,5 @@
+import { Reflect } from '../../revane-utils/Reflect'
+
 export function createBeanDecorator (): Function {
   return function decoratoteBeanFactory (maybeId, maybePropertyKey: string, descriptor: PropertyDescriptor) {
     if (typeof maybeId === 'string' || maybeId === undefined) {

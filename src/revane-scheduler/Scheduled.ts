@@ -1,3 +1,5 @@
+import { Reflect } from '../revane-utils/Reflect'
+
 function createScheduledDecorator (): Function {
   return function decoratoteScheduledFactory (cronPattern: string) {
     return function define (target, propertyKey: string, descriptor: PropertyDescriptor): void {

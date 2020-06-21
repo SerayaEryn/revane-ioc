@@ -1,6 +1,5 @@
 'use strict'
 
-import 'reflect-metadata'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Filter from './Filter'
 import RegexFilter from './RegexFilter'
@@ -18,6 +17,7 @@ import { Property } from '../../revane-ioc-core/Property'
 import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
 import { promises } from 'fs'
+import { Reflect } from '../../revane-utils/Reflect'
 
 const { readFile } = promises
 
@@ -115,7 +115,6 @@ function getClazz (file: string): any {
 function getBeanDefinition (module1, clazz): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
   const beanDefinition = new DefaultBeanDefinition(id)
