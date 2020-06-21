@@ -45,6 +45,9 @@ export default class ComponentScanLoader implements Loader {
       } catch (error) {
         throw new ModuleLoadError(file)
       }
+      if (Reflect.getMetadata(idSym, module1) == null) {
+        continue
+      }
       const clazz = file.replace(basePackage, '.')
       const beanDefinition = getBeanDefinition(module1, clazz)
       result.push(beanDefinition)

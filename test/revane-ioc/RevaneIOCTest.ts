@@ -625,9 +625,21 @@ test('should read json config file, component scan and register beans', async (t
   t.truthy(bean3)
 })
 
-test('should read json config file, component scan and register beans #2', async (t) => {
-  t.plan(4)
+test('component scan should handle file without bean', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan2') }
+    ],
+    configuration: { disabled: true },
+    profile: 'test'
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+  t.pass()
+})
 
+test('should read json config file, component scan and register beans #2', async (t) => {
   const options = {
     loaderOptions: [
       {
