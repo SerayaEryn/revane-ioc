@@ -1,4 +1,4 @@
-import * as replaceAll from 'replace-string'
+import { replaceAll } from '../StringReplaceAll'
 
 export function replaceEnvironmentVariables (content: string): string {
   let result = content
