@@ -28,14 +28,12 @@ const filterByType = {
 export default class ComponentScanLoader implements Loader {
   public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
     const path = options.basePackage
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const includeFilters = convert(options.includeFilters || [])
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     const excludeFilters = convert(options.excludeFilters || [])
     const files = await recursiveReaddir(path)
     const flatFiles = files.flat()
     const filesFilteredByJavascript = filterByJavascriptFiles(flatFiles)
-    const filesFilteredByPackage = await this.filterByPackage(filesFilteredByJavascript, basePackage)
+    const filesFilteredByPackage = await this.filterByPackage(filesFilteredByJavascript, options.basePackage)
     const filteredFiles = this.applyFilters(filesFilteredByPackage, includeFilters, excludeFilters)
     const result: BeanDefinition[] = []
     for (const file of filteredFiles) {
