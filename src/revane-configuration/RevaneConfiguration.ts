@@ -11,19 +11,22 @@ export class ConfigurationOptions {
   required: boolean
   disabled: boolean
   strategies: LoadingStrategy[]
+  basePackage: string
 
   constructor (
     profile: string,
     directory: string,
     required: boolean,
     disabled: boolean,
-    strategies: LoadingStrategy[]
+    strategies: LoadingStrategy[],
+    basePackage: string
   ) {
     this.profile = profile
     this.directory = directory
     this.required = required || false
     this.disabled = disabled || false
     this.strategies = strategies
+    this.basePackage = basePackage
   }
 }
 
@@ -51,6 +54,23 @@ export class RevaneConfiguration implements Configuration {
     }
     if (this.options.required) {
       throw new NoConfigFilesFound()
+    }
+    this.put('revane.basePackage', this.options.basePackage)
+  }
+
+  public put (key: string, value: any): void {
+    const parts = key.split('.')
+    let values = this.values
+    for (let index = 0; index < parts.length; index++) {
+      if (index === parts.length - 1) {
+        values[parts[index]] = value
+      } else {
+        if (values[parts[index]] == null) {
+          values[parts[index]] = {}
+        } else {
+          values = values[parts[index]]
+        }
+      }
     }
   }
 

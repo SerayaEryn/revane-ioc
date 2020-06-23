@@ -3,20 +3,21 @@ import { LoadingStrategy } from '../../src/revane-configuration/loading/LoadingS
 import { RevaneConfiguration, ConfigurationOptions } from '../../src/revane-configuration/RevaneConfiguration'
 
 test('Should load values', async (t) => {
-  t.plan(8)
   const testLoadingStrategy = new TestLoadingStrategy()
   const config = new RevaneConfiguration(new ConfigurationOptions(
     'test',
     '.',
     false,
     false,
-    [testLoadingStrategy]
+    [testLoadingStrategy],
+    'test/test'
   ))
   await config.init()
   t.true(config.getBoolean('test.bool'))
   t.is(config.getString('test.str'), 'test')
   t.is(config.getNumber('test.int'), 42)
   t.false(config.has('blub.bla'))
+  t.is(config.getString('revane.basePackage'), 'test/test')
   try {
     config.getString('blub.bla')
   } catch (error) {
@@ -46,7 +47,8 @@ test('Should throw error if no config files', async (t) => {
     '.',
     true,
     false,
-    []
+    [],
+    ''
   ))
   try {
     await config.init()
@@ -62,7 +64,8 @@ test('Should pass error from strategy', async (t) => {
     '.',
     true,
     false,
-    [new FailingLoadingStrategy()]
+    [new FailingLoadingStrategy()],
+    ''
   ))
   try {
     await config.init()

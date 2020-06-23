@@ -111,7 +111,8 @@ export default class RevaneIOC {
         [
           new JsonLoadingStrategy(),
           new YmlLoadingStrategy()
-        ]
+        ],
+        this.options.basePackage
       )
     )
   }
