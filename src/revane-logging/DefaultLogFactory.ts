@@ -7,6 +7,7 @@ import { createWriteStream } from 'fs'
 import { join } from 'path'
 import { Parser } from 'acorn'
 import * as classFields from 'acorn-class-fields'
+import { Bean } from '../revane-ioc/RevaneIOC'
 
 type Class = new(...args: any[]) => any
 
@@ -19,7 +20,6 @@ export class DefaultLogFactory implements LogFactory {
       transports: this.transports(),
       level: options.rootLevel
     })
-    this.rootLogger.info(JSON.stringify(options))
     this.rootLogger.info('Starting Revane application...')
   }
 
@@ -29,6 +29,11 @@ export class DefaultLogFactory implements LogFactory {
     const logger = this.rootLogger.child({ className })
     logger.setLevel(this.options.levels[id] || this.options.rootLevel)
     return logger
+  }
+
+  @Bean
+  public logger (): Logger {
+    return this.rootLogger
   }
 
   private transports (): Transport[] {

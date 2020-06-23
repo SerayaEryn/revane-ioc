@@ -693,5 +693,5 @@ test('should get components', async (t) => {
   t.truthy(beans[2].test6)
   t.truthy(beans[3].arg)
   t.truthy(beans[4])
-  t.is(5, beans.length)
+  t.is(6, beans.length)
 })

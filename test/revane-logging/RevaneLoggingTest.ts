@@ -60,6 +60,23 @@ test('should log to file if a path was given', async (t) => {
   t.is(logger.getLevel(), 'INFO')
 })
 
+test('should create logger bean', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../../testdata/logging3'),
+    componentScan: false,
+    loaderOptions: [],
+    configuration: { disabled: false },
+    profile: 'test',
+    scheduling: {
+      enabled: false
+    }
+  }
+  const revane = new RevaneIoc(options)
+  await revane.initialize()
+
+  t.true(await revane.has('logger'))
+})
+
 test('should use rootLevel', async (t) => {
   // eslint-disable-next-line @typescript-eslint/no-extraneous-class
   class Test {}

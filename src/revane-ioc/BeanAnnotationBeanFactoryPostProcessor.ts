@@ -8,13 +8,16 @@ import { beansSym } from './decorators/Symbols'
 export class BeanAnnotationBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
   async postProcess (beanDefinition: DefaultBeanDefinition, bean: Bean): Promise<Bean[]> {
     const classConstructor = beanDefinition.classConstructor
-    const beans = classConstructor.prototype ? Reflect.getMetadata(beansSym, classConstructor.prototype) || [] : []
+    let beans = classConstructor.prototype ? Reflect.getMetadata(beansSym, classConstructor.prototype) || [] : []
+    if (beanDefinition.instance?.constructor?.prototype != null) {
+      beans = beans.concat(Reflect.getMetadata(beansSym, beanDefinition.instance.constructor.prototype) || [])
+    }
     const createdBeans: Bean[] = []
-    for (const bean of beans) {
-      const beanDefinition2: DefaultBeanDefinition = new DefaultBeanDefinition(bean.id)
-      beanDefinition2.type = bean.type
+    for (const beanFactory of beans) {
+      const beanDefinition2: DefaultBeanDefinition = new DefaultBeanDefinition(beanFactory.id)
+      beanDefinition2.type = beanFactory.type
       beanDefinition2.scope = 'singleton'
-      beanDefinition2.instance = bean.instance
+      beanDefinition2.instance = (await bean.getInstance())[beanFactory.propertyKey]()
       const beanFromFactory = new SingletonBean(beanDefinition2)
       await beanFromFactory.init()
       createdBeans.push(beanFromFactory)

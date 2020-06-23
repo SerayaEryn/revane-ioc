@@ -18,7 +18,7 @@ function addBean (target, id: string, propertyKey: string): void {
   beans.push({
     id,
     type: 'component',
-    instance: target[propertyKey]()
+    propertyKey
   })
   Reflect.defineMetadata(beansSym, beans, target)
 }
