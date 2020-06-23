@@ -6,7 +6,6 @@ import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import { ContextPlugin } from './context/ContextPlugin'
 import { DefaultApplicationContext } from './DefaultApplicationContext'
 import { BeanFactory } from './BeanFactory'
-import { BeanAnnotationBeanFactoryPostProcessor } from './postProcessors/BeanAnnotationBeanFactoryPostProcessor'
 import { ModuleLoaderBeanFactoryPreProcessor } from './preProcessors/ModuleLoaderFactoryPreProcessor'
 import { ApplicationContext } from './ApplicationContext'
 import { PathBeanFactoryPreProcessor } from './preProcessors/PathBeanFactoryPreProcessor'
@@ -42,11 +41,9 @@ export default class RevaneIOCCore {
         new PathBeanFactoryPreProcessor(this.options),
         new ModuleLoaderBeanFactoryPreProcessor(),
         new ConditionalsBeanFactoryPreProcessor(),
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         ...(this.plugins.get('beanFactoryPreProcessor') || []) as BeanFactoryPreProcessor[]
       ],
       [
-        new BeanAnnotationBeanFactoryPostProcessor(),
         ...this.plugins.get('beanFactoryPostProcessor') as BeanFactoryPostProcessor[]
       ],
       this.context as DefaultApplicationContext,

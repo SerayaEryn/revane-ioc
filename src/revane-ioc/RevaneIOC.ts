@@ -40,6 +40,7 @@ import { SchedulerLoader } from '../revane-scheduler/SchedulerLoader'
 import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
 import { LoggingOptions, LogFactory, Logger, LoggingLoader } from '../revane-logging/RevaneLogging'
 
+import { BeanAnnotationBeanFactoryPostProcessor } from './BeanAnnotationBeanFactoryPostProcessor'
 export {
   DefaultBeanDefinition as BeanDefinition,
   Loader,
@@ -208,6 +209,7 @@ export default class RevaneIOC {
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
+    this.revaneCore.addPlugin('beanFactoryPostProcessor', new BeanAnnotationBeanFactoryPostProcessor())
     if (!this.options.configuration?.disabled) {
       this.revaneCore.addPlugin(
         'beanFactoryPostProcessor',
