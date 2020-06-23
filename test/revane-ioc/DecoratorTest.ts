@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import test from 'ava'
 import { Scope, Service } from '../../src/revane-ioc/RevaneIOC'
 import {
