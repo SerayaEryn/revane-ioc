@@ -17,7 +17,8 @@ test('should read json configuration file and register beans', async (t) => {
     profile: 'test',
     scheduling: {
       enabled: false
-    }
+    },
+    noRedefinition: true
   }
   const revane = new Revane(options)
   await revane.initialize()

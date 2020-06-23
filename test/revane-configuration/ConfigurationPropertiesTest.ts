@@ -49,6 +49,29 @@ test('should add configuration properties #2', async (t) => {
   t.is(configurationProperties.property2, 44)
 })
 
+test('should add configuration properties and use REVANE_PROFILE=test', async (t) => {
+  t.plan(4)
+
+  process.env.REVANE_PROFILE = 'test'
+  const options = {
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties2') }
+    ],
+    basePackage: path.join(__dirname, '../../../testdata/configurationProperties2'),
+    componentScan: false,
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties2/testconfig') }
+  }
+  const revane = new Revane(options)
+  await revane.initialize()
+
+  const configuration: RevaneConfiguration = await revane.get('configuration')
+  t.is(configuration.getString('test.property1'), 'hello world')
+  t.is(configuration.getNumber('test.property2'), 44)
+  const configurationProperties = await revane.get('scan56')
+  t.is(configurationProperties.property1, 'hello world')
+  t.is(configurationProperties.property2, 44)
+})
+
 test('should add configuration properties #3', async (t) => {
   t.plan(4)
 

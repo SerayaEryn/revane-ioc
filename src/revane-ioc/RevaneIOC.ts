@@ -38,9 +38,13 @@ import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
 import { SchedulerLoader } from '../revane-scheduler/SchedulerLoader'
 import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
-import { LoggingOptions, LogFactory, Logger, LoggingLoader } from '../revane-logging/RevaneLogging'
+import { LogFactory } from '../revane-logging/LogFactory'
+import { Logger } from 'apheleia'
+import { LoggingOptions } from '../revane-logging/LoggingOptions'
+import { LoggingLoader } from '../revane-logging/LoggingLoader'
 
 import { BeanAnnotationBeanFactoryPostProcessor } from './BeanAnnotationBeanFactoryPostProcessor'
+
 export {
   DefaultBeanDefinition as BeanDefinition,
   Loader,
@@ -158,14 +162,13 @@ export default class RevaneIOC {
     if (this.configuration.has('revane.logging.path')) {
       path = this.configuration.getString('revane.logging.path')
     }
-    const options: LoggingOptions = {
-      basePackage: this.options.basePackage,
+    return new LoggingOptions(
       rootLevel,
       levels,
+      this.options.basePackage,
       file,
       path
-    }
-    return options
+    )
   }
 
   public async get (id: string): Promise<any> {
