@@ -5,7 +5,6 @@ import Filter from './Filter'
 import RegexFilter from './RegexFilter'
 import Loader from '../../revane-ioc-core/Loader'
 
-import * as recursiveReaddir from 'recursive-readdir'
 import {
   idSym,
   typeSym,
@@ -18,6 +17,7 @@ import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
 import { promises } from 'fs'
 import { Reflect } from '../../revane-utils/Reflect'
+import { recursiveReaddir } from './RecursiveReadDir'
 
 const { readFile } = promises
 
