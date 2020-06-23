@@ -68,7 +68,8 @@ export {
   Scheduled,
   ConditionalOnMissingBean,
   Logger,
-  LogFactory
+  LogFactory,
+  RevaneConfiguration
 }
 
 export default class RevaneIOC {
