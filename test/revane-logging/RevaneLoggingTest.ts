@@ -1,7 +1,6 @@
 import * as path from 'path'
 import test from 'ava'
-import RevaneIoc from '../../src/revane-ioc/RevaneIOC'
-import { LogFactory } from '../../src/revane-logging/RevaneLogging'
+import RevaneIoc, { LogFactory } from '../../src/revane-ioc/RevaneIOC'
 import { LoggingLoader } from '../../src/revane-logging/LoggingLoader'
 
 test('should disable logging', async (t) => {

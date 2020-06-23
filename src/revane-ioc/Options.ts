@@ -9,7 +9,7 @@ export default class Options {
     loaders?: Loader[]
   }
 
-  public profile: string
+  public profile?: string
 
   public configuration?: {
     directory?: string

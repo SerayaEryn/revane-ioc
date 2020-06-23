@@ -1,6 +1,7 @@
 import { Loader, LoaderOptions, BeanDefinition } from '../revane-ioc/RevaneIOC'
-import { DefaultLogFactory, LoggingOptions } from './RevaneLogging'
 import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
+import { DefaultLogFactory } from './DefaultLogFactory'
+import { LoggingOptions } from './LoggingOptions'
 
 export class LoggingLoader implements Loader {
   private readonly logFactory: DefaultLogFactory

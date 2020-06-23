@@ -12,11 +12,10 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
 
   async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<Bean[]> {
     await bean.executeOnInstance(async (instance: any) => {
-      const configurationPropertyValues = {}
+      const configurationPropertyValues: any = {}
       if (this.configuration != null) {
         const configurationProperties = beanDefinition.configurationProperties
         if (configurationProperties != null) {
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           for (const configurationProperty of configurationProperties.properties || []) {
             const key = `${configurationProperties.prefix}.${configurationProperty}`
             if (this.configuration.has(key)) {
@@ -25,7 +24,6 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
           }
         }
       }
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       for (const key of Object.keys(configurationPropertyValues || {})) {
         instance[key] = configurationPropertyValues[key]
       }

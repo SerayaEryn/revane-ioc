@@ -37,7 +37,7 @@ export class RevaneConfiguration implements Configuration {
 
   public async init (): Promise<void> {
     for (const strategy of this.options.strategies) {
-      let loadedValues = {}
+      let loadedValues: object = {}
       try {
         const { directory: configDirectory, profile } = this.options
         loadedValues = await strategy.load(configDirectory, profile)

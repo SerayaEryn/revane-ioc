@@ -1,7 +1,8 @@
 export class LoggingOptions {
-  public rootLevel: string
-  public levels: object
-  public file?: string
-  public path?: string
-  public basePackage: string
+  constructor (
+    public rootLevel: string,
+    public levels: object,
+    public basePackage: string,
+    public file?: string,
+    public path?: string) {}
 }
