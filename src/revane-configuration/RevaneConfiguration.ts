@@ -67,9 +67,8 @@ export class RevaneConfiguration implements Configuration {
       } else {
         if (values[parts[index]] == null) {
           values[parts[index]] = {}
-        } else {
-          values = values[parts[index]]
         }
+        values = values[parts[index]]
       }
     }
   }
