@@ -42,7 +42,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "nyc": "^15.0.0",
     "ts-node": "^9.0.0",
-    "typescript": "^3.7.5"
+    "typescript": "^4.0.3"
   },
   "keywords": [
     "inversion of control",
