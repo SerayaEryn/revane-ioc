@@ -3,7 +3,7 @@ import test from 'ava'
 import ComponentScanLoader from '../../src/revane-ioc/loaders/ComponentScanLoader'
 import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 
-test('should do component scan without filters', async (t) => {
+test('should do component scan without filters', async (t): Promise<void> => {
   t.plan(8)
 
   const basePackage = path.join(__dirname, '../../testdata/scan')
@@ -30,7 +30,7 @@ test('should do component scan without filters', async (t) => {
     })
 })
 
-test('should do component scan with exclude filter', async (t) => {
+test('should do component scan with exclude filter', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/scan')
   const options = {
     basePackage,
@@ -80,7 +80,7 @@ test('should throw error on undefined module', async (t) => {
   }, { code: 'REV_ERR_MODULE_LOAD_ERROR' })
 })
 
-test('should do component scan with include filter', async (t) => {
+test('should do component scan with include filter', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/scan')
   const options = {
     basePackage,
@@ -98,7 +98,7 @@ test('should do component scan with include filter', async (t) => {
     })
 })
 
-test('should do component scan but exclude node module without dependency on revane', async (t) => {
+test('should do component scan but exclude node module without dependency on revane', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/componentScan1')
   const options = {
     basePackage,
@@ -112,7 +112,7 @@ test('should do component scan but exclude node module without dependency on rev
     })
 })
 
-test('should do component scan but exclude node module without dependency on revane #2', async (t) => {
+test('should do component scan but exclude node module without dependency on revane #2', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/componentScan3')
   const options = {
     basePackage,
@@ -126,7 +126,7 @@ test('should do component scan but exclude node module without dependency on rev
     })
 })
 
-test('should do component scan and detect node module with dependency on revane', async (t) => {
+test('should do component scan and detect node module with dependency on revane', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/componentScan2')
   const options = {
     basePackage,

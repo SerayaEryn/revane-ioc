@@ -2,7 +2,7 @@ import * as path from 'path'
 import test from 'ava'
 import JsonFileLoader from '../../src/revane-ioc/loaders/JsonFileLoader'
 
-test('should read json configuration file and register beans', async (t) => {
+test('should read json configuration file and register beans', async (t): Promise<void> => {
   const file = path.join(__dirname, '../../../testdata/json/config.json')
 
   const jsonFileResolver = new JsonFileLoader()

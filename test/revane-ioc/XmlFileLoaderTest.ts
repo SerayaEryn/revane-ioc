@@ -2,7 +2,7 @@ import * as path from 'path'
 import test from 'ava'
 import XmlFileLoader from '../../src/revane-ioc/loaders/XmlFileLoader'
 
-test('should read xml configuration file and register beans', async (t) => {
+test('should read xml configuration file and register beans', async (t): Promise<void> => {
   t.plan(1)
 
   const file = path.join(__dirname, '../../../testdata/xml/config.xml')
@@ -30,7 +30,7 @@ test('should reject on error', async (t) => {
   })
 })
 
-test('should trigger scan from xml #2', async (t) => {
+test('should trigger scan from xml #2', async (t): Promise<void> => {
   const file = path.join(__dirname, '../../../testdata/xml/config6.xml')
   const basePackage = path.join(__dirname, '../../testdata/scan')
 
@@ -42,7 +42,7 @@ test('should trigger scan from xml #2', async (t) => {
     })
 })
 
-test('should trigger scan from xml', async (t) => {
+test('should trigger scan from xml', async (t): Promise<void> => {
   const file = path.join(__dirname, '../../../testdata/xml/config5.xml')
   const basePackage = path.join(__dirname, '../../testdata/scan')
 

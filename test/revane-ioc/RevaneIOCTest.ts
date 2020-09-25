@@ -318,7 +318,7 @@ test('should tearDown', async (t) => {
   t.truthy(bean.destroyed)
 })
 
-test('should read not reject on missing paths', async (t) => {
+test('should read not reject on missing paths', async (t): Promise<void> => {
   t.plan(1)
 
   const options = {
@@ -367,7 +367,7 @@ test('should reject error on unknown configuration file ending', async (t) => {
     })
 })
 
-test('should not reject on custom file ending from loader', async (t) => {
+test('should not reject on custom file ending from loader', async (t): Promise<void> => {
   class TestLoader implements Loader {
     static type = 'test'
 
@@ -400,7 +400,7 @@ test('should not reject on custom file ending from loader', async (t) => {
     })
 })
 
-test('should throw error on get() if not initialized', async (t) => {
+test('should throw error on get() if not initialized', async (t): Promise<void> => {
   t.plan(2)
 
   const options = {
@@ -420,7 +420,7 @@ test('should throw error on get() if not initialized', async (t) => {
   }
 })
 
-test('should throw error on has() if not initialized', async (t) => {
+test('should throw error on has() if not initialized', async (t): Promise<void> => {
   t.plan(2)
 
   const options = {
