@@ -2,6 +2,8 @@ import Bean from './context/bean/Bean'
 import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
 import { randomBytes } from 'crypto'
+import InvalidScopeError from './context/errors/InvalidScopeError'
+import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string
@@ -19,6 +21,15 @@ export default class DefaultBeanDefinition implements BeanDefinition {
 
   constructor (id: string) {
     this.id = id
+  }
+
+  public async create (dependencies: Bean[], beanTypeRegistry: BeanTypeRegistry): Promise<Bean> {
+    this.dependencies = dependencies
+    const BeanForScope = beanTypeRegistry.get(this.scope)
+    if (BeanForScope != null) {
+      return new BeanForScope(this)
+    }
+    throw new InvalidScopeError(this.scope)
   }
 
   public isClass (): boolean {

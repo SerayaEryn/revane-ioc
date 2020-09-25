@@ -35,14 +35,14 @@ export class BeanFactory {
   }
 
   async process (beanDefinitions: BeanDefinition[]): Promise<void> {
-    let preprocessed = []
+    let preprocessed = [...beanDefinitions]
     for (const preProcessor of this.preProcessors) {
-      let allPreProcessedBeanDefinitions = []
       for (const beanDefinition of beanDefinitions) {
-        const preProcessedBeanDefinitions = await preProcessor.preProcess(beanDefinition, allPreProcessedBeanDefinitions)
-        allPreProcessedBeanDefinitions = allPreProcessedBeanDefinitions.concat(preProcessedBeanDefinitions)
+        const preProcessedBeanDefinitions = await preProcessor.preProcess(beanDefinition, preprocessed)
+        const index = preprocessed.indexOf(beanDefinition)
+        preprocessed.splice(index, 1)
+        preprocessed = preprocessed.concat(preProcessedBeanDefinitions)
       }
-      preprocessed = allPreProcessedBeanDefinitions
     }
     const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
     for (const preProcessedBeanDefinition of preprocessed) {
@@ -51,7 +51,7 @@ export class BeanFactory {
         throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
       }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
-      const bean = await this.registerBean(preProcessedBeanDefinition, beanDefinitions)
+      const bean = await this.registerBean(preProcessedBeanDefinition, preprocessed)
       const postProcessedBeans = await this.postProcess(bean, preProcessedBeanDefinition)
       this.context.put(postProcessedBeans)
     }
@@ -84,20 +84,8 @@ export class BeanFactory {
     entry: BeanDefinition,
     beanDefinitions: BeanDefinition[]
   ): Promise<Bean> {
-    const BeanForScope = this.beanTypeRegistry.get(entry.scope)
-    if (BeanForScope != null) {
-      return await this.createBeanForScope(BeanForScope, entry, beanDefinitions)
-    }
-    throw new InvalidScopeError(entry.scope)
-  }
-
-  private async createBeanForScope (
-    BeanForScope: any,
-    entry: BeanDefinition,
-    beanDefinitions: BeanDefinition[]
-  ): Promise<any> {
-    entry.dependencies = await this.getDependencies(entry, beanDefinitions)
-    return new BeanForScope(entry)
+    const dependencies = await this.getDependencies(entry, beanDefinitions)
+    return await entry.create(dependencies, this.beanTypeRegistry)
   }
 
   private async getDependencies (

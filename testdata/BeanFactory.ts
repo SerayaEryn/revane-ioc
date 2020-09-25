@@ -2,12 +2,12 @@ import { Bean } from '../src/revane-ioc/RevaneIOC'
 
 export default class BeanFactory {
   @Bean
-  testBean () {
+  testBean (): any {
     return { test: '42' }
   }
 
   @Bean()
-  testBean2 () {
+  testBean2 (): any {
     return { test: '43' }
   }
 }

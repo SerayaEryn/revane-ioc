@@ -17,7 +17,7 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
 
   public async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<Bean[]> {
     const { classConstructor } = beanDefinition
-    if (this.enabled && classConstructor.prototype != null) {
+    if (this.enabled && classConstructor != null && classConstructor.prototype != null) {
       const scheduled = Reflect.getMetadata('scheduled', classConstructor.prototype)
       if (scheduled != null) {
         if (scheduled.cronPattern == null) {

@@ -43,7 +43,7 @@ import { Logger } from 'apheleia'
 import { LoggingOptions } from '../revane-logging/LoggingOptions'
 import { LoggingLoader } from '../revane-logging/LoggingLoader'
 
-import { BeanAnnotationBeanFactoryPostProcessor } from './BeanAnnotationBeanFactoryPostProcessor'
+import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -214,7 +214,7 @@ export default class RevaneIOC {
     this.revaneCore.addPlugin('loader', this.getLoader('xml') || new XmlFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
-    this.revaneCore.addPlugin('beanFactoryPostProcessor', new BeanAnnotationBeanFactoryPostProcessor())
+    this.revaneCore.addPlugin('beanFactoryPreProcessor', new BeanAnnotationBeanFactoryPreProcessor())
     if (!this.options.configuration?.disabled) {
       this.revaneCore.addPlugin(
         'beanFactoryPostProcessor',

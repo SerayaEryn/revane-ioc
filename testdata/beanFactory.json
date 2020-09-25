@@ -2,5 +2,12 @@
   {
     "id": "beanFactory",
     "class": "./bin/testdata/BeanFactory.js"
+  },
+  {
+    "id": "dependsOnBeanFactory",
+    "class": "./bin/testdata/DependsOnBeanFactory.js",
+    "properties": [{
+      "ref": "testBean"
+    }]
   }
 ]

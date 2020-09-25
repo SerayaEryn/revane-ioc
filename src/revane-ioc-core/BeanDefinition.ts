@@ -1,5 +1,6 @@
 import Bean from './context/bean/Bean'
 import { Property } from './Property'
+import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 
 export interface BeanDefinition {
   class: string
@@ -15,4 +16,5 @@ export interface BeanDefinition {
   dependencies: Bean[]
   conditionalOnMissingBean?: string
   isClass (): boolean
+  create (dependencies: Bean[], beanTypeRegistry: BeanTypeRegistry): Promise<Bean>
 }
