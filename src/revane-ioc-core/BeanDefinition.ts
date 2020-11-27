@@ -1,6 +1,7 @@
 import Bean from './context/bean/Bean'
 import { Property } from './Property'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
+import { Constructor } from './Constructor'
 
 export interface BeanDefinition {
   class: string
@@ -12,7 +13,7 @@ export interface BeanDefinition {
   path: string
   scope: string
   instance?: any
-  classConstructor?: any
+  classConstructor?: Constructor
   dependencies: Bean[]
   conditionalOnMissingBean?: string
   isClass (): boolean

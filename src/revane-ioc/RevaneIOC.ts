@@ -5,7 +5,6 @@ import DefaultBeanTypeRegistry from '../revane-ioc-core/context/bean/DefaultBean
 import JsonFileLoader from './loaders/JsonFileLoader'
 import XmlFileLoader from './loaders/XmlFileLoader'
 import ComponentScanLoader from './loaders/ComponentScanLoader'
-import UnknownEndingError from './UnknownEndingError'
 import PrototypeBean from './bean/PrototypeBean'
 import SingletonBean from './bean/SingletonBean'
 import Options from './Options'
@@ -44,6 +43,7 @@ import { LoggingOptions } from '../revane-logging/LoggingOptions'
 import { LoggingLoader } from '../revane-logging/LoggingLoader'
 
 import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
+import { CoreOptionsBuilder } from './CoreOptionsBuilder'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -127,7 +127,8 @@ export default class RevaneIOC {
   public async initialize (): Promise<void> {
     await this.configuration.init()
     this.loadOptionsFromConfiguration()
-    const coreOptions: CoreOptions = this.prepareCoreOptions(this.options)
+    const coreOptionsBuilder = new CoreOptionsBuilder(this.isLoggingEnabled())
+    const coreOptions: CoreOptions = coreOptionsBuilder.prepareCoreOptions(this.options)
     const beanTypeRegistry = this.beanTypeRegistry()
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
     await this.addDefaultPlugins()
@@ -260,45 +261,6 @@ export default class RevaneIOC {
     beanTypeRegistry.register(SingletonBean)
     beanTypeRegistry.register(PrototypeBean)
     return beanTypeRegistry
-  }
-
-  private prepareCoreOptions (options: Options): CoreOptions {
-    const coreOptions: CoreOptions = new CoreOptions()
-    coreOptions.loaderOptions = options.loaderOptions || []
-    this.checkForUnknownEndings(coreOptions.loaderOptions)
-
-    if (!this.options.configuration?.disabled) {
-      coreOptions.loaderOptions.push({ file: 'config' })
-    }
-    if (this.isLoggingEnabled()) {
-      coreOptions.loaderOptions.push({ file: 'logging' })
-    }
-    coreOptions.loaderOptions.push({ file: 'taskScheduler' })
-    if (this.options.autoConfiguration) {
-      coreOptions.loaderOptions.push({
-        componentScan: true,
-        basePackage: this.options.basePackage
-      })
-    }
-    coreOptions.defaultScope = 'singleton'
-    coreOptions.basePackage = options.basePackage
-    coreOptions.noRedefinition = options.noRedefinition
-    return coreOptions
-  }
-
-  private checkForUnknownEndings (files: LoaderOptions[]): void {
-    const loaders = [
-      new XmlFileLoader(), new JsonFileLoader(), new ComponentScanLoader()
-    ].concat(this.options.plugins.loaders)
-    for (const file of files) {
-      const relevant: boolean[] = []
-      for (const loader of loaders) {
-        relevant.push(loader.isRelevant(file))
-      }
-      if (!relevant.includes(true)) {
-        throw new UnknownEndingError()
-      }
-    }
   }
 
   private checkIfInitialized (): void {

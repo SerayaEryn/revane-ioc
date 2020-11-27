@@ -20,7 +20,8 @@
       "bin/src/revane-configuration/loading/LoadingStrategy.js",
       "bin/src/revane-configuration/Configuration.js",
       "bin/src/revane-configuration/BeanDefinition.js",
-      "bin/src/revane-logging/LogFactory.js"
+      "bin/src/revane-logging/LogFactory.js",
+      "bin/src/revane-ioc-core/Constructor.js"
   ],
   "reporter": [
     "lcov",

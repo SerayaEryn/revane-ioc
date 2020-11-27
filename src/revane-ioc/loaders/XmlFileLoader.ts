@@ -9,6 +9,7 @@ import { join } from 'path'
 import ComponentScanLoader from './ComponentScanLoader'
 import { Property } from '../../revane-ioc-core/Property'
 import { BeanDefinition } from '../RevaneIOC'
+import { Scope } from '../../revane-ioc-core/Scope'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -112,8 +113,7 @@ export default class XmlFileLoader implements Loader {
   private toBeanDefinition (bean: XmlBean): DefaultBeanDefinition {
     const beanDefinition = new DefaultBeanDefinition(bean.attr.id)
     beanDefinition.class = bean.attr.class
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    beanDefinition.scope = bean.attr.scope || 'singleton'
+    beanDefinition.scope = bean.attr.scope || Scope.SINGLETON
     if (bean.attr.type != null) {
       beanDefinition.type = bean.attr.type
     }

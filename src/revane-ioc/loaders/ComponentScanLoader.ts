@@ -18,6 +18,7 @@ import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
 import { promises } from 'fs'
 import { Reflect } from '../../revane-utils/Reflect'
 import { recursiveReaddir } from './RecursiveReadDir'
+import { Scope } from '../../revane-ioc-core/Scope'
 
 const { readFile } = promises
 
@@ -113,7 +114,7 @@ function getClazz (file: string): any {
 function getBeanDefinition (module1, clazz): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
-  const scope = Reflect.getMetadata(scopeSym, module1) || 'singleton'
+  const scope = Reflect.getMetadata(scopeSym, module1) || Scope.SINGLETON
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.class = clazz

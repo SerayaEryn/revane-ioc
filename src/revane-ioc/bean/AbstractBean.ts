@@ -29,7 +29,6 @@ export default abstract class AbstractBean implements Bean {
       // eslint-disable-next-line new-cap
       instance = new this.entry.classConstructor(...parameters)
     } else {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       instance = this.entry.classConstructor || this.entry.instance
     }
     return instance

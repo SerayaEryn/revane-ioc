@@ -4,6 +4,7 @@ import { BeanDefinition } from './BeanDefinition'
 import { randomBytes } from 'crypto'
 import InvalidScopeError from './context/errors/InvalidScopeError'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
+import { Constructor } from './Constructor'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string
@@ -15,7 +16,7 @@ export default class DefaultBeanDefinition implements BeanDefinition {
   public path: string
   public scope: string
   public instance?: any
-  public classConstructor?: any
+  public classConstructor?: Constructor
   public dependencies: Bean[] = []
   public conditionalOnMissingBean?: string
 
