@@ -34,7 +34,7 @@ export default abstract class AbstractBean implements Bean {
     return instance
   }
 
-  public abstract async init (): Promise<void>
+  public abstract init (): Promise<void>
 
   public async postConstruct (): Promise<any> {
     return await Promise.resolve()

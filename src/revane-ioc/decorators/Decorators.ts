@@ -10,6 +10,7 @@ const Repository = createComponentDecorator('repository')
 const Service = createComponentDecorator('service')
 const Component = createComponentDecorator('component')
 const Controller = createComponentDecorator('controller')
+const ControllerAdvice = createComponentDecorator('controlleradvice')
 const Scheduler = createComponentDecorator('scheduler')
 const Scope = createScopeDecorator()
 const Bean = createBeanDecorator()
@@ -21,6 +22,7 @@ export {
   Service,
   Component,
   Controller,
+  ControllerAdvice,
   Scheduler,
   Scope,
   Bean,

@@ -15,7 +15,6 @@ export class DefaultLogFactory implements LogFactory {
   private readonly rootLogger: Logger
 
   constructor (private readonly options: LoggingOptions) {
-    this.options = options
     this.rootLogger = createLogger({
       transports: this.transports(),
       level: options.rootLevel

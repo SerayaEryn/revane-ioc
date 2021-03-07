@@ -1,12 +1,5 @@
 export function deepMerge (target: object, source: object): object {
-  if (Array.isArray(source) || Array.isArray(target)) {
-    throw new Error('merging arrays is not supported')
-  }
-  return merge(target, source)
-}
-
-function merge (target, source): any {
-  var destination = {}
+  const destination = {}
   if (isMergeable(target)) {
     for (const key of Object.keys(target)) {
       destination[key] = clone(target[key])

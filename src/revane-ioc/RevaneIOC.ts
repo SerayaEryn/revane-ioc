@@ -1,4 +1,4 @@
-import CoreOptions, { LoaderOptions, RegexFilter } from '../revane-ioc-core/Options'
+import { LoaderOptions, RegexFilter } from '../revane-ioc-core/Options'
 import RevaneCore from '../revane-ioc-core/RevaneIOCCore'
 import DefaultBeanTypeRegistry from '../revane-ioc-core/context/bean/DefaultBeanTypeRegistry'
 
@@ -44,6 +44,7 @@ import { LoggingLoader } from '../revane-logging/LoggingLoader'
 
 import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
+import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -110,7 +111,8 @@ export default class RevaneIOC {
         this.options.autoConfiguration || this.options.configuration.disabled,
         [
           new JsonLoadingStrategy(),
-          new YmlLoadingStrategy()
+          new YmlLoadingStrategy(),
+          new PropertiesLoadingStrategy()
         ],
         this.options.basePackage
       )
@@ -128,7 +130,7 @@ export default class RevaneIOC {
     await this.configuration.init()
     this.loadOptionsFromConfiguration()
     const coreOptionsBuilder = new CoreOptionsBuilder(this.isLoggingEnabled())
-    const coreOptions: CoreOptions = coreOptionsBuilder.prepareCoreOptions(this.options)
+    const coreOptions = coreOptionsBuilder.prepareCoreOptions(this.options)
     const beanTypeRegistry = this.beanTypeRegistry()
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
     await this.addDefaultPlugins()
