@@ -1,8 +1,10 @@
-import { readFile } from 'fs/promises'
+import { promises } from 'fs'
 import { deepMerge } from '../../revane-utils/Deepmerge'
 import { ConfigFileNotFound } from './ConfigFileNotFound'
 import { replaceEnvironmentVariables } from './EnvironmentLoader'
 import { LoadingStrategy } from './LoadingStrategy'
+
+const { readFile } = promises
 
 export class PropertiesLoadingStrategy implements LoadingStrategy {
   public async load (configDirectory: string, profile: string): Promise<object> {
