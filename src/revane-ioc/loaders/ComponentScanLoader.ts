@@ -93,9 +93,13 @@ export default class ComponentScanLoader implements Loader {
   private async moduleDependsOnRevane (file: string, basePackage: string): Promise<boolean> {
     const moduleName = file.replace(`${basePackage}/node_modules/`, '').split('/')[0]
     const packageJsonPath = `${basePackage}/node_modules/${moduleName}/package.json`
-    const buffer = await readFile(packageJsonPath)
-    const packageJson = JSON.parse(buffer.toString())
-    return packageJson.dependencies?.revane != null
+    try {
+      const buffer = await readFile(packageJsonPath)
+      const packageJson = JSON.parse(buffer.toString())
+      return packageJson.dependencies?.revane != null
+    } catch (ignore) {
+      return false
+    }
   }
 
   private isInsideNodeModules (file: string, basePackage: string): boolean {
