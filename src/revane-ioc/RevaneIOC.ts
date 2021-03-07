@@ -20,7 +20,8 @@ import {
   Scope,
   Bean,
   Scheduler,
-  ConditionalOnMissingBean
+  ConditionalOnMissingBean,
+  ControllerAdvice
 } from './decorators/Decorators'
 import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
@@ -59,6 +60,7 @@ export {
   Service,
   Component,
   Controller,
+  ControllerAdvice,
   Scheduler,
   Scope,
   Bean,
