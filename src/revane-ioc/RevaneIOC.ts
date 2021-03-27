@@ -39,8 +39,6 @@ import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
 import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
 import { LogFactory } from '../revane-logging/LogFactory'
 import { Logger } from 'apheleia'
-import { LoggingOptions } from '../revane-logging/LoggingOptions'
-import { LoggingLoader } from '../revane-logging/LoggingLoader'
 
 import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
@@ -48,6 +46,7 @@ import { PropertiesLoadingStrategy } from '../revane-configuration/loading/Prope
 import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProcessor'
 import { Extension } from './Extension'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
+import { LoggingExtension } from '../revane-logging/LoggingExtension'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -78,7 +77,8 @@ export {
   PostConstruct,
   PreDestroy,
   Extension,
-  SchedulingExtension
+  SchedulingExtension,
+  LoggingExtension
 }
 
 export default class RevaneIOC {
@@ -125,7 +125,10 @@ export default class RevaneIOC {
   public async initialize (): Promise<void> {
     await this.configuration.init()
     this.loadOptionsFromConfiguration()
-    const coreOptionsBuilder = new CoreOptionsBuilder(this.isLoggingEnabled())
+    for (const extension of this.options.extensions) {
+      await extension.initialize(this.configuration)
+    }
+    const coreOptionsBuilder = new CoreOptionsBuilder()
     const coreOptions = coreOptionsBuilder.prepareCoreOptions(this.options)
     const beanTypeRegistry = this.beanTypeRegistry()
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
@@ -139,32 +142,6 @@ export default class RevaneIOC {
       const allowRedefinition = this.configuration.getBoolean('revane.main.allow-bean-definition-overriding')
       this.options.noRedefinition = !allowRedefinition
     }
-  }
-
-  private loggingOptions (): LoggingOptions {
-    let rootLevel = 'INFO'
-    if (this.configuration.has('revane.logging.rootLevel')) {
-      rootLevel = this.configuration.getString('revane.logging.rootLevel')
-    }
-    let levels = {}
-    if (this.configuration.has('revane.logging.level')) {
-      levels = this.configuration.get('revane.logging.level')
-    }
-    let file: string | null = null
-    if (this.configuration.has('revane.logging.file')) {
-      file = this.configuration.getString('revane.logging.file')
-    }
-    let path: string | null = null
-    if (this.configuration.has('revane.logging.path')) {
-      path = this.configuration.getString('revane.logging.path')
-    }
-    return new LoggingOptions(
-      rootLevel,
-      levels,
-      this.options.basePackage,
-      file,
-      path
-    )
   }
 
   public async get (id: string): Promise<any> {
@@ -218,11 +195,7 @@ export default class RevaneIOC {
       )
       this.revaneCore?.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
     }
-    if (this.isLoggingEnabled()) {
-      this.revaneCore?.addPlugin('loader', new LoggingLoader(this.loggingOptions()))
-    }
     for (const extension of this.options.extensions) {
-      await extension.initialize(this.configuration)
       for (const beanFactoryPostProcessor of extension.beanFactoryPostProcessors()) {
         this.revaneCore?.addPlugin('beanFactoryPostProcessor', beanFactoryPostProcessor)
       }
@@ -230,13 +203,6 @@ export default class RevaneIOC {
         this.revaneCore?.addPlugin('loader', loader)
       }
     }
-  }
-
-  private isLoggingEnabled (): boolean {
-    const loggingEnabled = this.configuration.has('revane.logging.enabled')
-    return !loggingEnabled ||
-    (loggingEnabled &&
-      this.configuration.getBoolean('revane.logging.enabled'))
   }
 
   private beanTypeRegistry (): BeanTypeRegistry {

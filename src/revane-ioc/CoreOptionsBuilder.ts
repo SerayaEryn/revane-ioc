@@ -7,12 +7,6 @@ import Options from './Options'
 import UnknownEndingError from './UnknownEndingError'
 
 export class CoreOptionsBuilder {
-  private readonly isLoggingEnabled: boolean
-
-  constructor (isLoggingEnabled: boolean) {
-    this.isLoggingEnabled = isLoggingEnabled
-  }
-
   public prepareCoreOptions (options: Options): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
     coreOptions.loaderOptions = options.loaderOptions ?? []
@@ -20,9 +14,6 @@ export class CoreOptionsBuilder {
 
     if (!(options.configuration?.disabled ?? false)) {
       coreOptions.loaderOptions.push({ file: 'config' })
-    }
-    if (this.isLoggingEnabled) {
-      coreOptions.loaderOptions.push({ file: 'logging' })
     }
     for (const extension of options.extensions) {
       for (const loaderOption of extension.loaderOptions()) {
