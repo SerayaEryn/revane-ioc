@@ -15,7 +15,7 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
     this.enabled = enabled
   }
 
-  public async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<Bean[]> {
+  public async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<void> {
     const { classConstructor } = beanDefinition
     if (this.enabled && classConstructor != null && classConstructor.prototype != null) {
       const scheduled = Reflect.getMetadata('scheduled', classConstructor.prototype)
@@ -33,7 +33,6 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
         this.schedulingService.schedule(cronPattern, functionToSchedule, isAsyncFunction)
       }
     }
-    return [bean]
   }
 
   private isAsyncFunction (f: Function): boolean {

@@ -1,23 +1,16 @@
 import { LoaderOptions } from '../revane-ioc-core/Options'
-import { Loader } from './RevaneIOC'
+import { Extension } from './Extension'
 
 export default class Options {
+  public profile?: string
   public noRedefinition?: boolean
   public loaderOptions?: LoaderOptions[]
-  public plugins?: {
-    loaders?: Loader[]
-  }
-
-  public profile?: string
+  public extensions: Extension[]
 
   public configuration?: {
     directory?: string
     required?: boolean
     disabled?: boolean
-  }
-
-  public scheduling?: {
-    enabled: boolean
   }
 
   public autoConfiguration?: boolean

@@ -58,12 +58,10 @@ export class BeanFactory {
   }
 
   private async postProcess (bean: Bean, beanDefinition: BeanDefinition): Promise<Bean[]> {
-    let postProcessedBeanDefinitions: Bean[] = []
     for (const postProcessor of this.postProcessors) {
-      const postProcessed = await postProcessor.postProcess(beanDefinition, bean)
-      postProcessedBeanDefinitions = postProcessedBeanDefinitions.concat(postProcessed)
+      await postProcessor.postProcess(beanDefinition, bean)
     }
-    return postProcessedBeanDefinitions
+    return [bean]
   }
 
   private async registerBean (entry: BeanDefinition, beanDefinitions: BeanDefinition[]): Promise<Bean> {

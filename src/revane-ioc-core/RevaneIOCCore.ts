@@ -40,18 +40,18 @@ export default class RevaneIOCCore {
         new ScopeBeanFactoryPreProcessor(this.options),
         new PathBeanFactoryPreProcessor(this.options),
         new ModuleLoaderBeanFactoryPreProcessor(),
-        ...this.plugins.get('beanFactoryPreProcessor') as BeanFactoryPreProcessor[],
+        ...this.plugins.get('beanFactoryPreProcessor') as BeanFactoryPreProcessor[] ?? [],
         new ConditionalsBeanFactoryPreProcessor()
       ],
       [
-        ...this.plugins.get('beanFactoryPostProcessor') as BeanFactoryPostProcessor[]
+        ...this.plugins.get('beanFactoryPostProcessor') as BeanFactoryPostProcessor[] ?? []
       ],
       this.context as DefaultApplicationContext,
       this.beanTypeRegistry,
       this.options,
       this.plugins
     )
-    const loaders: Loader[] = this.plugins.get('loader') as Loader[]
+    const loaders: Loader[] = this.plugins.get('loader') as Loader[] ?? []
     const beanLoader = new BeanLoader(loaders)
     const beanDefinitions: any = await beanLoader.getBeanDefinitions(this.options)
     await beanFactory.process(beanDefinitions.flat())

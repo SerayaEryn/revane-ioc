@@ -10,7 +10,7 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
     this.configuration = configuration
   }
 
-  async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<Bean[]> {
+  async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<void> {
     await bean.executeOnInstance(async (instance: any) => {
       const values: { [key: string]: any } = {}
       if (this.configuration != null) {
@@ -28,6 +28,5 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
         instance[key] = values[key]
       }
     })
-    return [bean]
   }
 }

@@ -16,7 +16,7 @@ export class CoreOptionsBuilder {
   public prepareCoreOptions (options: Options): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
     coreOptions.loaderOptions = options.loaderOptions ?? []
-    this.checkForUnknownEndings(options, coreOptions.loaderOptions)
+    this.checkForUnknownEndings(coreOptions.loaderOptions)
 
     if (!(options.configuration?.disabled ?? false)) {
       coreOptions.loaderOptions.push({ file: 'config' })
@@ -24,7 +24,11 @@ export class CoreOptionsBuilder {
     if (this.isLoggingEnabled) {
       coreOptions.loaderOptions.push({ file: 'logging' })
     }
-    coreOptions.loaderOptions.push({ file: 'taskScheduler' })
+    for (const extension of options.extensions) {
+      for (const loaderOption of extension.loaderOptions()) {
+        coreOptions.loaderOptions.push(loaderOption)
+      }
+    }
     if (options.autoConfiguration === true) {
       coreOptions.loaderOptions.push({
         componentScan: true,
@@ -37,10 +41,10 @@ export class CoreOptionsBuilder {
     return coreOptions
   }
 
-  private checkForUnknownEndings (options: Options, files: LoaderOptions[]): void {
+  private checkForUnknownEndings (files: LoaderOptions[]): void {
     const loaders = [
       new XmlFileLoader(), new JsonFileLoader(), new ComponentScanLoader()
-    ].concat(options.plugins?.loaders != null ? options.plugins.loaders : [])
+    ]
     for (const file of files) {
       const relevant: boolean[] = []
       for (const loader of loaders) {

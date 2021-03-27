@@ -13,7 +13,8 @@ test('should add configuration properties', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -36,7 +37,8 @@ test('should add configuration properties #2', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties2'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties2/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -59,7 +61,8 @@ test('should add configuration properties and use REVANE_PROFILE=test', async (t
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties2'),
     componentScan: false,
-    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties2/testconfig') }
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties2/testconfig') },
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -82,7 +85,8 @@ test('should add configuration properties #3', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties3'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationProperties3/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -105,7 +109,8 @@ test('should add configuration properties from yaml #1', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml1'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesYml1/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -128,7 +133,8 @@ test('should add configuration properties from yaml #2', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml2'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesYml2/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -152,7 +158,8 @@ test('should add configuration properties from yaml and replace env vars', async
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml3'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesYml3/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -175,7 +182,8 @@ test('should add configuration properties from properties #1', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties1'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesProperties1/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -200,7 +208,8 @@ test('should add configuration properties from properties #2', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties2'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesProperties2/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -224,7 +233,8 @@ test('should add configuration properties from properties and replace env vars',
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties3'),
     componentScan: false,
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/configurationPropertiesProperties3/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()

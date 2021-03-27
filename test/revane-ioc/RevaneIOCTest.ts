@@ -1,8 +1,6 @@
 import * as path from 'path'
 import test from 'ava'
-import Revane, { LoaderOptions, BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
-import Loader from '../../src/revane-ioc-core/Loader'
-import DefaultBeanDefinition from '../../src/revane-ioc-core/DefaultBeanDefinition'
+import Revane from '../../src/revane-ioc/RevaneIOC'
 
 test('should read json configuration file and register beans', async (t) => {
   t.plan(3)
@@ -15,10 +13,8 @@ test('should read json configuration file and register beans', async (t) => {
     ],
     configuration: { disabled: true },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    },
-    noRedefinition: true
+    noRedefinition: true,
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -34,12 +30,12 @@ test('should use auto configuration', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/autoConfig'),
     profile: 'test',
-    autoConfiguration: true
+    autoConfiguration: true,
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
   const configuration = await revane.get('configuration')
-  await revane.get('taskScheduler')
   await revane.get('test')
   t.true(configuration.get('test'))
 })
@@ -52,7 +48,8 @@ test('should throw error on unknown id', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -69,7 +66,8 @@ test('should throw error if not initialized #1', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -89,7 +87,8 @@ test('should throw error if not initialized #2', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -109,7 +108,8 @@ test('should throw error if not initialized #3', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -129,7 +129,8 @@ test('should use parent context', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane1 = new Revane(options1)
 
@@ -140,7 +141,8 @@ test('should use parent context', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config4.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane2 = new Revane(options2)
   await revane1.initialize()
@@ -158,40 +160,6 @@ test('should use parent context', async (t) => {
   t.truthy(bean12)
 })
 
-test('should use loader from Plugin', async (t) => {
-  class FakeLoader implements Loader {
-    type (): string {
-      return 'json'
-    }
-
-    isRelevant (options: LoaderOptions): boolean {
-      return true
-    }
-
-    async load (): Promise<DefaultBeanDefinition[]> {
-      throw new Error('Method not implemented.')
-    }
-  }
-
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
-    componentScan: false,
-    loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
-    ],
-    plugins: {
-      loaders: [new FakeLoader()]
-    },
-    configuration: { disabled: true },
-    profile: 'test'
-  }
-  const revane = new Revane(options)
-  return await revane.initialize()
-    .catch((error) => {
-      t.is(error.message, 'Method not implemented.')
-    })
-})
-
 test('should read json configuration file and register beans #2', async (t) => {
   t.plan(4)
 
@@ -201,7 +169,8 @@ test('should read json configuration file and register beans #2', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config3.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -224,7 +193,8 @@ test('should return if beans exist()', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config3.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -245,7 +215,8 @@ test('should read json and xml configuration file and register beans', async (t)
       { file: path.join(__dirname, '../../../testdata/xml/config.xml') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -271,7 +242,8 @@ test('should create bean for module', async (t) => {
       { file: path.join(__dirname, '../../../testdata/xml/config3.xml') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -288,7 +260,8 @@ test('should create bean for module with value', async (t) => {
       { file: path.join(__dirname, '../../../testdata/xml/config4.xml') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -307,7 +280,8 @@ test('should tearDown', async (t) => {
       { file: path.join(__dirname, '../../../testdata/xml/config4.xml') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -322,7 +296,8 @@ test('should read not reject on missing paths', async (t): Promise<void> => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   return await revane.initialize()
@@ -338,7 +313,8 @@ test('should read json config file and reject on missing dependency', async (t) 
       { file: path.join(__dirname, '../../../testdata/json/config2.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   return await revane.initialize()
@@ -355,46 +331,14 @@ test('should reject error on unknown configuration file ending', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config2.test') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   return await revane.initialize()
     .catch((err) => {
       t.truthy(err)
       t.is(err.code, 'REV_ERR_UNKNOWN_ENDING')
-    })
-})
-
-test('should not reject on custom file ending from loader', async (t): Promise<void> => {
-  class TestLoader implements Loader {
-    static type = 'test'
-
-    type (): string {
-      return 'test'
-    }
-
-    isRelevant (options: LoaderOptions): boolean {
-      return options.file?.endsWith('test') ?? false
-    }
-
-    async load (): Promise<BeanDefinition[]> {
-      return []
-    }
-  }
-
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
-    loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config2.test') }
-    ],
-    plugins: { loaders: [new TestLoader()] },
-    configuration: { disabled: true },
-    profile: 'test'
-  }
-  const revane = new Revane(options)
-  return await revane.initialize()
-    .then(() => {
-      t.pass()
     })
 })
 
@@ -407,7 +351,8 @@ test('should throw error on get() if not initialized', async (t): Promise<void> 
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -427,7 +372,8 @@ test('should throw error on has() if not initialized', async (t): Promise<void> 
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -448,7 +394,8 @@ test('should throw error on getMultiple if not initialized', async (t) => {
     ],
     componentScan: false,
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -468,7 +415,8 @@ test('should throw error on invalid scope', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/invalidScope') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -488,7 +436,8 @@ test('should throw error if dependency throws error', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/dependencyError') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -508,7 +457,8 @@ test('should throw error if bean was defined twice', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/definedTwice') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -528,7 +478,8 @@ test('should not throw error if bean redefinition is allowed', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/definedTwice2') }
     ],
     configuration: { disabled: false },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -542,7 +493,8 @@ test('should not create conditional bean if not missing', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean1') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -556,7 +508,8 @@ test('should create conditional bean if missing', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean2') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -570,7 +523,8 @@ test('should return multiple beans', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -588,7 +542,8 @@ test('should throw error on getByType if not initialized', async (t) => {
       { file: path.join(__dirname, '../../../testdata/json/config.json') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   try {
@@ -610,7 +565,8 @@ test('should read json config file, component scan and register beans', async (t
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -631,7 +587,8 @@ test('component scan should handle file without bean', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan2') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -655,7 +612,8 @@ test('should read json config file, component scan and register beans #2', async
     basePackage: path.join(__dirname, '../../testdata'),
     componentScan: false,
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -678,7 +636,8 @@ test('should get components', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan') }
     ],
     configuration: { disabled: true },
-    profile: 'test'
+    profile: 'test',
+    extensions: []
   }
   const revane = new Revane(options)
   await revane.initialize()

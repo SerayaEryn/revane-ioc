@@ -10,9 +10,7 @@ test('should disable logging', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    }
+    extensions: []
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()
@@ -27,9 +25,7 @@ test('should log to file', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    }
+    extensions: []
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()
@@ -46,9 +42,7 @@ test('should log to file if a path was given', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    }
+    extensions: []
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()
@@ -67,9 +61,7 @@ test('should create logger bean', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    }
+    extensions: []
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()
@@ -86,9 +78,7 @@ test('should use rootLevel', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    }
+    extensions: []
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()
@@ -112,9 +102,7 @@ test('should use level for class', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    scheduling: {
-      enabled: false
-    }
+    extensions: []
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()

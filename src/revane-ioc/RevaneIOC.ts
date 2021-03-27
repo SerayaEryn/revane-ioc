@@ -33,12 +33,9 @@ import { ApplicationContext } from '../revane-ioc-core/ApplicationContext'
 import { ConfigurationProperties } from '../revane-configuration/ConfigurationProperties'
 import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy'
 import { Scheduled } from '../revane-scheduler/Scheduled'
-import { SchedulerBeanPostProcessor } from '../revane-scheduler/SchedulerBeanPostProcessor'
-import { TaskScheduler } from '../revane-scheduler/TaskScheduler'
 import { join } from 'path'
 import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader'
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
-import { SchedulerLoader } from '../revane-scheduler/SchedulerLoader'
 import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
 import { LogFactory } from '../revane-logging/LogFactory'
 import { Logger } from 'apheleia'
@@ -49,6 +46,8 @@ import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFacto
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
 import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy'
 import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProcessor'
+import { Extension } from './Extension'
+import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -77,7 +76,9 @@ export {
   LogFactory,
   RevaneConfiguration,
   PostConstruct,
-  PreDestroy
+  PreDestroy,
+  Extension,
+  SchedulingExtension
 }
 
 export default class RevaneIOC {
@@ -85,22 +86,9 @@ export default class RevaneIOC {
   private options: Options
   private initialized: boolean = false
   private readonly configuration: RevaneConfiguration
-  private readonly taskScheduler: TaskScheduler = new TaskScheduler()
 
   constructor (options: Options) {
     this.options = options
-    if (this.options.plugins == null) {
-      this.options.plugins = {}
-    }
-    if (this.options.plugins.loaders == null) {
-      this.options.plugins.loaders = []
-    }
-    if (this.options.scheduling == null) {
-      this.options.scheduling = { enabled: true }
-    }
-    if (!this.options.scheduling.enabled) {
-      this.options.scheduling.enabled = false
-    }
     if (this.options.noRedefinition == null) {
       this.options.noRedefinition = true
     }
@@ -142,20 +130,11 @@ export default class RevaneIOC {
     const beanTypeRegistry = this.beanTypeRegistry()
     this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
     await this.addDefaultPlugins()
-    this.addPlugins()
     await this.revaneCore.initialize()
     this.initialized = true
   }
 
   private loadOptionsFromConfiguration (): void {
-    if (this.configuration.has('revane.scheduling.enabled')) {
-      const schedulerDisabled = this.configuration.getBoolean('revane.scheduling.enabled')
-      if (this.options.scheduling == null) {
-        this.options.scheduling = { enabled: schedulerDisabled }
-      } else {
-        this.options.scheduling.enabled = schedulerDisabled
-      }
-    }
     if (this.configuration.has('revane.main.allow-bean-definition-overriding')) {
       const allowRedefinition = this.configuration.getBoolean('revane.main.allow-bean-definition-overriding')
       this.options.noRedefinition = !allowRedefinition
@@ -209,7 +188,9 @@ export default class RevaneIOC {
   }
 
   public async close (): Promise<void> {
-    this.taskScheduler.close()
+    for (const extension of this.options.extensions) {
+      await extension.close()
+    }
     await this.revaneCore.close()
   }
 
@@ -225,25 +206,9 @@ export default class RevaneIOC {
     if (!(this.options.configuration?.disabled ?? false)) {
       this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
     }
-    this.revaneCore?.addPlugin('loader', new SchedulerLoader(this.taskScheduler))
-    const customXmlLoader = this.getLoader('xml')
-    if (customXmlLoader != null) {
-      this.revaneCore?.addPlugin('loader', customXmlLoader)
-    } else {
-      this.revaneCore?.addPlugin('loader', new XmlFileLoader())
-    }
-    const customJsonLoader = this.getLoader('json')
-    if (customJsonLoader != null) {
-      this.revaneCore?.addPlugin('loader', customJsonLoader)
-    } else {
-      this.revaneCore?.addPlugin('loader', new JsonFileLoader())
-    }
-    const customScanLoader = this.getLoader('scan')
-    if (customScanLoader != null) {
-      this.revaneCore?.addPlugin('loader', customScanLoader)
-    } else {
-      this.revaneCore?.addPlugin('loader', new ComponentScanLoader())
-    }
+    this.revaneCore?.addPlugin('loader', new XmlFileLoader())
+    this.revaneCore?.addPlugin('loader', new JsonFileLoader())
+    this.revaneCore?.addPlugin('loader', new ComponentScanLoader())
     this.revaneCore?.addPlugin('beanFactoryPreProcessor', new BeanAnnotationBeanFactoryPreProcessor())
     this.revaneCore?.addPlugin('beanFactoryPreProcessor', new LifeCycleBeanFactoryPreProcessor())
     if (!(this.options.configuration?.disabled ?? false)) {
@@ -253,12 +218,17 @@ export default class RevaneIOC {
       )
       this.revaneCore?.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
     }
-    this.revaneCore?.addPlugin(
-      'beanFactoryPostProcessor',
-      new SchedulerBeanPostProcessor(this.taskScheduler, this.options.scheduling?.enabled ?? false)
-    )
     if (this.isLoggingEnabled()) {
       this.revaneCore?.addPlugin('loader', new LoggingLoader(this.loggingOptions()))
+    }
+    for (const extension of this.options.extensions) {
+      await extension.initialize(this.configuration)
+      for (const beanFactoryPostProcessor of extension.beanFactoryPostProcessors()) {
+        this.revaneCore?.addPlugin('beanFactoryPostProcessor', beanFactoryPostProcessor)
+      }
+      for (const loader of extension.beanLoaders()) {
+        this.revaneCore?.addPlugin('loader', loader)
+      }
     }
   }
 
@@ -267,27 +237,6 @@ export default class RevaneIOC {
     return !loggingEnabled ||
     (loggingEnabled &&
       this.configuration.getBoolean('revane.logging.enabled'))
-  }
-
-  private addPlugins (): void {
-    const loaders = this.options.plugins?.loaders
-    if (loaders == null) return
-    for (const loader of loaders) {
-      if (!['xml', 'json', 'scan'].includes(loader.type())) {
-        this.revaneCore.addPlugin('loader', loader)
-      }
-    }
-  }
-
-  private getLoader (type: string): Loader | null {
-    const loaders = this.options.plugins?.loaders
-    if (loaders == null) return null
-    for (const loader of loaders) {
-      if (loader.type() === type) {
-        return loader
-      }
-    }
-    return null
   }
 
   private beanTypeRegistry (): BeanTypeRegistry {

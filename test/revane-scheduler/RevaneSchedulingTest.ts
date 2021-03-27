@@ -1,17 +1,36 @@
 import test from 'ava'
 import * as path from 'path'
-import RevaneIOC from '../../src/revane-ioc/RevaneIOC'
+import RevaneIOC, { SchedulingExtension } from '../../src/revane-ioc/RevaneIOC'
 import { SchedulerLoader } from '../../src/revane-scheduler/SchedulerLoader'
 import { TaskScheduler } from '../../src/revane-scheduler/TaskScheduler'
 
 test('Should schedule task', async (t) => {
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage: path.join(__dirname, '../../testdata/scheduler'),
     loaderOptions: [
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler') }
     ],
-    configuration: { disabled: false },
-    profile: 'test'
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler/testconfig') },
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
+  }
+  const revane = new RevaneIOC(options)
+  await revane.initialize()
+
+  await wait()
+  t.true((await revane.get('scan56')).executed)
+  await revane.close()
+})
+
+test('Should schedule task enabled via extension options', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata/scheduler2'),
+    loaderOptions: [
+      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler2') }
+    ],
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler2/testconfig') },
+    profile: 'test',
+    extensions: [new SchedulingExtension({ enabled: true })]
   }
   const revane = new RevaneIOC(options)
   await revane.initialize()
@@ -27,8 +46,9 @@ test('Should schedule task #2', async (t) => {
     loaderOptions: [
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-invalid1') }
     ],
-    configuration: { disabled: false, directory: '/testconfig' },
-    profile: 'test'
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-invalid1/testconfig') },
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
   }
   const revane = new RevaneIOC(options)
   try {
@@ -44,8 +64,9 @@ test('Should schedule task #3', async (t) => {
     loaderOptions: [
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-invalid2') }
     ],
-    configuration: { disabled: false, directory: '/testconfig' },
-    profile: 'test'
+    configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-invalid2/testconfig') },
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
   }
   const revane = new RevaneIOC(options)
 
@@ -63,7 +84,8 @@ test('Should not schedule tasks', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-invalid3') }
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-invalid3/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
   }
   const revane = new RevaneIOC(options)
   await revane.initialize()
@@ -77,7 +99,8 @@ test('Should handle error in scheduled task', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws') }
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
   }
   const revane = new RevaneIOC(options)
   await revane.initialize()
@@ -93,7 +116,8 @@ test('Should handle error in scheduled async task', async (t) => {
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws3') }
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws3/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
   }
   const revane = new RevaneIOC(options)
   await revane.initialize()
@@ -109,7 +133,8 @@ test('Should handle error in scheduled task with default handler', async (t) => 
       { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws2') }
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws2/testconfig') },
-    profile: 'test'
+    profile: 'test',
+    extensions: [new SchedulingExtension(null)]
   }
   const revane = new RevaneIOC(options)
   await revane.initialize()
