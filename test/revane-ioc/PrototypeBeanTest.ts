@@ -5,10 +5,11 @@ import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 test('should class postConstruct on instance', async (t) => {
   t.plan(1)
 
-  const Clazz = require('../../../testdata/test6') // eslint-disable-line
+  const Clazz = await import('../../testdata/test6')
 
   const beanDefinition = new BeanDefinition('test')
-  beanDefinition.classConstructor = Clazz
+  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.postConstructKey = 'postConstruct'
   const bean = new PrototypeBean(beanDefinition)
 
   const instance = await bean.getInstance()
@@ -18,10 +19,11 @@ test('should class postConstruct on instance', async (t) => {
 test('should handle missing postConstruct on instance', async (t) => {
   t.plan(1)
 
-  const Clazz = require('../../../testdata/test1') // eslint-disable-line
+  const Clazz = await import('../../testdata/test1')
 
   const beanDefinition = new BeanDefinition('test')
-  beanDefinition.classConstructor = Clazz
+  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.postConstructKey = null
   const bean = new PrototypeBean(beanDefinition)
 
   t.truthy(await bean.getInstance())
@@ -30,10 +32,11 @@ test('should handle missing postConstruct on instance', async (t) => {
 test('should return Promise on preDestroy()', async (t) => {
   t.plan(1)
 
-  const Clazz = require('../../../testdata/test6') // eslint-disable-line
+  const Clazz = await import('../../testdata/test6')
 
   const beanDefinition = new BeanDefinition('test')
-  beanDefinition.classConstructor = Clazz
+  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.preDestroyKey = 'preDestroy'
   const bean = new PrototypeBean(beanDefinition)
 
   await bean.preDestroy()
@@ -42,10 +45,11 @@ test('should return Promise on preDestroy()', async (t) => {
 })
 
 test('should return Promise on postConstruct()', async (t) => {
-  const Clazz = require('../../../testdata/test6') // eslint-disable-line
+  const Clazz = await import('../../testdata/test6')
 
   const beanDefinition = new BeanDefinition('test')
-  beanDefinition.classConstructor = Clazz
+  beanDefinition.classConstructor = Clazz as any
+  beanDefinition.postConstructKey = 'postConstruct'
   const bean = new PrototypeBean(beanDefinition)
 
   await bean.postConstruct()

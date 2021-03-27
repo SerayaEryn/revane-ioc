@@ -4,6 +4,7 @@ import { createComponentDecorator } from './Component'
 import { createScopeDecorator } from './Scope'
 import { createBeanDecorator } from './Bean'
 import { createConditionalOnMissingBeanDecorator } from './ConditionalOnMissingBean'
+import { createLifeCycleDecorator } from './LifeCycleDecorators'
 
 const Configuration = createComponentDecorator('configuration')
 const Repository = createComponentDecorator('repository')
@@ -15,6 +16,8 @@ const Scheduler = createComponentDecorator('scheduler')
 const Scope = createScopeDecorator()
 const Bean = createBeanDecorator()
 const ConditionalOnMissingBean = createConditionalOnMissingBeanDecorator()
+const PostConstruct = createLifeCycleDecorator('postConstruct')
+const PreDestroy = createLifeCycleDecorator('preDestroy')
 
 export {
   Configuration,
@@ -26,5 +29,7 @@ export {
   Scheduler,
   Scope,
   Bean,
-  ConditionalOnMissingBean
+  ConditionalOnMissingBean,
+  PostConstruct,
+  PreDestroy
 }

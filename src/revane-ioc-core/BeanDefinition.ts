@@ -16,6 +16,10 @@ export interface BeanDefinition {
   classConstructor?: Constructor
   dependencies: Bean[]
   conditionalOnMissingBean?: string
+  key?: string
+  postConstructKey?: string
+  preDestroyKey?: string
+
   isClass (): boolean
   create (dependencies: Bean[], beanTypeRegistry: BeanTypeRegistry): Promise<Bean>
 }

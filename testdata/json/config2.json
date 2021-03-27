@@ -1,7 +1,7 @@
 [
   {
     "id": "json2",
-    "class": "./json/json2",
+    "class": "../testdata/json/json2",
     "properties": [{
       "ref": "json1"
     }]

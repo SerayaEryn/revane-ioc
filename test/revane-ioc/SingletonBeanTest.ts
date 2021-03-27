@@ -3,10 +3,11 @@ import SingletonBean from '../../src/revane-ioc/bean/SingletonBean'
 import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 
 test('should class postContruct on instance', async (t) => {
-  const Clazz = require('../../../testdata/test6') // eslint-disable-line
+  const Clazz = await import('../../testdata/test6')
 
   const beanDefinition = new BeanDefinition('test')
-  beanDefinition.classConstructor = Clazz
+  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.postConstructKey = 'postConstruct'
   const bean = new SingletonBean(beanDefinition)
   await bean.init()
   await bean.postConstruct()
@@ -16,10 +17,10 @@ test('should class postContruct on instance', async (t) => {
 })
 
 test('should return Promise on preDestroy()', async (t) => {
-  const Clazz = require('../../../testdata/test6') // eslint-disable-line
+  const Clazz = await import('../../testdata/test6')
 
   const beanDefinition = new BeanDefinition('test')
-  beanDefinition.classConstructor = Clazz
+  beanDefinition.classConstructor = Clazz.default
   const bean = new SingletonBean(beanDefinition)
   await bean.init()
   await bean.preDestroy()

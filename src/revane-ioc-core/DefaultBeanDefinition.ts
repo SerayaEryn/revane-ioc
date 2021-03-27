@@ -19,6 +19,9 @@ export default class DefaultBeanDefinition implements BeanDefinition {
   public classConstructor?: Constructor
   public dependencies: Bean[] = []
   public conditionalOnMissingBean?: string
+  public key?: string
+  public postConstructKey?: string
+  public preDestroyKey?: string
 
   constructor (id: string) {
     this.id = id

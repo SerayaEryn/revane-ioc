@@ -16,8 +16,8 @@ export default class PrototypeBean extends AbstractBean {
     if (this.callback != null) {
       await this.callback(instance)
     }
-    if (instance.postConstruct != null) {
-      await instance.postConstruct()
+    if (this.entry.postConstructKey != null) {
+      await instance[this.entry.postConstructKey]()
     }
     return instance
   }

@@ -8,3 +8,6 @@ export default class Scan1 {
     this.test6 = test6
   }
 }
+
+@Component
+export class AnotherClass {}

@@ -15,7 +15,7 @@ test('should do component scan without filters', async (t): Promise<void> => {
   const componentScanResolver = new ComponentScanLoader()
   return await componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.is(beanDefinitions.length, 4)
+      t.is(beanDefinitions.length, 5)
       const scan1 = findDefinition(beanDefinitions, 'scan1')
       t.is(scan1.scope, 'singleton')
       const scan2 = findDefinition(beanDefinitions, 'scan2')
@@ -56,10 +56,7 @@ test('should return correct type', (t) => {
 
 test('should throw error on require error', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/loadFailure')
-  const options = {
-    basePackage,
-    componentScan: true
-  }
+  const options = { basePackage, componentScan: true }
 
   const componentScanResolver = new ComponentScanLoader()
   await t.throwsAsync(async () => {
@@ -94,49 +91,7 @@ test('should do component scan with include filter', async (t): Promise<void> =>
   const componentScanResolver = new ComponentScanLoader()
   return await componentScanResolver.load(options, basePackage)
     .then((beanDefinitions) => {
-      t.is(beanDefinitions.length, 4)
-    })
-})
-
-test('should do component scan but exclude node module without dependency on revane', async (t): Promise<void> => {
-  const basePackage = path.join(__dirname, '../../testdata/componentScan1')
-  const options = {
-    basePackage,
-    componentScan: true
-  }
-
-  const componentScanResolver = new ComponentScanLoader()
-  return await componentScanResolver.load(options, basePackage)
-    .then((beanDefinitions) => {
-      t.is(beanDefinitions.length, 0)
-    })
-})
-
-test('should do component scan but exclude node module without dependency on revane #2', async (t): Promise<void> => {
-  const basePackage = path.join(__dirname, '../../testdata/componentScan3')
-  const options = {
-    basePackage,
-    componentScan: true
-  }
-
-  const componentScanResolver = new ComponentScanLoader()
-  return await componentScanResolver.load(options, basePackage)
-    .then((beanDefinitions) => {
-      t.is(beanDefinitions.length, 0)
-    })
-})
-
-test('should do component scan and detect node module with dependency on revane', async (t): Promise<void> => {
-  const basePackage = path.join(__dirname, '../../testdata/componentScan2')
-  const options = {
-    basePackage,
-    componentScan: true
-  }
-
-  const componentScanResolver = new ComponentScanLoader()
-  return await componentScanResolver.load(options, basePackage)
-    .then((beanDefinitions) => {
-      t.is(beanDefinitions.length, 1)
+      t.is(beanDefinitions.length, 5)
     })
 })
 

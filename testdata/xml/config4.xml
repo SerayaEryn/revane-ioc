@@ -1,8 +1,8 @@
 <beans>
-  <bean id="xml2" class="./xml/xml2">
+  <bean id="xml2" class="../testdata/xml/xml2">
     <ref value="xml1"/>
   </bean>
-  <bean id="xml3" class="./xml/xml2" scope="prototype">
+  <bean id="xml3" class="../testdata/xml/xml2" scope="prototype">
     <ref value="xml1"/>
   </bean>
 </beans>

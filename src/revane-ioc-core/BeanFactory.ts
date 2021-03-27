@@ -92,19 +92,19 @@ export class BeanFactory {
     entry: BeanDefinition,
     beanDefinitions: BeanDefinition[]
   ): Promise<Bean[]> {
-    if (entry.isClass()) {
-      const dependencies: Bean[] = []
-      for (const property of entry.dependencyIds) {
-        const dependency = await this.getDependecySafe(
-          property,
-          entry.id,
-          beanDefinitions
-        )
-        dependencies.push(dependency)
-      }
-      return dependencies
+    if (!entry.isClass()) {
+      return []
     }
-    return []
+    const dependencies: Bean[] = []
+    for (const property of entry.dependencyIds) {
+      const dependency = await this.getDependecySafe(
+        property,
+        entry.id,
+        beanDefinitions
+      )
+      dependencies.push(dependency)
+    }
+    return dependencies
   }
 
   private async getDependecySafe (

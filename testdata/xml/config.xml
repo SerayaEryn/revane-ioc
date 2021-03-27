@@ -1,9 +1,9 @@
 <beans>
-  <bean id="xml1" class="./xml/xml1.js"/>
-  <bean id="xml2" class="./xml/xml2">
+  <bean id="xml1" class="../testdata/xml/xml1.js"/>
+  <bean id="xml2" class="../testdata/xml/xml2">
     <ref bean="xml1"/>
   </bean>
-  <bean id="xml3" class="./xml/xml3">
+  <bean id="xml3" class="../testdata/xml/xml3">
     <ref bean="xml1"/>
     <ref bean="xml2"/>
   </bean>

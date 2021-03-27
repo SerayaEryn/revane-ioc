@@ -15,10 +15,14 @@ export class ModuleLoaderBeanFactoryPreProcessor implements BeanFactoryPreProces
     if (entry.path != null) {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const Clazz = require(entry.path)
-      if (Clazz.default != null) {
-        return Clazz.default
+      if (entry.key != null) {
+        return Clazz[entry.key]
+      } else {
+        if (Clazz.default != null) {
+          return Clazz.default
+        }
+        return Clazz
       }
-      return Clazz
     }
     throw new Error(`no constructor or instance available for ${entry.id}`)
   }

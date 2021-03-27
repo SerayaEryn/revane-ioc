@@ -15,12 +15,9 @@ import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { Property } from '../../revane-ioc-core/Property'
 import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
-import { promises } from 'fs'
 import { Reflect } from '../../revane-utils/Reflect'
 import { recursiveReaddir } from './RecursiveReadDir'
 import { Scope } from '../../revane-ioc-core/Scope'
-
-const { readFile } = promises
 
 const filterByType = {
   regex: RegexFilter
@@ -34,24 +31,40 @@ export default class ComponentScanLoader implements Loader {
     const files = await recursiveReaddir(path)
     const flatFiles = files.flat()
     const filesFilteredByJavascript = filterByJavascriptFiles(flatFiles)
-    const filesFilteredByPackage = await this.filterByPackage(filesFilteredByJavascript, options.basePackage)
+    const filesFilteredByPackage = this.filterByPackage(filesFilteredByJavascript)
     const filteredFiles = this.applyFilters(filesFilteredByPackage, includeFilters, excludeFilters)
     const result: BeanDefinition[] = []
     for (const file of filteredFiles) {
-      let module1
+      let requiredFile: any
+      let moduleMap: Map<string, any>
       try {
-        module1 = getClazz(file)
+        requiredFile = require(file) // eslint-disable-line
+        moduleMap = getModuleMap(requiredFile)
       } catch (error) {
         throw new ModuleLoadError(file, error)
       }
-      if (Reflect.getMetadata(idSym, module1) == null) {
-        continue
+      if (moduleMap.size === 0) {
+        if (this.isNoComponent(requiredFile)) {
+          continue
+        }
+        const clazz = file.replace(basePackage, '.')
+        result.push(getBeanDefinition(null, requiredFile, clazz))
+      } else {
+        for (const key of moduleMap.keys()) {
+          const aModule = moduleMap.get(key)
+          if (this.isNoComponent(aModule)) {
+            continue
+          }
+          const clazz = file.replace(basePackage, '.')
+          result.push(getBeanDefinition(key, aModule, clazz))
+        }
       }
-      const clazz = file.replace(basePackage, '.')
-      const beanDefinition = getBeanDefinition(module1, clazz)
-      result.push(beanDefinition)
     }
     return result
+  }
+
+  private isNoComponent (aModule: any): boolean {
+    return Reflect.getMetadata(idSym, aModule) == null
   }
 
   public isRelevant (options: LoaderOptions): boolean {
@@ -76,46 +89,20 @@ export default class ComponentScanLoader implements Loader {
     return filtered
   }
 
-  private async filterByPackage (files: string[], basePackage: string): Promise<string[]> {
-    const filteredFiles = []
-    for (const file of files) {
-      if (this.isInsideNodeModules(file, basePackage)) {
-        if (await this.moduleDependsOnRevane(file, basePackage)) {
-          filteredFiles.push(file)
-        }
-      } else {
-        filteredFiles.push(file)
-      }
-    }
-    return filteredFiles
-  }
-
-  private async moduleDependsOnRevane (file: string, basePackage: string): Promise<boolean> {
-    const moduleName = file.replace(`${basePackage}/node_modules/`, '').split('/')[0]
-    const packageJsonPath = `${basePackage}/node_modules/${moduleName}/package.json`
-    try {
-      const buffer = await readFile(packageJsonPath)
-      const packageJson = JSON.parse(buffer.toString())
-      return packageJson.dependencies?.revane != null
-    } catch (ignore) {
-      return false
-    }
-  }
-
-  private isInsideNodeModules (file: string, basePackage: string): boolean {
-    return file.replace(basePackage, '').startsWith('/node_modules')
+  private filterByPackage (files: string[]): string[] {
+    return files.filter(file => !file.includes('/node_modules'))
   }
 }
 
-function getClazz (file: string): any {
-  const module1: any = require(file) // eslint-disable-line
-  if (module1.default != null) {
-    return module1.default
+function getModuleMap (requiredFile: any): Map<string, any> {
+  const moduleMap: Map<string, any> = new Map()
+  for (const key of Object.keys(requiredFile)) {
+    moduleMap.set(key, requiredFile[key])
   }
-  return module1
+  return moduleMap
 }
 
-function getBeanDefinition (module1, clazz): DefaultBeanDefinition {
+function getBeanDefinition (key: string, module1: any, clazz): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
   const scope = Reflect.getMetadata(scopeSym, module1) || Scope.SINGLETON
@@ -125,6 +112,7 @@ function getBeanDefinition (module1, clazz): DefaultBeanDefinition {
   beanDefinition.dependencyIds = dependencies
   beanDefinition.scope = scope
   beanDefinition.type = type
+  beanDefinition.key = key
   return beanDefinition
 }
 

@@ -21,7 +21,9 @@ import {
   Bean,
   Scheduler,
   ConditionalOnMissingBean,
-  ControllerAdvice
+  ControllerAdvice,
+  PostConstruct,
+  PreDestroy
 } from './decorators/Decorators'
 import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
@@ -46,6 +48,7 @@ import { LoggingLoader } from '../revane-logging/LoggingLoader'
 import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
 import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy'
+import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProcessor'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -72,7 +75,9 @@ export {
   ConditionalOnMissingBean,
   Logger,
   LogFactory,
-  RevaneConfiguration
+  RevaneConfiguration,
+  PostConstruct,
+  PreDestroy
 }
 
 export default class RevaneIOC {
@@ -220,6 +225,7 @@ export default class RevaneIOC {
     this.revaneCore.addPlugin('loader', this.getLoader('json') || new JsonFileLoader())
     this.revaneCore.addPlugin('loader', this.getLoader('scan') || new ComponentScanLoader())
     this.revaneCore.addPlugin('beanFactoryPreProcessor', new BeanAnnotationBeanFactoryPreProcessor())
+    this.revaneCore.addPlugin('beanFactoryPreProcessor', new LifeCycleBeanFactoryPreProcessor())
     if (!this.options.configuration?.disabled) {
       this.revaneCore.addPlugin(
         'beanFactoryPostProcessor',

@@ -38,7 +38,7 @@ test('should trigger scan from xml #2', async (t): Promise<void> => {
 
   return await xmlFileResolver.load({ file, basePackage }, basePackage)
     .then((beanDefinitions) => {
-      t.deepEqual(beanDefinitions.length, 4)
+      t.deepEqual(beanDefinitions.length, 5)
     })
 })
 
@@ -50,7 +50,7 @@ test('should trigger scan from xml', async (t): Promise<void> => {
 
   return await xmlFileResolver.load({ file, basePackage }, basePackage)
     .then((beanDefinitions) => {
-      t.deepEqual(beanDefinitions.length, 4)
+      t.deepEqual(beanDefinitions.length, 5)
     })
 })
 
