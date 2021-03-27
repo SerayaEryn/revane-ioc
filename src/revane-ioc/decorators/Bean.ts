@@ -5,7 +5,7 @@ export function createBeanDecorator (): Function {
   return function decoratoteBeanFactory (maybeId, maybePropertyKey: string, descriptor: PropertyDescriptor) {
     if (typeof maybeId === 'string' || maybeId === undefined) {
       return function define (target, propertyKey: string, descriptor: PropertyDescriptor): void {
-        addBean(target, maybeId || propertyKey, propertyKey)
+        addBean(target, maybeId ?? propertyKey, propertyKey)
       }
     } else {
       addBean(maybeId, maybePropertyKey, maybePropertyKey)
@@ -14,7 +14,7 @@ export function createBeanDecorator (): Function {
 }
 
 function addBean (target, id: string, propertyKey: string): void {
-  const beans = Reflect.getMetadata(beansSym, target) || []
+  const beans = Reflect.getMetadata(beansSym, target) ?? []
   beans.push({
     id,
     type: 'component',

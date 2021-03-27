@@ -1,4 +1,4 @@
-export type RegexFilter = {
+export interface RegexFilter {
   type: string
   regex: string
 }
@@ -14,6 +14,6 @@ export class LoaderOptions {
 export default class Options {
   public noRedefinition?: boolean
   public basePackage: string
-  public loaderOptions?: LoaderOptions[]
+  public loaderOptions: LoaderOptions[]
   public defaultScope?: string
 }

@@ -3,7 +3,7 @@ import { Service } from '../src/revane-ioc/RevaneIOC'
 @Service
 export default class Test8 {
   test6: any
-  invoked: boolean
+  invoked: boolean = false
   constructor (test6) {
     this.test6 = test6
   }

@@ -10,9 +10,10 @@ export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProc
     beanDefinitions: BeanDefinition[]
   ): Promise<BeanDefinition[]> {
     const classConstructor = beanDefinition.classConstructor
-    let beans = classConstructor.prototype ? Reflect.getMetadata(beansSym, classConstructor.prototype) || [] : []
+    if (classConstructor == null) return [beanDefinition]
+    let beans = classConstructor.prototype != null ? Reflect.getMetadata(beansSym, classConstructor.prototype) ?? [] : []
     if (beanDefinition.instance?.constructor?.prototype != null) {
-      beans = beans.concat(Reflect.getMetadata(beansSym, beanDefinition.instance.constructor.prototype) || [])
+      beans = beans.concat(Reflect.getMetadata(beansSym, beanDefinition.instance.constructor.prototype) ?? [])
     }
     const createdBeans: BeanDefinition[] = [beanDefinition]
     for (const beanFactory of beans) {

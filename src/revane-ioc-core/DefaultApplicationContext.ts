@@ -3,7 +3,7 @@ import Bean from './context/bean/Bean'
 import NotFoundError from './context/errors/NotFoundError'
 
 export class DefaultApplicationContext implements ApplicationContext {
-  private parent: ApplicationContext
+  private parent: ApplicationContext | null
   private readonly beans: Map<string, Bean> = new Map()
 
   put (beans: Bean[]): void {
@@ -29,10 +29,10 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async getByType (type: string): Promise<any[]> {
-    const beansByType = []
+    const beansByType: any[] = []
     for (const bean of this.beans.values()) {
       if (bean.type() === type) {
-        const instance = await bean.getInstance()
+        const instance: any = await bean.getInstance()
         beansByType.push(instance)
       }
     }

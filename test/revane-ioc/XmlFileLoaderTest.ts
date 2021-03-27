@@ -9,7 +9,7 @@ test('should read xml configuration file and register beans', async (t): Promise
 
   const xmlFileResolver = new XmlFileLoader()
 
-  return await xmlFileResolver.load({ file }, null)
+  return await xmlFileResolver.load({ file }, '')
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 3)
     })
@@ -26,7 +26,7 @@ test('should reject on error', async (t) => {
   const xmlFileLoader = new XmlFileLoader()
 
   await t.throwsAsync(async () => {
-    await xmlFileLoader.load({ file }, null)
+    await xmlFileLoader.load({ file }, '')
   })
 })
 

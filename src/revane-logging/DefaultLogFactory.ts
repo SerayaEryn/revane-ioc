@@ -26,7 +26,7 @@ export class DefaultLogFactory implements LogFactory {
     const className = clazz.constructor.name
     const id = getId(getSyntaxTree(clazz))
     const logger = this.rootLogger.child({ className })
-    logger.setLevel(this.options.levels[id] || this.options.rootLevel)
+    logger.setLevel(this.options.levels[id] ?? this.options.rootLevel)
     return logger
   }
 

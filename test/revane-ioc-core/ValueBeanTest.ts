@@ -24,6 +24,6 @@ test('should return null for id', async (t) => {
     // ...
   })
 
-  t.is(bean.id(), null)
-  t.is(bean.type(), null)
+  t.truthy(bean.id())
+  t.truthy(bean.type())
 })

@@ -3,9 +3,7 @@ import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import { RevaneConfiguration } from './RevaneConfiguration'
 
 export class ConfigurationLoader implements Loader {
-  private readonly configuration?: RevaneConfiguration = null
-
-  constructor (configuration: RevaneConfiguration) {
+  constructor (private readonly configuration: RevaneConfiguration) {
     this.configuration = configuration
   }
 

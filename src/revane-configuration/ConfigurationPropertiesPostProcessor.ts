@@ -16,7 +16,7 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
       if (this.configuration != null) {
         const { configurationProperties } = beanDefinition
         if (configurationProperties != null) {
-          for (const propertyName of configurationProperties.properties || []) {
+          for (const propertyName of configurationProperties.properties ?? []) {
             const key = `${configurationProperties.prefix}.${propertyName}`
             if (this.configuration.has(key)) {
               values[propertyName] = this.configuration.get(key)

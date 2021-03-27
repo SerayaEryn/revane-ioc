@@ -3,7 +3,6 @@ import { Loader } from './RevaneIOC'
 
 export default class Options {
   public noRedefinition?: boolean
-  public basePackage?: string
   public loaderOptions?: LoaderOptions[]
   public plugins?: {
     loaders?: Loader[]
@@ -22,4 +21,6 @@ export default class Options {
   }
 
   public autoConfiguration?: boolean
+
+  constructor (public basePackage: string) {}
 }

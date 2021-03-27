@@ -11,7 +11,7 @@ export default class DefaultBeanLoaderRegistry implements BeanLoaderRegistry {
   }
 
   public async get (loaderOptions: LoaderOptions[], basePackage: string): Promise<BeanDefinition[][]> {
-    const promises = []
+    const promises: any[] = []
     for (let index = 0; index < this.loaders.length; index++) {
       promises.push(this.loaders[index].load(loaderOptions[index], basePackage))
     }

@@ -28,7 +28,7 @@ export class PropertiesLoadingStrategy implements LoadingStrategy {
   private parseProperties (content: string): object {
     const lines = content.split('\n')
     const config = {}
-    let current = null
+    let current: object | null = null
     for (const line of lines) {
       current = config
       const index = line.indexOf('=')
@@ -37,6 +37,9 @@ export class PropertiesLoadingStrategy implements LoadingStrategy {
       const keyParts = key.split('.')
       for (let index = 0; index < keyParts.length; index++) {
         const keyPart = keyParts[index]
+        if (current == null) {
+          throw new Error('syntax error')
+        }
         if (current[keyPart] == null && index !== keyParts.length - 1) {
           current[keyPart] = {}
           current = current[keyPart]

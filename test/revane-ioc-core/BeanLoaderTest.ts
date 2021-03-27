@@ -37,6 +37,6 @@ test('should handle undefined loaderOptions', async (t) => {
 
   const beanLoader = new BeanLoader([])
 
-  await beanLoader.getBeanDefinitions({ basePackage: '.' })
+  await beanLoader.getBeanDefinitions({ basePackage: '.', loaderOptions: [] })
   t.pass()
 })

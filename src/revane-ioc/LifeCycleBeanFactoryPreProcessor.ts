@@ -12,14 +12,16 @@ export class LifeCycleBeanFactoryPreProcessor implements BeanFactoryPreProcessor
     return [beanDefinition]
   }
 
-  private postConstructKey (beanDefinition: BeanDefinition): string | undefined {
+  private postConstructKey (beanDefinition: BeanDefinition): string | null {
+    if (beanDefinition.classConstructor == null) return null
     return Reflect.getMetadata(
       'life-cycle:postConstruct',
       beanDefinition.classConstructor.prototype
     )?.propertyKey
   }
 
-  private preDestroyKey (beanDefinition: BeanDefinition): string | undefined {
+  private preDestroyKey (beanDefinition: BeanDefinition): string | null {
+    if (beanDefinition.classConstructor == null) return null
     return Reflect.getMetadata(
       'life-cycle:preDestroy',
       beanDefinition.classConstructor.prototype

@@ -47,7 +47,7 @@ export class BeanFactory {
     const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
     for (const preProcessedBeanDefinition of preprocessed) {
       const exitingBeanDefininaton = processedBeanDefinitions.get(preProcessedBeanDefinition.id)
-      if (exitingBeanDefininaton != null && this.options.noRedefinition) {
+      if (exitingBeanDefininaton != null && this.options.noRedefinition !== false) {
         throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
       }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
@@ -116,7 +116,11 @@ export class BeanFactory {
       return new ValueBean(property.value)
     }
     await this.ensureDependencyIsPresent(property, parentId, beanDefinitions)
-    return await this.context.getBean(property.ref)
+    const reference = property.ref
+    if (reference == null) {
+      throw new Error()
+    }
+    return await this.context.getBean(reference)
   }
 
   private async ensureDependencyIsPresent (
@@ -124,8 +128,9 @@ export class BeanFactory {
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<void> {
-    if (!(await this.hasDependency(property.ref))) {
-      await this.registerDependency(property.ref, parentId, beanDefinitions)
+    const reference = property.ref
+    if (reference != null && !(await this.hasDependency(reference))) {
+      await this.registerDependency(reference, parentId, beanDefinitions)
     }
   }
 

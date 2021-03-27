@@ -1,3 +1,3 @@
 export default interface Filter {
-  applies (entry: string): boolean
+  applies: (entry: string) => boolean
 }

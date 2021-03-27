@@ -66,7 +66,7 @@ export default class RevaneIOCCore {
   }
 
   public async getMultiple (ids: string[]): Promise<any[]> {
-    const beans = []
+    const beans: any[] = []
     for (const id of ids) {
       const bean = await this.get(id)
       beans.push(bean)

@@ -6,16 +6,17 @@ import { Reflect } from '../../revane-utils/Reflect'
 
 export function createComponentDecorator (type: string) {
   return function decorateComponent (options?: Options | string | any) {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (typeof options === 'string' || options === undefined || options.id || options.dependencies) {
       return function define (Class) {
         let opts: Options
-        let id: string
+        let id: string | null
         if (typeof options === 'string') {
           id = options
           opts = new Options()
         } else {
-          opts = options || new Options()
-          id = opts.id
+          opts = options as Options ?? new Options()
+          id = opts.id === undefined ? null : opts.id
         }
 
         const tree = getSyntaxTree(Class)

@@ -3,7 +3,7 @@ import { Parser } from 'acorn'
 import * as classFields from 'acorn-class-fields'
 import { Reflect } from '../revane-utils/Reflect'
 
-export type ConfigurationPropertiesOptions = {
+export interface ConfigurationPropertiesOptions {
   prefix: string
 }
 

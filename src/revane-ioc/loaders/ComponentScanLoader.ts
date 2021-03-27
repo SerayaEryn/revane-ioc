@@ -26,8 +26,9 @@ const filterByType = {
 export default class ComponentScanLoader implements Loader {
   public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
     const path = options.basePackage
-    const includeFilters = convert(options.includeFilters || [])
-    const excludeFilters = convert(options.excludeFilters || [])
+    if (path == null) return []
+    const includeFilters = convert(options.includeFilters ?? [])
+    const excludeFilters = convert(options.excludeFilters ?? [])
     const files = await recursiveReaddir(path)
     const flatFiles = files.flat()
     const filesFilteredByJavascript = filterByJavascriptFiles(flatFiles)
@@ -68,7 +69,7 @@ export default class ComponentScanLoader implements Loader {
   }
 
   public isRelevant (options: LoaderOptions): boolean {
-    return options.componentScan
+    return options.componentScan != null ? options.componentScan : false
   }
 
   public type (): string {
@@ -102,10 +103,10 @@ function getModuleMap (requiredFile: any): Map<string, any> {
   return moduleMap
 }
 
-function getBeanDefinition (key: string, module1: any, clazz): DefaultBeanDefinition {
+function getBeanDefinition (key: string | null, module1: any, clazz: any): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
-  const scope = Reflect.getMetadata(scopeSym, module1) || Scope.SINGLETON
+  const scope = Reflect.getMetadata(scopeSym, module1) ?? Scope.SINGLETON
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.class = clazz
@@ -123,7 +124,7 @@ function toReference (id: string): Property {
 }
 
 function filterByJavascriptFiles (files: string[]): string[] {
-  const filteredFiles = []
+  const filteredFiles: string[] = []
   for (const file of files) {
     if (file.endsWith('.js')) {
       filteredFiles.push(file)

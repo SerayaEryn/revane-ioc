@@ -10,8 +10,7 @@ export class ScopeBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   }
 
   async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    beanDefinition.scope = beanDefinition.scope || this.options.defaultScope
+    beanDefinition.scope = beanDefinition.scope ?? this.options.defaultScope ?? 'singleton'
     return [beanDefinition]
   }
 }

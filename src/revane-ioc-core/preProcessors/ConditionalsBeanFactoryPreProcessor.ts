@@ -9,6 +9,7 @@ export class ConditionalsBeanFactoryPreProcessor implements BeanFactoryPreProces
     beanDefinitions: BeanDefinition[]
   ): Promise<BeanDefinition[]> {
     const classConstructor = beanDefinition.classConstructor
+    if (classConstructor == null) return [beanDefinition]
     const conditionalOnMissingBean = Reflect.getMetadata(conditionalOnMissingBeanSym, classConstructor)
     if (conditionalOnMissingBean === true) {
       const beanIsMissing = beanDefinitions.filter((it) => it.uid !== beanDefinition.uid)

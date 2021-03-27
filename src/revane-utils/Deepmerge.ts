@@ -7,7 +7,7 @@ export function deepMerge (target: object, source: object): object {
   }
   for (const key of Object.keys(source)) {
     if (propertyIsUnsafe(target, key)) {
-      return
+      continue
     }
 
     if (existsOn(target, key) && isMergeable(source[key])) {

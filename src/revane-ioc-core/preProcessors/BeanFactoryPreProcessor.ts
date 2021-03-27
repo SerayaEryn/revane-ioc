@@ -1,8 +1,8 @@
 import { BeanDefinition } from '../BeanDefinition'
 
 export interface BeanFactoryPreProcessor {
-  preProcess (
+  preProcess: (
     beanDefinition: BeanDefinition,
     beanDefinitions: BeanDefinition[]
-  ): Promise<BeanDefinition[]>
+  ) => Promise<BeanDefinition[]>
 }

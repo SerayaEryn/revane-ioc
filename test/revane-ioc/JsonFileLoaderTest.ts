@@ -7,7 +7,7 @@ test('should read json configuration file and register beans', async (t): Promis
 
   const jsonFileResolver = new JsonFileLoader()
 
-  return await jsonFileResolver.load({ file }, null)
+  return await jsonFileResolver.load({ file }, '')
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 2)
     })
@@ -19,7 +19,7 @@ test('should reject on error', async (t) => {
   const jsonFileResolver = new JsonFileLoader()
 
   await t.throwsAsync(async () => {
-    await jsonFileResolver.load({ file }, null)
+    await jsonFileResolver.load({ file }, '')
   })
 })
 

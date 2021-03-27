@@ -20,16 +20,19 @@ export default abstract class AbstractBean implements Bean {
   public abstract executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void>
 
   public async createInstance (): Promise<any> {
-    const parameters = []
+    const parameters: any[] = []
     for (const dependency of this.entry.dependencies) {
       parameters.push(await dependency.getInstance())
     }
     let instance = null
     if (this.entry.isClass()) {
+      if (this.entry.classConstructor == null) {
+        throw new Error('cannot create instance')
+      }
       // eslint-disable-next-line new-cap
       instance = new this.entry.classConstructor(...parameters)
     } else {
-      instance = this.entry.classConstructor || this.entry.instance
+      instance = this.entry.classConstructor ?? this.entry.instance
     }
     return instance
   }

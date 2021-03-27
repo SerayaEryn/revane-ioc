@@ -1,5 +1,0 @@
-const EventListener = {}
-
-export {
-  EventListener
-}

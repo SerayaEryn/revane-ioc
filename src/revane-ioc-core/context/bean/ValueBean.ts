@@ -1,3 +1,4 @@
+import { uid } from '../../../revane-utils/Random'
 import Bean from './Bean'
 
 export default class ValueBean implements Bean {
@@ -9,7 +10,7 @@ export default class ValueBean implements Bean {
   }
 
   public id (): string {
-    return null
+    return uid()
   }
 
   public async init (): Promise<any> {
@@ -33,6 +34,6 @@ export default class ValueBean implements Bean {
   }
 
   public type (): string {
-    return null
+    return 'value'
   }
 }

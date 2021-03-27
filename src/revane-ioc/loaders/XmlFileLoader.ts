@@ -21,16 +21,16 @@ const xmlParserOptions = {
   parseNodeValue: true
 }
 
-type XmlReferenceAttribute = {
+interface XmlReferenceAttribute {
   bean?: string
   value?: string
 }
 
-type XmlReference = {
+interface XmlReference {
   attr: XmlReferenceAttribute
 }
 
-type XmlAttribute = {
+interface XmlAttribute {
   class?: string
   scope?: string
   type?: string
@@ -38,17 +38,17 @@ type XmlAttribute = {
   'base-package'?: string
 }
 
-type XmlBean = {
-  attr?: XmlAttribute
+interface XmlBean {
+  attr: XmlAttribute
   ref?: XmlReference
 }
 
-type XmlBeans = {
+interface XmlBeans {
   bean?: XmlBean[] | XmlBean
   'context:component-scan'?: XmlBean
 }
 
-type Xml = {
+interface Xml {
   beans: XmlBeans
 }
 
@@ -60,7 +60,9 @@ export default class XmlFileLoader implements Loader {
   }
 
   public async load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
-    const data = await this.loadFile(options.file)
+    const file = options.file
+    if (file == null) return []
+    const data = await this.loadFile(file)
     const result: Xml = fastXmlParser.parse(data.toString(), xmlParserOptions)
 
     let beanDefinitions: DefaultBeanDefinition[] = []
@@ -107,18 +109,28 @@ export default class XmlFileLoader implements Loader {
   }
 
   public isRelevant (options: LoaderOptions): boolean {
-    return options.file?.endsWith('.xml')
+    const file = options.file
+    if (file == null) return false
+    return file.endsWith('.xml')
   }
 
   private toBeanDefinition (bean: XmlBean): DefaultBeanDefinition {
-    const beanDefinition = new DefaultBeanDefinition(bean.attr.id)
-    beanDefinition.class = bean.attr.class
-    beanDefinition.scope = bean.attr.scope || Scope.SINGLETON
+    const id = bean.attr.id
+    if (id == null) throw new Error('Missing id')
+    const beanDefinition = new DefaultBeanDefinition(id)
+    const clazz = bean.attr.class
+    if (clazz == null) throw new Error('missing class')
+    beanDefinition.class = clazz
+    beanDefinition.scope = bean.attr.scope ?? Scope.SINGLETON
     if (bean.attr.type != null) {
       beanDefinition.type = bean.attr.type
     }
     const ref = bean.ref
-    beanDefinition.dependencyIds = this.getProperties(ref)
+    if (ref != null) {
+      beanDefinition.dependencyIds = this.getProperties(ref)
+    } else {
+      beanDefinition.dependencyIds = []
+    }
     return beanDefinition
   }
 

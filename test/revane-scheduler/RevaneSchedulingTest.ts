@@ -2,6 +2,7 @@ import test from 'ava'
 import * as path from 'path'
 import RevaneIOC from '../../src/revane-ioc/RevaneIOC'
 import { SchedulerLoader } from '../../src/revane-scheduler/SchedulerLoader'
+import { TaskScheduler } from '../../src/revane-scheduler/TaskScheduler'
 
 test('Should schedule task', async (t) => {
   const options = {
@@ -117,7 +118,9 @@ test('Should handle error in scheduled task with default handler', async (t) => 
 })
 
 test('schedulerLoader should return correct type', (t) => {
-  const loader = new SchedulerLoader(null)
+  const loader = new SchedulerLoader(
+    new TaskScheduler()
+  )
   t.is(loader.type(), 'taskScheduler')
 })
 

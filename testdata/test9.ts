@@ -2,7 +2,7 @@ import { Controller } from '../src/revane-ioc/RevaneIOC'
 
 @Controller
 export default class Test9 {
-  invoked: boolean
+  invoked: boolean = false
   doSomething (): void {
     this.invoked = true
   }

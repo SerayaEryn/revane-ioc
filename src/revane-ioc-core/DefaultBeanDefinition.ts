@@ -1,10 +1,10 @@
 import Bean from './context/bean/Bean'
 import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
-import { randomBytes } from 'crypto'
 import InvalidScopeError from './context/errors/InvalidScopeError'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import { Constructor } from './Constructor'
+import { uid } from '../revane-utils/Random'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string
@@ -19,9 +19,9 @@ export default class DefaultBeanDefinition implements BeanDefinition {
   public classConstructor?: Constructor
   public dependencies: Bean[] = []
   public conditionalOnMissingBean?: string
-  public key?: string
-  public postConstructKey?: string
-  public preDestroyKey?: string
+  public key: string | null
+  public postConstructKey: string | null
+  public preDestroyKey: string | null
 
   constructor (id: string) {
     this.id = id
@@ -46,8 +46,4 @@ export default class DefaultBeanDefinition implements BeanDefinition {
       return typeof this.classConstructor === 'function'
     }
   }
-}
-
-function uid (): string {
-  return randomBytes(32).toString('hex')
 }

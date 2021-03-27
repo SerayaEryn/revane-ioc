@@ -1,4 +1,4 @@
-export type Property = {
+export interface Property {
   value?: string
   ref?: string
 }

@@ -6,10 +6,12 @@ class ReflectImpl {
     value: any,
     target: Object
   ): void {
-    if (this.metadata.get(target) == null) {
-      this.metadata.set(target, new Map())
+    let metadataForTarget = this.metadata.get(target)
+    if (metadataForTarget == null) {
+      metadataForTarget = new Map()
     }
-    this.metadata.get(target).set(key, value)
+    metadataForTarget.set(key, value)
+    this.metadata.set(target, metadataForTarget)
   }
 
   getMetadata (key: any, target: Object): any {

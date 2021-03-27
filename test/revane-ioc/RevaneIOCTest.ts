@@ -374,7 +374,7 @@ test('should not reject on custom file ending from loader', async (t): Promise<v
     }
 
     isRelevant (options: LoaderOptions): boolean {
-      return options.file?.endsWith('test')
+      return options.file?.endsWith('test') ?? false
     }
 
     async load (): Promise<BeanDefinition[]> {
