@@ -1,7 +1,7 @@
 import { LoadingStrategy } from './LoadingStrategy'
 import { promises } from 'fs'
 import { ConfigFileNotFound } from './ConfigFileNotFound'
-import { safeLoad } from 'js-yaml'
+import { load } from 'js-yaml'
 import { replaceEnvironmentVariables } from './EnvironmentLoader'
 import { deepMerge } from '../../revane-utils/Deepmerge'
 
@@ -15,11 +15,11 @@ export class YmlLoadingStrategy implements LoadingStrategy {
     } catch (error) {
       throw new ConfigFileNotFound(`${configDirectory}/application.yml`)
     }
-    const defaultConfig: object = safeLoad(replaceEnvironmentVariables(buffer1.toString()))
+    const defaultConfig: object = load(replaceEnvironmentVariables(buffer1.toString()))
     let profileConfig: object
     try {
       const buffer2 = await readFile(`${configDirectory}/application-${profile}.yml`)
-      profileConfig = safeLoad(replaceEnvironmentVariables(buffer2.toString()))
+      profileConfig = load(replaceEnvironmentVariables(buffer2.toString()))
     } catch (ignore) {
       profileConfig = {}
     }
