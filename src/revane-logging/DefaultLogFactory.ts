@@ -79,7 +79,9 @@ export class DefaultLogFactory implements LogFactory {
 
 function getSyntaxTree (Class): any {
   const functionAsString = Class.toString()
-  return Parser.extend(classFields).parse(functionAsString)
+  return Parser.extend(classFields).parse(
+    functionAsString, { ecmaVersion: 2020 }
+  )
 }
 
 function getId (tree): string {

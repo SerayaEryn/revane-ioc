@@ -12,7 +12,7 @@ function createConfigurationPropertiesDecorator () {
     return function define (Class) {
       const tree = getSyntaxTree(Class)
       const properties: string[] = tree.body[0].body.body
-        .filter((node) => node.type === 'FieldDefinition')
+        .filter((node) => node.type === 'PropertyDefinition')
         .map((node) => node.key.name)
       Reflect.defineMetadata(
         configurationPropertiesSym,
@@ -36,7 +36,9 @@ export class ConfigurationPropertiesData {
 
 function getSyntaxTree (Class): any {
   const functionAsString = Class.toString()
-  return Parser.extend(classFields).parse(functionAsString)
+  return Parser.extend(classFields).parse(
+    functionAsString, { ecmaVersion: 2020 }
+  )
 }
 
 const ConfigurationProperties = createConfigurationPropertiesDecorator()
