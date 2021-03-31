@@ -1,6 +1,6 @@
 import * as path from 'path'
 import test from 'ava'
-import RevaneIoc, { LogFactory, LoggingExtension } from '../../src/revane-ioc/RevaneIOC'
+import RevaneIoc, { BeanFactoryExtension, LogFactory, LoggingExtension } from '../../src/revane-ioc/RevaneIOC'
 import { LoggingLoader } from '../../src/revane-logging/LoggingLoader'
 
 test('should disable logging', async (t) => {
@@ -10,7 +10,9 @@ test('should disable logging', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    extensions: [new LoggingExtension()]
+    extensions: [
+      new LoggingExtension()
+    ]
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()
@@ -61,7 +63,10 @@ test('should create logger bean', async (t) => {
     loaderOptions: [],
     configuration: { disabled: false },
     profile: 'test',
-    extensions: [new LoggingExtension()]
+    extensions: [
+      new BeanFactoryExtension(),
+      new LoggingExtension()
+    ]
   }
   const revane = new RevaneIoc(options)
   await revane.initialize()

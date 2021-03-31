@@ -2,7 +2,6 @@
 
 import { createComponentDecorator } from './Component'
 import { createScopeDecorator } from './Scope'
-import { createBeanDecorator } from './Bean'
 import { createConditionalOnMissingBeanDecorator } from './ConditionalOnMissingBean'
 import { createLifeCycleDecorator } from './LifeCycleDecorators'
 
@@ -14,7 +13,6 @@ const Controller = createComponentDecorator('controller')
 const ControllerAdvice = createComponentDecorator('controlleradvice')
 const Scheduler = createComponentDecorator('scheduler')
 const Scope = createScopeDecorator()
-const Bean = createBeanDecorator()
 const ConditionalOnMissingBean = createConditionalOnMissingBeanDecorator()
 const PostConstruct = createLifeCycleDecorator('postConstruct')
 const PreDestroy = createLifeCycleDecorator('preDestroy')
@@ -28,7 +26,6 @@ export {
   ControllerAdvice,
   Scheduler,
   Scope,
-  Bean,
   ConditionalOnMissingBean,
   PostConstruct,
   PreDestroy

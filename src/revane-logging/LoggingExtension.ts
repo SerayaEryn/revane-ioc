@@ -1,6 +1,7 @@
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import Loader from '../revane-ioc-core/Loader'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
+import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { Extension } from '../revane-ioc/Extension'
 import { LoggingLoader } from './LoggingLoader'
 import { LoggingOptions } from './LoggingOptions'
@@ -37,6 +38,10 @@ export class LoggingExtension implements Extension {
     if (loggingEnabled && !configuration.getBoolean('revane.logging.enabled')) {
       this.enabled = false
     }
+  }
+
+  public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {
+    return []
   }
 
   public beanFactoryPostProcessors (): BeanFactoryPostProcessor[] {

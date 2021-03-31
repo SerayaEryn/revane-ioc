@@ -1,6 +1,6 @@
 import * as path from 'path'
 import test from 'ava'
-import Revane from '../../src/revane-ioc/RevaneIOC'
+import Revane, { BeanFactoryExtension } from '../../src/revane-ioc/RevaneIOC'
 import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
 
 test('should create bean using beanFactory', async (t) => {
@@ -12,7 +12,7 @@ test('should create bean using beanFactory', async (t) => {
     ],
     profile: 'test',
     configuration: { disabled: true },
-    extensions: []
+    extensions: [new BeanFactoryExtension()]
   }
   const revane = new Revane(options)
   await revane.initialize()
@@ -20,6 +20,8 @@ test('should create bean using beanFactory', async (t) => {
   const hasTestBean = await revane.has('testBean')
   const hasTestBean2 = await revane.has('testBean2')
   const hasDependsOnBeanFactory = await revane.has('dependsOnBeanFactory')
+
+  await revane.close()
 
   t.truthy(bean1)
   t.truthy(hasTestBean)

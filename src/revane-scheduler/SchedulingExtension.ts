@@ -1,6 +1,7 @@
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import Loader from '../revane-ioc-core/Loader'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
+import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { Extension } from '../revane-ioc/Extension'
 import { Options } from './Options'
 import { SchedulerBeanPostProcessor } from './SchedulerBeanPostProcessor'
@@ -25,6 +26,10 @@ export class SchedulingExtension implements Extension {
     if (this.options == null) {
       this.enabled = enabled
     }
+  }
+
+  public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {
+    return []
   }
 
   public beanFactoryPostProcessors (): BeanFactoryPostProcessor[] {

@@ -1,9 +1,9 @@
-import { Reflect } from '../../revane-utils/Reflect'
+import { Reflect } from '../revane-utils/Reflect'
 import { beansSym } from './Symbols'
 
-export function createBeanDecorator (): Function {
-  return function decoratoteBeanFactory (maybeId, maybePropertyKey: string, descriptor: PropertyDescriptor) {
-    if (typeof maybeId === 'string' || maybeId === undefined) {
+function createBeanDecorator (): Function {
+  return function Bean (maybeId, maybePropertyKey: string, descriptor: PropertyDescriptor) {
+    if (typeof maybeId === 'string' || maybeId == null) {
       return function define (target, propertyKey: string, descriptor: PropertyDescriptor): void {
         addBean(target, maybeId ?? propertyKey, propertyKey)
       }
@@ -21,4 +21,10 @@ function addBean (target, id: string, propertyKey: string): void {
     propertyKey
   })
   Reflect.defineMetadata(beansSym, beans, target)
+}
+
+const Bean = createBeanDecorator()
+
+export {
+  Bean
 }

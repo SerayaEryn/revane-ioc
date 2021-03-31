@@ -1,5 +1,5 @@
-import AbstractBean from './AbstractBean'
-import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
+import AbstractBean from '../revane-ioc/bean/AbstractBean'
+import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 
 export default class SimplifiedSingletonBean extends AbstractBean {
   public static scope: string = 'singleton'
@@ -24,14 +24,14 @@ export default class SimplifiedSingletonBean extends AbstractBean {
   }
 
   public async postConstruct (): Promise<void> {
-    if (this.instance.postConstruct != null) {
-      await this.instance.postConstruct()
+    if (this.beanDefinition.postConstructKey != null) {
+      await this.instance[this.beanDefinition.postConstructKey]()
     }
   }
 
   public async preDestroy (): Promise<void> {
-    if (this.instance.preDestroy != null) {
-      await this.instance.preDestroy()
+    if (this.beanDefinition.preDestroyKey != null) {
+      await this.instance[this.beanDefinition.preDestroyKey]()
     }
   }
 

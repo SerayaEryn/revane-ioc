@@ -18,7 +18,6 @@ import {
   Component,
   Controller,
   Scope,
-  Bean,
   Scheduler,
   ConditionalOnMissingBean,
   ControllerAdvice,
@@ -40,7 +39,7 @@ import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingSt
 import { LogFactory } from '../revane-logging/LogFactory'
 import { Logger } from 'apheleia'
 
-import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
+import { Bean } from '../revane-beanfactory/BeanDecorator'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
 import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy'
 import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProcessor'
@@ -48,6 +47,7 @@ import { Extension } from './Extension'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
 import { LoggingExtension } from '../revane-logging/LoggingExtension'
 import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
+import { BeanFactoryExtension } from '../revane-beanfactory/BeanFactoryExtension'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -79,7 +79,8 @@ export {
   PreDestroy,
   Extension,
   SchedulingExtension,
-  LoggingExtension
+  LoggingExtension,
+  BeanFactoryExtension
 }
 
 export default class RevaneIOC {
@@ -187,7 +188,6 @@ export default class RevaneIOC {
     this.revaneCore?.addPlugin('loader', new XmlFileLoader())
     this.revaneCore?.addPlugin('loader', new JsonFileLoader())
     this.revaneCore?.addPlugin('loader', new ComponentScanLoader())
-    this.revaneCore?.addPlugin('beanFactoryPreProcessor', new BeanAnnotationBeanFactoryPreProcessor())
     this.revaneCore?.addPlugin('beanFactoryPreProcessor', new LifeCycleBeanFactoryPreProcessor())
     if (!(this.options.configuration?.disabled ?? false)) {
       this.revaneCore?.addPlugin(
@@ -197,6 +197,9 @@ export default class RevaneIOC {
       this.revaneCore?.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
     }
     for (const extension of this.options.extensions) {
+      for (const beanFactoryPreProcessor of extension.beanFactoryPreProcessors()) {
+        this.revaneCore?.addPlugin('beanFactoryPreProcessor', beanFactoryPreProcessor)
+      }
       for (const beanFactoryPostProcessor of extension.beanFactoryPostProcessors()) {
         this.revaneCore?.addPlugin('beanFactoryPostProcessor', beanFactoryPostProcessor)
       }

@@ -1,6 +1,6 @@
 import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import Bean from '../revane-ioc-core/context/bean/Bean'
-import SimplifiedSingletonBean from './bean/SimplifiedSingletonBean'
+import SimplifiedSingletonBean from './SimplifiedSingletonBean'
 
 export class BeanAnnotationBeanDefinition extends DefaultBeanDefinition {
   private readonly propertyKey: string

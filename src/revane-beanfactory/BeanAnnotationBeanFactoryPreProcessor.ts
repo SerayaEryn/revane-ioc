@@ -1,8 +1,8 @@
 import { Reflect } from '../revane-utils/Reflect'
-import { beansSym } from './decorators/Symbols'
 import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { BeanAnnotationBeanDefinition } from './BeanAnnotationBeanDefinition'
+import { beansSym } from './Symbols'
 
 export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   async preProcess (
@@ -10,8 +10,7 @@ export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProc
     beanDefinitions: BeanDefinition[]
   ): Promise<BeanDefinition[]> {
     const classConstructor = beanDefinition.classConstructor
-    if (classConstructor == null) return [beanDefinition]
-    let beans = classConstructor.prototype != null ? Reflect.getMetadata(beansSym, classConstructor.prototype) ?? [] : []
+    let beans = classConstructor?.prototype != null ? Reflect.getMetadata(beansSym, classConstructor.prototype) ?? [] : []
     if (beanDefinition.instance?.constructor?.prototype != null) {
       beans = beans.concat(Reflect.getMetadata(beansSym, beanDefinition.instance.constructor.prototype) ?? [])
     }
