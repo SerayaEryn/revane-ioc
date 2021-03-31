@@ -11,10 +11,6 @@ test('should reject on errors in loaders', async (t) => {
       throw new Error('booom')
     }
 
-    isRelevant (): boolean {
-      return true
-    }
-
     type (): string {
       return 'mock'
     }
@@ -25,7 +21,7 @@ test('should reject on errors in loaders', async (t) => {
   try {
     await beanLoader.getBeanDefinitions({
       basePackage: '.',
-      loaderOptions: [{}]
+      loaderOptions: []
     })
   } catch (error) {
     t.is(error.message, 'booom')

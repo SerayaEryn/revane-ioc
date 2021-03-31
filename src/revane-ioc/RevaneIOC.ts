@@ -1,4 +1,4 @@
-import { LoaderOptions, RegexFilter } from '../revane-ioc-core/Options'
+import { RegexFilter } from '../revane-ioc-core/Options'
 import RevaneCore from '../revane-ioc-core/RevaneIOCCore'
 import DefaultBeanTypeRegistry from '../revane-ioc-core/context/bean/DefaultBeanTypeRegistry'
 
@@ -47,6 +47,7 @@ import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProce
 import { Extension } from './Extension'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
 import { LoggingExtension } from '../revane-logging/LoggingExtension'
+import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
 
 export {
   DefaultBeanDefinition as BeanDefinition,

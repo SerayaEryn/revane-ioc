@@ -1,6 +1,5 @@
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import Loader from '../revane-ioc-core/Loader'
-import { LoaderOptions } from '../revane-ioc-core/Options'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
 import { Extension } from '../revane-ioc/Extension'
 import { Options } from './Options'
@@ -36,10 +35,6 @@ export class SchedulingExtension implements Extension {
 
   public beanLoaders (): Loader[] {
     return [new SchedulerLoader(this.taskScheduler)]
-  }
-
-  public loaderOptions (): LoaderOptions[] {
-    return [{ file: 'taskScheduler' }]
   }
 
   public async close (): Promise<void> {

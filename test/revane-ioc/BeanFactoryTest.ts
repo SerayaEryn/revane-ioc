@@ -1,13 +1,14 @@
 import * as path from 'path'
 import test from 'ava'
 import Revane from '../../src/revane-ioc/RevaneIOC'
+import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
 
 test('should create bean using beanFactory', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/beanFactory.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/beanFactory.json'))
     ],
     profile: 'test',
     configuration: { disabled: true },

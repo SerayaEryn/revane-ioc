@@ -3,13 +3,9 @@ import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import { TaskScheduler } from './TaskScheduler'
 
 export class SchedulerLoader implements Loader {
-  private readonly taskScheduler: TaskScheduler
+  constructor (private readonly taskScheduler: TaskScheduler) {}
 
-  constructor (taskScheduler: TaskScheduler) {
-    this.taskScheduler = taskScheduler
-  }
-
-  public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
+  public async load (options: LoaderOptions[]): Promise<BeanDefinition[]> {
     const configuration = new DefaultBeanDefinition('taskScheduler')
     configuration.instance = this.taskScheduler
     configuration.scope = 'singleton'
@@ -18,9 +14,5 @@ export class SchedulerLoader implements Loader {
 
   public type (): string {
     return 'taskScheduler'
-  }
-
-  public isRelevant (options: LoaderOptions): boolean {
-    return options.file === 'taskScheduler'
   }
 }

@@ -1,14 +1,8 @@
+import { LoaderOptions } from './LoaderOptions'
+
 export interface RegexFilter {
   type: string
   regex: string
-}
-
-export class LoaderOptions {
-  componentScan?: boolean
-  basePackage?: string
-  includeFilters?: RegexFilter[]
-  excludeFilters?: RegexFilter[]
-  file?: string
 }
 
 export default class Options {

@@ -1,6 +1,5 @@
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import Loader from '../revane-ioc-core/Loader'
-import { LoaderOptions } from '../revane-ioc-core/Options'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
 import { Extension } from '../revane-ioc/Extension'
 import { LoggingLoader } from './LoggingLoader'
@@ -9,13 +8,6 @@ import { LoggingOptions } from './LoggingOptions'
 export class LoggingExtension implements Extension {
   private enabled = true
   private options: LoggingOptions
-
-  public loaderOptions (): LoaderOptions[] {
-    if (this.enabled) {
-      return [{ file: 'logging' }]
-    }
-    return []
-  }
 
   public async initialize (configuration: RevaneConfiguration): Promise<void> {
     let rootLevel = 'INFO'

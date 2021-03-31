@@ -1,5 +1,6 @@
 import test from 'ava'
 import * as path from 'path'
+import { ComponentScanLoaderOptions } from '../../src/revane-ioc/loaders/ComponentScanLoaderOptions'
 import RevaneIOC, { SchedulingExtension } from '../../src/revane-ioc/RevaneIOC'
 import { SchedulerLoader } from '../../src/revane-scheduler/SchedulerLoader'
 import { TaskScheduler } from '../../src/revane-scheduler/TaskScheduler'
@@ -8,7 +9,7 @@ test('Should schedule task', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler/testconfig') },
     profile: 'test',
@@ -26,7 +27,7 @@ test('Should schedule task enabled via extension options', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler2'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler2') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler2'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler2/testconfig') },
     profile: 'test',
@@ -44,7 +45,7 @@ test('Should schedule task #2', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-invalid1'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-invalid1') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler-invalid1'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-invalid1/testconfig') },
     profile: 'test',
@@ -62,7 +63,7 @@ test('Should schedule task #3', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-invalid2'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-invalid2') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler-invalid2'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-invalid2/testconfig') },
     profile: 'test',
@@ -81,7 +82,7 @@ test('Should not schedule tasks', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-invalid3'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-invalid3') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler-invalid3'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-invalid3/testconfig') },
     profile: 'test',
@@ -96,7 +97,7 @@ test('Should handle error in scheduled task', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-throws'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler-throws'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws/testconfig') },
     profile: 'test',
@@ -113,7 +114,7 @@ test('Should handle error in scheduled async task', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-throws3'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws3') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler-throws3'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws3/testconfig') },
     profile: 'test',
@@ -130,7 +131,7 @@ test('Should handle error in scheduled task with default handler', async (t) => 
   const options = {
     basePackage: path.join(__dirname, '../../testdata/scheduler-throws2'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scheduler-throws2') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scheduler-throws2'), null, null)
     ],
     configuration: { disabled: false, directory: path.join(__dirname, '../../../testdata/scheduler-throws2/testconfig') },
     profile: 'test',

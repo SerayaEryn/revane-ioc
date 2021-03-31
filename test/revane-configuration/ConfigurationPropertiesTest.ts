@@ -2,13 +2,16 @@ import * as path from 'path'
 import test from 'ava'
 import Revane from '../../src/revane-ioc/RevaneIOC'
 import { RevaneConfiguration } from '../../src/revane-configuration/RevaneConfiguration'
+import { ComponentScanLoaderOptions } from '../../src/revane-ioc/loaders/ComponentScanLoaderOptions'
 
 test('should add configuration properties', async (t) => {
   t.plan(4)
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationProperties'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties'),
     componentScan: false,
@@ -32,7 +35,9 @@ test('should add configuration properties #2', async (t) => {
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties2') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationProperties2'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties2'),
     componentScan: false,
@@ -57,7 +62,9 @@ test('should add configuration properties and use REVANE_PROFILE=test', async (t
   process.env.REVANE_PROFILE = 'test'
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties2') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationProperties2'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties2'),
     componentScan: false,
@@ -80,7 +87,9 @@ test('should add configuration properties #3', async (t) => {
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationProperties3') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationProperties3'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationProperties3'),
     componentScan: false,
@@ -104,7 +113,9 @@ test('should add configuration properties from yaml #1', async (t) => {
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml1') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationPropertiesYml1'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml1'),
     componentScan: false,
@@ -128,7 +139,9 @@ test('should add configuration properties from yaml #2', async (t) => {
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml2') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationPropertiesYml2'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml2'),
     componentScan: false,
@@ -153,7 +166,9 @@ test('should add configuration properties from yaml and replace env vars', async
   process.env.A_ENV_VAR = 'a env var'
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml3') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationPropertiesYml3'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesYml3'),
     componentScan: false,
@@ -177,7 +192,9 @@ test('should add configuration properties from properties #1', async (t) => {
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties1') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationPropertiesProperties1'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties1'),
     componentScan: false,
@@ -203,7 +220,9 @@ test('should add configuration properties from properties #2', async (t) => {
 
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties2') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationPropertiesProperties2'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties2'),
     componentScan: false,
@@ -228,7 +247,9 @@ test('should add configuration properties from properties and replace env vars',
   process.env.A_ENV_VAR = 'a env var'
   const options = {
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties3') }
+      new ComponentScanLoaderOptions(
+        path.join(__dirname, '../../../testdata/configurationPropertiesProperties3'), null, null
+      )
     ],
     basePackage: path.join(__dirname, '../../../testdata/configurationPropertiesProperties3'),
     componentScan: false,

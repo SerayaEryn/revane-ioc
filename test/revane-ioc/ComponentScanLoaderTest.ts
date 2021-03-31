@@ -2,18 +2,16 @@ import * as path from 'path'
 import test from 'ava'
 import ComponentScanLoader from '../../src/revane-ioc/loaders/ComponentScanLoader'
 import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
+import { ComponentScanLoaderOptions } from '../../src/revane-ioc/loaders/ComponentScanLoaderOptions'
 
 test('should do component scan without filters', async (t): Promise<void> => {
   t.plan(8)
 
   const basePackage = path.join(__dirname, '../../testdata/scan')
-  const options = {
-    basePackage,
-    componentScan: true
-  }
+  const options = new ComponentScanLoaderOptions(basePackage, null, null)
 
   const componentScanResolver = new ComponentScanLoader()
-  return await componentScanResolver.load(options, basePackage)
+  return await componentScanResolver.load([options])
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 5)
       const scan1 = findDefinition(beanDefinitions, 'scan1')
@@ -32,17 +30,17 @@ test('should do component scan without filters', async (t): Promise<void> => {
 
 test('should do component scan with exclude filter', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/scan')
-  const options = {
+  const options = new ComponentScanLoaderOptions(
     basePackage,
-    excludeFilters: [{
+    null,
+    [{
       type: 'regex',
       regex: '.*'
-    }],
-    componentScan: true
-  }
+    }]
+  )
 
   const componentScanLoader = new ComponentScanLoader()
-  return await componentScanLoader.load(options, basePackage)
+  return await componentScanLoader.load([options])
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 0)
     })
@@ -56,40 +54,37 @@ test('should return correct type', (t) => {
 
 test('should throw error on require error', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/loadFailure')
-  const options = { basePackage, componentScan: true }
+  const options = new ComponentScanLoaderOptions(basePackage, null, null)
 
   const componentScanResolver = new ComponentScanLoader()
   await t.throwsAsync(async () => {
-    await componentScanResolver.load(options, basePackage)
+    await componentScanResolver.load([options])
   }, { code: 'REV_ERR_MODULE_LOAD_ERROR' })
 })
 
 test('should throw error on undefined module', async (t) => {
   const basePackage = path.join(__dirname, '../../../testdata/loadFailure2')
-  const options = {
-    basePackage,
-    componentScan: true
-  }
+  const options = new ComponentScanLoaderOptions(basePackage, null, null)
 
   const componentScanResolver = new ComponentScanLoader()
   await t.throwsAsync(async () => {
-    await componentScanResolver.load(options, basePackage)
+    await componentScanResolver.load([options])
   }, { code: 'REV_ERR_MODULE_LOAD_ERROR' })
 })
 
 test('should do component scan with include filter', async (t): Promise<void> => {
   const basePackage = path.join(__dirname, '../../testdata/scan')
-  const options = {
+  const options = new ComponentScanLoaderOptions(
     basePackage,
-    includeFilters: [{
+    [{
       type: 'regex',
       regex: '.*'
     }],
-    componentScan: true
-  }
+    null
+  )
 
   const componentScanResolver = new ComponentScanLoader()
-  return await componentScanResolver.load(options, basePackage)
+  return await componentScanResolver.load([options])
     .then((beanDefinitions) => {
       t.is(beanDefinitions.length, 5)
     })

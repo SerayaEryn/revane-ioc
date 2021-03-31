@@ -3,12 +3,23 @@
 import { readFile } from 'fs'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
-import { LoaderOptions } from '../../revane-ioc-core/Options'
+import { BeanDefinition } from '../RevaneIOC'
+import UnknownEndingError from '../UnknownEndingError'
+import { JsonFileLoaderOptions } from './JsonFileLoaderOptions'
 
 export default class JsonFileLoader implements Loader {
-  public async load (options: LoaderOptions, basePackage: string): Promise<DefaultBeanDefinition[]> {
-    const file = options.file
-    if (file == null) return []
+  public async load (options: JsonFileLoaderOptions[]): Promise<BeanDefinition[]> {
+    const promises: Array<Promise<BeanDefinition[]>> = []
+    for (const option of options) {
+      promises.push(this.loadJsonFile(option))
+    }
+    const allBeanDefinitions = await Promise.all(promises)
+    return allBeanDefinitions.flat()
+  }
+
+  private async loadJsonFile (options: JsonFileLoaderOptions): Promise<BeanDefinition[]> {
+    const { file } = options
+    if (!file.endsWith('.json')) throw new UnknownEndingError()
     return await new Promise((resolve, reject) => {
       readFile(file, (error, data) => {
         if (error != null) {
@@ -26,11 +37,6 @@ export default class JsonFileLoader implements Loader {
           return beanDefinition
         })
       })
-  }
-
-  public isRelevant (options: LoaderOptions): boolean {
-    if (options.file == null) return false
-    return options.file.endsWith('.json')
   }
 
   public type (): string {

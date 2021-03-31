@@ -1,4 +1,4 @@
-import { LoaderOptions } from '../revane-ioc-core/Options'
+import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
 import { Extension } from './Extension'
 
 export default class Options {

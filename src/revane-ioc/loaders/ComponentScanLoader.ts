@@ -11,25 +11,33 @@ import {
   scopeSym,
   dependenciesSym
 } from '../decorators/Symbols'
-import { LoaderOptions } from '../../revane-ioc-core/Options'
 import { Property } from '../../revane-ioc-core/Property'
 import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
 import { Reflect } from '../../revane-utils/Reflect'
 import { recursiveReaddir } from './RecursiveReadDir'
 import { Scope } from '../../revane-ioc-core/Scope'
+import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
 
 const filterByType = {
   regex: RegexFilter
 }
 
 export default class ComponentScanLoader implements Loader {
-  public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
-    const path = options.basePackage
-    if (path == null) return []
+  public async load (options: ComponentScanLoaderOptions[]): Promise<BeanDefinition[]> {
+    const promises: Array<Promise<BeanDefinition[]>> = []
+    for (const option of options) {
+      promises.push(this.scan(option))
+    }
+    const allBeanDefinitions = await Promise.all(promises)
+    return allBeanDefinitions.flat()
+  }
+
+  private async scan (options: ComponentScanLoaderOptions): Promise<BeanDefinition[]> {
+    const { basePackage } = options
     const includeFilters = convert(options.includeFilters ?? [])
     const excludeFilters = convert(options.excludeFilters ?? [])
-    const files = await recursiveReaddir(path)
+    const files = await recursiveReaddir(basePackage)
     const flatFiles = files.flat()
     const filesFilteredByJavascript = filterByJavascriptFiles(flatFiles)
     const filesFilteredByPackage = this.filterByPackage(filesFilteredByJavascript)
@@ -48,16 +56,14 @@ export default class ComponentScanLoader implements Loader {
         if (this.isNoComponent(requiredFile)) {
           continue
         }
-        const clazz = file.replace(basePackage, '.')
-        result.push(getBeanDefinition(null, requiredFile, clazz))
+        result.push(getBeanDefinition(null, requiredFile, file))
       } else {
         for (const key of moduleMap.keys()) {
           const aModule = moduleMap.get(key)
           if (this.isNoComponent(aModule)) {
             continue
           }
-          const clazz = file.replace(basePackage, '.')
-          result.push(getBeanDefinition(key, aModule, clazz))
+          result.push(getBeanDefinition(key, aModule, file))
         }
       }
     }
@@ -66,10 +72,6 @@ export default class ComponentScanLoader implements Loader {
 
   private isNoComponent (aModule: any): boolean {
     return Reflect.getMetadata(idSym, aModule) == null
-  }
-
-  public isRelevant (options: LoaderOptions): boolean {
-    return options.componentScan != null ? options.componentScan : false
   }
 
   public type (): string {

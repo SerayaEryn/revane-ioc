@@ -11,8 +11,7 @@ export class LoggingLoader implements Loader {
   }
 
   async load (
-    options: LoaderOptions,
-    basePackage: string
+    options: LoaderOptions[]
   ): Promise<BeanDefinition[]> {
     const beanDefinition = new DefaultBeanDefinition('logFactory')
     beanDefinition.scope = 'singleton'
@@ -22,9 +21,5 @@ export class LoggingLoader implements Loader {
 
   type (): string {
     return 'logging'
-  }
-
-  isRelevant (options: LoaderOptions): boolean {
-    return options.file === 'logging'
   }
 }

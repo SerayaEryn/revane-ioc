@@ -1,6 +1,9 @@
 import * as path from 'path'
 import test from 'ava'
 import Revane from '../../src/revane-ioc/RevaneIOC'
+import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
+import { XmlFileLoaderOptions } from '../../src/revane-ioc/loaders/XmlFileLoaderOptions'
+import { ComponentScanLoaderOptions } from '../../src/revane-ioc/loaders/ComponentScanLoaderOptions'
 
 test('should read json configuration file and register beans', async (t) => {
   t.plan(3)
@@ -9,7 +12,7 @@ test('should read json configuration file and register beans', async (t) => {
     basePackage: path.join(__dirname, '../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -45,7 +48,7 @@ test('should throw error on unknown id', async (t) => {
     basePackage: path.join(__dirname, '../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -63,7 +66,7 @@ test('should throw error if not initialized #1', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -84,7 +87,7 @@ test('should throw error if not initialized #2', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -105,7 +108,7 @@ test('should throw error if not initialized #3', async (t) => {
     basePackage: path.join(__dirname, '../../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -126,7 +129,7 @@ test('should use parent context', async (t) => {
     basePackage: path.join(__dirname, '../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -138,7 +141,7 @@ test('should use parent context', async (t) => {
     basePackage: path.join(__dirname, '../../testdata'),
     componentScan: false,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config4.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config4.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -166,7 +169,7 @@ test('should read json configuration file and register beans #2', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config3.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config3.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -190,7 +193,7 @@ test('should return if beans exist()', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config3.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config3.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -208,11 +211,12 @@ test('should return if beans exist()', async (t) => {
 test('should read json and xml configuration file and register beans', async (t) => {
   t.plan(6)
 
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') },
-      { file: path.join(__dirname, '../../../testdata/xml/config.xml') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json')),
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config.xml'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -236,10 +240,11 @@ test('should read json and xml configuration file and register beans', async (t)
 test('should create bean for module', async (t) => {
   t.plan(1)
 
+  const basePackage = path.join(__dirname, '../../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../../testdata'),
+    basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/xml/config3.xml') }
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config3.xml'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -254,10 +259,11 @@ test('should create bean for module', async (t) => {
 test('should create bean for module with value', async (t) => {
   t.plan(3)
 
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/xml/config4.xml') }
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config4.xml'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -274,10 +280,11 @@ test('should create bean for module with value', async (t) => {
 })
 
 test('should tearDown', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/xml/config4.xml') }
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config4.xml'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -310,7 +317,7 @@ test('should read json config file and reject on missing dependency', async (t) 
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config2.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config2.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -324,11 +331,32 @@ test('should read json config file and reject on missing dependency', async (t) 
     })
 })
 
-test('should reject error on unknown configuration file ending', async (t) => {
+test('should reject error on unknown configuration file ending - json', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config2.test') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config2.test'))
+    ],
+    configuration: { disabled: true },
+    profile: 'test',
+    extensions: []
+  }
+  const revane = new Revane(options)
+  return await revane.initialize()
+    .catch((err) => {
+      t.truthy(err)
+      t.is(err.code, 'REV_ERR_UNKNOWN_ENDING')
+    })
+})
+
+test('should reject error on unknown configuration file ending - xml', async (t) => {
+  const options = {
+    basePackage: path.join(__dirname, '../../testdata'),
+    loaderOptions: [
+      new XmlFileLoaderOptions(
+        path.join(__dirname, '../../testdata'),
+        path.join(__dirname, '../../../testdata/json/config2.test')
+      )
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -348,7 +376,7 @@ test('should throw error on get() if not initialized', async (t): Promise<void> 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -369,7 +397,7 @@ test('should throw error on has() if not initialized', async (t): Promise<void> 
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -390,7 +418,7 @@ test('should throw error on getMultiple if not initialized', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     componentScan: false,
     configuration: { disabled: true },
@@ -412,7 +440,7 @@ test('should throw error on invalid scope', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/invalidScope') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../../testdata/invalidScope'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -433,7 +461,7 @@ test('should throw error if dependency throws error', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/dependencyError') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../../testdata/dependencyError'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -454,7 +482,7 @@ test('should throw error if bean was defined twice', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/definedTwice') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../../testdata/definedTwice'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -475,7 +503,7 @@ test('should not throw error if bean redefinition is allowed', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../../testdata/definedTwice2'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../../testdata/definedTwice2') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../../testdata/definedTwice2'), null, null)
     ],
     configuration: { disabled: false },
     profile: 'test',
@@ -490,7 +518,7 @@ test('should not create conditional bean if not missing', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean1'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean1') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/conditionalOnMissingBean1'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -505,7 +533,7 @@ test('should create conditional bean if missing', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean2'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/conditionalOnMissingBean2') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/conditionalOnMissingBean2'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -517,10 +545,11 @@ test('should create conditional bean if missing', async (t) => {
 })
 
 test('should return multiple beans', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage: basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -539,7 +568,7 @@ test('should throw error on getByType if not initialized', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json'))
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -557,12 +586,13 @@ test('should throw error on getByType if not initialized', async (t) => {
 test('should read json config file, component scan and register beans', async (t) => {
   t.plan(4)
 
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') },
-      { file: path.join(__dirname, '../../../testdata/xml/config2.xml') },
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json')),
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config2.xml')),
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scan'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -584,7 +614,7 @@ test('component scan should handle file without bean', async (t) => {
   const options = {
     basePackage: path.join(__dirname, '../../testdata'),
     loaderOptions: [
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan2') }
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scan2'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',
@@ -596,20 +626,14 @@ test('component scan should handle file without bean', async (t) => {
 })
 
 test('should read json config file, component scan and register beans #2', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
     loaderOptions: [
-      {
-        file: path.join(__dirname, '../../../testdata/json/config.json')
-      },
-      {
-        file: path.join(__dirname, '../../../testdata/xml/config2.xml')
-      },
-      {
-        componentScan: true,
-        basePackage: path.join(__dirname, '../../testdata/scan')
-      }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json')),
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config2.xml')),
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scan'), null, null)
     ],
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage,
     componentScan: false,
     configuration: { disabled: true },
     profile: 'test',
@@ -628,12 +652,13 @@ test('should read json config file, component scan and register beans #2', async
 })
 
 test('should get components', async (t) => {
+  const basePackage = path.join(__dirname, '../../testdata')
   const options = {
-    basePackage: path.join(__dirname, '../../testdata'),
+    basePackage,
     loaderOptions: [
-      { file: path.join(__dirname, '../../../testdata/json/config.json') },
-      { file: path.join(__dirname, '../../../testdata/xml/config2.xml') },
-      { componentScan: true, basePackage: path.join(__dirname, '../../testdata/scan') }
+      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/json/config.json')),
+      new XmlFileLoaderOptions(basePackage, path.join(__dirname, '../../../testdata/xml/config2.xml')),
+      new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/scan'), null, null)
     ],
     configuration: { disabled: true },
     profile: 'test',

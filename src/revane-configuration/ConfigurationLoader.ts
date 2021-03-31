@@ -7,7 +7,7 @@ export class ConfigurationLoader implements Loader {
     this.configuration = configuration
   }
 
-  public async load (options: LoaderOptions, basePackage: string): Promise<BeanDefinition[]> {
+  public async load (options: LoaderOptions[]): Promise<BeanDefinition[]> {
     const configuration = new DefaultBeanDefinition('configuration')
     configuration.instance = this.configuration
     configuration.scope = 'singleton'
@@ -16,9 +16,5 @@ export class ConfigurationLoader implements Loader {
 
   public type (): string {
     return 'configuration'
-  }
-
-  public isRelevant (options: LoaderOptions): boolean {
-    return options.file === 'config'
   }
 }
