@@ -24,24 +24,21 @@ import {
   PostConstruct,
   PreDestroy
 } from './decorators/Decorators'
-import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
+import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin'
 import { ConfigurationPropertiesPostProcessor } from '../revane-configuration/ConfigurationPropertiesPostProcessor'
 import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/ConfigurationPropertiesPreProcessor'
 import { ApplicationContext } from '../revane-ioc-core/ApplicationContext'
 import { ConfigurationProperties } from '../revane-configuration/ConfigurationProperties'
-import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy'
 import { Scheduled } from '../revane-scheduler/Scheduled'
-import { join } from 'path'
 import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader'
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry'
-import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
 import { LogFactory } from '../revane-logging/LogFactory'
 import { Logger } from 'apheleia'
 
 import { Bean } from '../revane-beanfactory/BeanDecorator'
+import { buildConfiguration } from './ConfigurationFactory'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
-import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy'
 import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProcessor'
 import { Extension } from './Extension'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
@@ -91,9 +88,6 @@ export default class RevaneIOC {
 
   constructor (options: Options) {
     this.options = options
-    if (this.options.noRedefinition == null) {
-      this.options.noRedefinition = true
-    }
     if (this.options.autoConfiguration == null) {
       this.options.autoConfiguration = false
     }
@@ -101,27 +95,7 @@ export default class RevaneIOC {
     const profile = this.options.profile ?? process.env.REVANE_PROFILE ?? 'dev'
     this.options.profile = profile
 
-    this.configuration = new RevaneConfiguration(
-      new ConfigurationOptions(
-        profile,
-        this.configPath(),
-        this.options.configuration?.required ?? false,
-        this.options.autoConfiguration ?? this.options.configuration?.disabled ?? false,
-        [
-          new JsonLoadingStrategy(),
-          new YmlLoadingStrategy(),
-          new PropertiesLoadingStrategy()
-        ],
-        this.options.basePackage
-      )
-    )
-  }
-
-  private configPath (): string {
-    if (this.options.configuration?.directory?.startsWith('/') === true) {
-      return this.options.configuration.directory
-    }
-    return join(this.options.basePackage, this.options.configuration?.directory ?? '/config')
+    this.configuration = buildConfiguration(this.options, profile)
   }
 
   public async initialize (): Promise<void> {

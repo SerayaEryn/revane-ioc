@@ -1,20 +1,20 @@
 import * as path from 'path'
 import test from 'ava'
-import Revane, { BeanFactoryExtension } from '../../src/revane-ioc/RevaneIOC'
+import RevaneIOC, { BeanFactoryExtension, Options } from '../../src/revane-ioc/RevaneIOC'
 import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
 
 test('should create bean using beanFactory', async (t) => {
-  const options = {
-    basePackage: path.join(__dirname, '../../../'),
-    componentScan: false,
-    loaderOptions: [
-      new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/beanFactory.json'))
-    ],
-    profile: 'test',
-    configuration: { disabled: true },
-    extensions: [new BeanFactoryExtension()]
-  }
-  const revane = new Revane(options)
+  const options = new Options(
+    path.join(__dirname, '../../../'),
+    [new BeanFactoryExtension()]
+  )
+  options.loaderOptions = [
+    new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/beanFactory.json'))
+  ]
+  options.profile = 'test'
+  options.configuration = { disabled: true }
+
+  const revane = new RevaneIOC(options)
   await revane.initialize()
   const bean1 = await revane.has('beanFactory')
   const hasTestBean = await revane.has('testBean')

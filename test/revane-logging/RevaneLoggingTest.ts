@@ -1,19 +1,16 @@
 import * as path from 'path'
 import test from 'ava'
-import RevaneIoc, { BeanFactoryExtension, LogFactory, LoggingExtension } from '../../src/revane-ioc/RevaneIOC'
+import RevaneIoc, { BeanFactoryExtension, LogFactory, LoggingExtension, Options } from '../../src/revane-ioc/RevaneIOC'
 import { LoggingLoader } from '../../src/revane-logging/LoggingLoader'
 
 test('should disable logging', async (t) => {
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata/logging1'),
-    componentScan: false,
-    loaderOptions: [],
-    configuration: { disabled: false },
-    profile: 'test',
-    extensions: [
-      new LoggingExtension()
-    ]
-  }
+  const options = new Options(
+    path.join(__dirname, '../../../testdata/logging1'),
+    [new LoggingExtension()]
+  )
+  options.loaderOptions = []
+  options.configuration = { disabled: false }
+  options.profile = 'test'
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
@@ -21,14 +18,13 @@ test('should disable logging', async (t) => {
 })
 
 test('should log to file', async (t) => {
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata/logging2'),
-    componentScan: false,
-    loaderOptions: [],
-    configuration: { disabled: false },
-    profile: 'test',
-    extensions: [new LoggingExtension()]
-  }
+  const options = new Options(
+    path.join(__dirname, '../../../testdata/logging2'),
+    [new LoggingExtension()]
+  )
+  options.loaderOptions = []
+  options.configuration = { disabled: false }
+  options.profile = 'test'
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
@@ -38,14 +34,13 @@ test('should log to file', async (t) => {
 test('should log to file if a path was given', async (t) => {
   // eslint-disable-next-line @typescript-eslint/no-extraneous-class
   class Test {}
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata/logging3'),
-    componentScan: false,
-    loaderOptions: [],
-    configuration: { disabled: false },
-    profile: 'test',
-    extensions: [new LoggingExtension()]
-  }
+  const options = new Options(
+    path.join(__dirname, '../../../testdata/logging3'),
+    [new LoggingExtension()]
+  )
+  options.loaderOptions = []
+  options.configuration = { disabled: false }
+  options.profile = 'test'
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
@@ -57,17 +52,16 @@ test('should log to file if a path was given', async (t) => {
 })
 
 test('should create logger bean', async (t) => {
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata/logging3'),
-    componentScan: false,
-    loaderOptions: [],
-    configuration: { disabled: false },
-    profile: 'test',
-    extensions: [
+  const options = new Options(
+    path.join(__dirname, '../../../testdata/logging3'),
+    [
       new BeanFactoryExtension(),
       new LoggingExtension()
     ]
-  }
+  )
+  options.loaderOptions = []
+  options.configuration = { disabled: false }
+  options.profile = 'test'
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
@@ -77,14 +71,13 @@ test('should create logger bean', async (t) => {
 test('should use rootLevel', async (t) => {
   // eslint-disable-next-line @typescript-eslint/no-extraneous-class
   class Test {}
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata/logging4'),
-    componentScan: false,
-    loaderOptions: [],
-    configuration: { disabled: false },
-    profile: 'test',
-    extensions: [new LoggingExtension()]
-  }
+  const options = new Options(
+    path.join(__dirname, '../../../testdata/logging4'),
+    [new LoggingExtension()]
+  )
+  options.loaderOptions = []
+  options.configuration = { disabled: false }
+  options.profile = 'test'
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
@@ -101,14 +94,13 @@ test('should use level for class', async (t) => {
     // eslint-disable-next-line @typescript-eslint/no-useless-constructor
     constructor () {}
   }
-  const options = {
-    basePackage: path.join(__dirname, '../../../testdata/logging5'),
-    componentScan: false,
-    loaderOptions: [],
-    configuration: { disabled: false },
-    profile: 'test',
-    extensions: [new LoggingExtension()]
-  }
+  const options = new Options(
+    path.join(__dirname, '../../../testdata/logging5'),
+    [new LoggingExtension()]
+  )
+  options.loaderOptions = []
+  options.configuration = { disabled: false }
+  options.profile = 'test'
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
