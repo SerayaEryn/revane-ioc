@@ -29,6 +29,8 @@ test('should create bean using beanFactory', async (t) => {
   t.truthy(hasDependsOnBeanFactory)
   const testBean = await revane.get('testBean')
   t.is(testBean.test, '42')
+  t.is(testBean.pre, true)
+  t.is(testBean.post, true)
   const testBean2 = await revane.get('testBean2')
   t.is(testBean2.test, '43')
   const dependsOnBeanFactory = await revane.get('dependsOnBeanFactory')

@@ -27,11 +27,16 @@ export default class DefaultBeanDefinition implements BeanDefinition {
     this.id = id
   }
 
-  public async create (dependencies: Bean[], beanTypeRegistry: BeanTypeRegistry): Promise<Bean> {
+  public async create (
+    dependencies: Bean[],
+    beanTypeRegistry: BeanTypeRegistry,
+    postProcess: (bean: Bean, beanDefinition: BeanDefinition, instance: any) => Promise<void>
+  ): Promise<Bean> {
     this.dependencies = dependencies
     const BeanForScope = beanTypeRegistry.get(this.scope)
     if (BeanForScope != null) {
-      return new BeanForScope(this)
+      const bean = new BeanForScope(this, postProcess)
+      return bean
     }
     throw new InvalidScopeError(this.scope)
   }

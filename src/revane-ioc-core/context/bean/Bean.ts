@@ -5,6 +5,5 @@ export default interface Bean {
   getInstance: () => Promise<any>
   postConstruct: () => Promise<any>
   preDestroy: () => Promise<any>
-  executeOnInstance: (callback: (instance: any) => Promise<void>) => Promise<void>
   type: () => string
 }

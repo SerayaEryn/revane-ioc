@@ -15,14 +15,11 @@ test('should return Promise on preDestroy()', async (t) => {
   t.pass()
 })
 
-test('should return null for id', async (t) => {
+test('should return id', async (t) => {
   const bean = new ValueBean('test')
   await bean.init()
   await bean.postConstruct()
   await bean.preDestroy()
-  await bean.executeOnInstance(async () => {
-    // ...
-  })
 
   t.truthy(bean.id())
   t.truthy(bean.type())

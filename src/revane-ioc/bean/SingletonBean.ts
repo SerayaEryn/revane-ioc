@@ -28,8 +28,4 @@ export default class SingletonBean extends AbstractBean {
       await this.instance[this.beanDefinition.preDestroyKey]()
     }
   }
-
-  public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {
-    await callback(this.instance)
-  }
 }

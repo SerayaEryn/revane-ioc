@@ -39,7 +39,7 @@ import { Logger } from 'apheleia'
 import { Bean } from '../revane-beanfactory/BeanDecorator'
 import { buildConfiguration } from './ConfigurationFactory'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
-import { LifeCycleBeanFactoryPreProcessor } from './LifeCycleBeanFactoryPreProcessor'
+import { LifeCycleBeanFactoryPostProcessor } from './LifeCycleBeanFactoryPostProcessor'
 import { Extension } from './Extension'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
 import { LoggingExtension } from '../revane-logging/LoggingExtension'
@@ -164,7 +164,7 @@ export default class RevaneIOC {
     this.revaneCore?.addPlugin('loader', new XmlFileLoader())
     this.revaneCore?.addPlugin('loader', new JsonFileLoader())
     this.revaneCore?.addPlugin('loader', new ComponentScanLoader())
-    this.revaneCore?.addPlugin('beanFactoryPreProcessor', new LifeCycleBeanFactoryPreProcessor())
+    this.revaneCore?.addPlugin('beanFactoryPostProcessor', new LifeCycleBeanFactoryPostProcessor())
     if (!(this.options.configuration?.disabled ?? false)) {
       this.revaneCore?.addPlugin(
         'beanFactoryPostProcessor',

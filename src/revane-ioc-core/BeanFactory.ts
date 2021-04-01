@@ -1,7 +1,6 @@
 import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
 import { DefaultApplicationContext } from './DefaultApplicationContext'
 import Bean from './context/bean/Bean'
-import InvalidScopeError from './context/errors/InvalidScopeError'
 import ValueBean from './context/bean/ValueBean'
 import DependencyRegisterError from './context/errors/DependencyRegisterError'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
@@ -11,6 +10,7 @@ import BeanDefinedTwiceError from './context/errors/BeanDefinedTwiceError'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
 import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
+import { RethrowableError } from './RethrowableError'
 
 export class BeanFactory {
   private readonly preProcessors: BeanFactoryPreProcessor[]
@@ -52,16 +52,8 @@ export class BeanFactory {
       }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
       const bean = await this.registerBean(preProcessedBeanDefinition, preprocessed)
-      const postProcessedBeans = await this.postProcess(bean, preProcessedBeanDefinition)
-      this.context.put(postProcessedBeans)
+      this.context.put([bean])
     }
-  }
-
-  private async postProcess (bean: Bean, beanDefinition: BeanDefinition): Promise<Bean[]> {
-    for (const postProcessor of this.postProcessors) {
-      await postProcessor.postProcess(beanDefinition, bean)
-    }
-    return [bean]
   }
 
   private async registerBean (entry: BeanDefinition, beanDefinitions: BeanDefinition[]): Promise<Bean> {
@@ -71,7 +63,7 @@ export class BeanFactory {
       await bean.postConstruct()
       return bean
     } catch (error) {
-      if (error instanceof DependencyNotFoundError || error instanceof InvalidScopeError) {
+      if (error instanceof RethrowableError && error.isRethrowable) {
         throw error
       }
       throw new DependencyRegisterError(entry.id, error)
@@ -83,7 +75,13 @@ export class BeanFactory {
     beanDefinitions: BeanDefinition[]
   ): Promise<Bean> {
     const dependencies = await this.getDependencies(entry, beanDefinitions)
-    return await entry.create(dependencies, this.beanTypeRegistry)
+    return await entry.create(
+      dependencies,
+      this.beanTypeRegistry,
+      async (bean: Bean, beanDefinition: BeanDefinition, instance: any) => {
+        await this.postProcess(bean, beanDefinition, instance)
+      }
+    )
   }
 
   private async getDependencies (
@@ -155,8 +153,14 @@ export class BeanFactory {
   ): Promise<void> {
     const entry = this.findEntry(id, parentId, beanDefinitions)
     const bean = await this.registerBean(entry, beanDefinitions)
-    const postProcessedBeans = await this.postProcess(bean, entry)
-    this.context.put(postProcessedBeans)
+    this.context.put([bean])
+  }
+
+  private async postProcess (bean: Bean, beanDefinition: BeanDefinition, instance: any): Promise<Bean[]> {
+    for (const postProcessor of this.postProcessors) {
+      await postProcessor.postProcess(beanDefinition, bean, instance)
+    }
+    return [bean]
   }
 
   private findEntry (
@@ -172,8 +176,8 @@ export class BeanFactory {
     throw new DependencyNotFoundError(id, parentId)
   }
 
-  private throwDependencyError (err: Error, id: string): void {
-    if (err instanceof DependencyNotFoundError) {
+  private throwDependencyError (err: Error | RethrowableError, id: string): void {
+    if (err instanceof RethrowableError && err.isRethrowable) {
       throw err
     }
     throw new DependencyRegisterError(id, err)

@@ -21,5 +21,9 @@ export interface BeanDefinition {
   preDestroyKey: string | null
 
   isClass: () => boolean
-  create: (dependencies: Bean[], beanTypeRegistry: BeanTypeRegistry) => Promise<Bean>
+  create: (
+    dependencies: Bean[],
+    beanTypeRegistry: BeanTypeRegistry,
+    postProcess: (bean: Bean, beanDefinition: BeanDefinition, instance: any) => Promise<void>
+  ) => Promise<Bean>
 }

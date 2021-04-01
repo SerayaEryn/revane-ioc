@@ -1,6 +1,8 @@
 'use strict'
 
-export default class DependencyNotFoundError extends Error {
+import { RethrowableError } from '../../RethrowableError'
+
+export default class DependencyNotFoundError extends RethrowableError {
   public code: string = 'REV_ERR_DEPENDENCY_NOT_FOUND'
 
   constructor (id: string, parentId: string) {

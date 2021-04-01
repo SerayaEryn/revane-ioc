@@ -10,23 +10,21 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
     this.configuration = configuration
   }
 
-  async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<void> {
-    await bean.executeOnInstance(async (instance: any) => {
-      const values: { [key: string]: any } = {}
-      if (this.configuration != null) {
-        const { configurationProperties } = beanDefinition
-        if (configurationProperties != null) {
-          for (const propertyName of configurationProperties.properties ?? []) {
-            const key = `${configurationProperties.prefix}.${propertyName}`
-            if (this.configuration.has(key)) {
-              values[propertyName] = this.configuration.get(key)
-            }
+  async postProcess (beanDefinition: BeanDefinition, bean: Bean, instance: any): Promise<void> {
+    const values: { [key: string]: any } = {}
+    if (this.configuration != null) {
+      const { configurationProperties } = beanDefinition
+      if (configurationProperties != null) {
+        for (const propertyName of configurationProperties.properties ?? []) {
+          const key = `${configurationProperties.prefix}.${propertyName}`
+          if (this.configuration.has(key)) {
+            values[propertyName] = this.configuration.get(key)
           }
         }
       }
-      for (const key of Object.keys(values)) {
-        instance[key] = values[key]
-      }
-    })
+    }
+    for (const key of Object.keys(values)) {
+      instance[key] = values[key]
+    }
   }
 }

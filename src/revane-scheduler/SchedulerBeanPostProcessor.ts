@@ -15,24 +15,24 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
     this.enabled = enabled
   }
 
-  public async postProcess (beanDefinition: BeanDefinition, bean: Bean): Promise<void> {
-    const { classConstructor } = beanDefinition
-    if (this.enabled && classConstructor != null && classConstructor.prototype != null) {
-      const scheduled = Reflect.getMetadata('scheduled', classConstructor.prototype)
-      if (scheduled != null) {
-        if (scheduled.cronPattern == null) {
-          throw new NoCronPatternProvided()
-        }
-        if (typeof scheduled.cronPattern !== 'string') {
-          throw new InvalidCronPatternProvided(scheduled.cronPattern)
-        }
-        const instance = await bean.getInstance()
-        const { propertyKey, cronPattern } = scheduled
-        const isAsyncFunction = this.isAsyncFunction(instance[propertyKey])
-        const functionToSchedule = instance[propertyKey].bind(instance)
-        this.schedulingService.schedule(cronPattern, functionToSchedule, isAsyncFunction)
-      }
+  public async postProcess (beanDefinition: BeanDefinition, bean: Bean, instance: any): Promise<void> {
+    if (!this.enabled) {
+      return
     }
+    const scheduled = Reflect.getMetadata('scheduled', instance.constructor.prototype)
+    if (scheduled == null) {
+      return
+    }
+    if (scheduled.cronPattern == null) {
+      throw new NoCronPatternProvided()
+    }
+    if (typeof scheduled.cronPattern !== 'string') {
+      throw new InvalidCronPatternProvided(scheduled.cronPattern)
+    }
+    const { propertyKey, cronPattern } = scheduled
+    const isAsyncFunction = this.isAsyncFunction(instance[propertyKey])
+    const functionToSchedule = instance[propertyKey].bind(instance)
+    this.schedulingService.schedule(cronPattern, functionToSchedule, isAsyncFunction)
   }
 
   private isAsyncFunction (f: Function): boolean {

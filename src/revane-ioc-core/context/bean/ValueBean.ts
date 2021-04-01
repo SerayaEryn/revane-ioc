@@ -29,10 +29,6 @@ export default class ValueBean implements Bean {
     // empty
   }
 
-  public async executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void> {
-    await callback(null)
-  }
-
   public type (): string {
     return 'value'
   }

@@ -8,7 +8,7 @@ test('should class postContruct on instance', async (t) => {
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
   beanDefinition.postConstructKey = 'postConstruct'
-  const bean = new SingletonBean(beanDefinition)
+  const bean = new SingletonBean(beanDefinition, async () => {})
   await bean.init()
   await bean.postConstruct()
 
@@ -21,7 +21,7 @@ test('should return Promise on preDestroy()', async (t) => {
 
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
-  const bean = new SingletonBean(beanDefinition)
+  const bean = new SingletonBean(beanDefinition, async () => {})
   await bean.init()
   await bean.preDestroy()
   t.pass()

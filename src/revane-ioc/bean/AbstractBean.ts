@@ -2,12 +2,12 @@ import Bean from '../../revane-ioc-core/context/bean/Bean'
 import { BeanDefinition } from '../RevaneIOC'
 
 export default abstract class AbstractBean implements Bean {
-  protected beanDefinition: BeanDefinition
   public scope: string
 
-  constructor (entry: BeanDefinition) {
-    this.beanDefinition = entry
-  }
+  constructor (
+    protected beanDefinition: BeanDefinition,
+    protected readonly postProcess: (bean: Bean, beanDefinition: BeanDefinition, instance: any) => Promise<void>
+  ) {}
 
   public type (): string {
     return this.beanDefinition.type
@@ -16,8 +16,6 @@ export default abstract class AbstractBean implements Bean {
   public abstract id (): string
 
   public abstract getInstance (): Promise<any>
-
-  public abstract executeOnInstance (callback: (instance: any) => Promise<void>): Promise<void>
 
   public async createInstance (): Promise<any> {
     const parameters: any[] = []
@@ -34,6 +32,7 @@ export default abstract class AbstractBean implements Bean {
     } else {
       instance = this.beanDefinition.classConstructor ?? this.beanDefinition.instance
     }
+    await this.postProcess(this, this.beanDefinition, instance)
     return instance
   }
 

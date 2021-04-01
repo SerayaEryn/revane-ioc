@@ -10,7 +10,7 @@ test('should class postConstruct on instance', async (t) => {
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
   beanDefinition.postConstructKey = 'postConstruct'
-  const bean = new PrototypeBean(beanDefinition)
+  const bean = new PrototypeBean(beanDefinition, async () => {})
 
   const instance = await bean.getInstance()
   t.truthy(instance.postConstructed)
@@ -24,7 +24,7 @@ test('should handle missing postConstruct on instance', async (t) => {
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
   beanDefinition.postConstructKey = null
-  const bean = new PrototypeBean(beanDefinition)
+  const bean = new PrototypeBean(beanDefinition, async () => {})
 
   t.truthy(await bean.getInstance())
 })
@@ -37,7 +37,7 @@ test('should return Promise on preDestroy()', async (t) => {
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
   beanDefinition.preDestroyKey = 'preDestroy'
-  const bean = new PrototypeBean(beanDefinition)
+  const bean = new PrototypeBean(beanDefinition, async () => {})
 
   await bean.preDestroy()
 
@@ -50,7 +50,7 @@ test('should return Promise on postConstruct()', async (t) => {
   const beanDefinition = new BeanDefinition('test')
   beanDefinition.classConstructor = Clazz as any
   beanDefinition.postConstructKey = 'postConstruct'
-  const bean = new PrototypeBean(beanDefinition)
+  const bean = new PrototypeBean(beanDefinition, async () => {})
 
   await bean.postConstruct()
 

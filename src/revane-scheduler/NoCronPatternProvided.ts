@@ -1,4 +1,6 @@
-export class NoCronPatternProvided extends Error {
+import { RethrowableError } from '../revane-ioc-core/RethrowableError'
+
+export class NoCronPatternProvided extends RethrowableError {
   public code: string = 'REV_ERR_NO_CRON_PATTERN_PROVIDED'
 
   constructor () {
