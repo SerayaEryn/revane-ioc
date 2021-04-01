@@ -661,3 +661,41 @@ test('should get components', async (t) => {
   t.truthy(beans[4].arg)
   t.truthy(beans[5])
 })
+
+test('should invoke lifecycle methods for bean with scope prototype', async (t) => {
+  const options = new Options(
+    path.join(__dirname, '../../testdata/lifecycle'),
+    []
+  )
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/lifecycle1'), null, null)
+  ]
+  options.configuration = { disabled: true }
+  options.profile = 'test'
+  const revane = new Revane(options)
+  await revane.initialize()
+
+  await revane.get('test')
+  const bean = await revane.get('test')
+  await revane.close()
+  t.is(bean.getCallcount(), 4)
+})
+
+test('should not try to call no existant preDestroy hook', async (t) => {
+  const options = new Options(
+    path.join(__dirname, '../../testdata/lifecycle'),
+    []
+  )
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(path.join(__dirname, '../../testdata/lifecycle2'), null, null)
+  ]
+  options.configuration = { disabled: true }
+  options.profile = 'test'
+  const revane = new Revane(options)
+  await revane.initialize()
+
+  await revane.get('test')
+  const bean = await revane.get('test')
+  await revane.close()
+  t.is(bean.getCallcount(), 2)
+})

@@ -16,7 +16,7 @@ import { ModuleLoadError } from './ModuleLoadError'
 import { BeanDefinition } from '../../revane-ioc-core/BeanDefinition'
 import { Reflect } from '../../revane-utils/Reflect'
 import { recursiveReaddir } from './RecursiveReadDir'
-import { Scope } from '../../revane-ioc-core/Scope'
+import { Scopes } from '../../revane-ioc-core/Scopes'
 import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
 
 const filterByType = {
@@ -108,7 +108,7 @@ function getModuleMap (requiredFile: any): Map<string, any> {
 function getBeanDefinition (key: string | null, module1: any, clazz: any): DefaultBeanDefinition {
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
-  const scope = Reflect.getMetadata(scopeSym, module1) ?? Scope.SINGLETON
+  const scope = Reflect.getMetadata(scopeSym, module1) ?? Scopes.SINGLETON
   const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.class = clazz

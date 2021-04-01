@@ -1,5 +1,5 @@
 import CoreOptions from '../revane-ioc-core/Options'
-import { Scope } from '../revane-ioc-core/Scope'
+import { Scopes } from '../revane-ioc-core/Scopes'
 import { ComponentScanLoaderOptions } from './loaders/ComponentScanLoaderOptions'
 import Options from './Options'
 
@@ -12,7 +12,7 @@ export class CoreOptionsBuilder {
         new ComponentScanLoaderOptions(options.basePackage, null, null)
       )
     }
-    coreOptions.defaultScope = Scope.SINGLETON
+    coreOptions.defaultScope = Scopes.SINGLETON
     coreOptions.basePackage = options.basePackage
     coreOptions.noRedefinition = options.noRedefinition
     return coreOptions

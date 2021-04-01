@@ -1,25 +1,29 @@
 import AbstractBean from './AbstractBean'
-import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
+import { Scopes } from '../../revane-ioc-core/Scopes'
 
 export default class PrototypeBean extends AbstractBean {
-  public static scope: string = 'prototype'
-  public entry: DefaultBeanDefinition
+  public static scope: string = Scopes.PROTOTYPE
+  private readonly instances: any[] = []
   private callback: (instance: any) => Promise<void>
-
-  constructor (entry: DefaultBeanDefinition) {
-    super(entry)
-    this.entry = entry
-  }
 
   public async getInstance (): Promise<any> {
     const instance = await this.createInstance()
     if (this.callback != null) {
       await this.callback(instance)
     }
-    if (this.entry.postConstructKey != null) {
-      await instance[this.entry.postConstructKey]()
+    if (this.beanDefinition.postConstructKey != null) {
+      await instance[this.beanDefinition.postConstructKey]()
     }
+    this.instances.push(instance)
     return instance
+  }
+
+  public async preDestroy (): Promise<void> {
+    for (const instance of this.instances) {
+      if (this.beanDefinition.preDestroyKey != null) {
+        await instance[this.beanDefinition.preDestroyKey]()
+      }
+    }
   }
 
   public async init (): Promise<void> {
@@ -31,6 +35,6 @@ export default class PrototypeBean extends AbstractBean {
   }
 
   public id (): string {
-    return this.entry.id
+    return this.beanDefinition.id
   }
 }

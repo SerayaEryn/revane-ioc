@@ -8,7 +8,7 @@ import { join } from 'path'
 import ComponentScanLoader from './ComponentScanLoader'
 import { Property } from '../../revane-ioc-core/Property'
 import { BeanDefinition } from '../RevaneIOC'
-import { Scope } from '../../revane-ioc-core/Scope'
+import { Scopes } from '../../revane-ioc-core/Scopes'
 import { XmlFileLoaderOptions } from './XmlFileLoaderOptions'
 import UnknownEndingError from '../UnknownEndingError'
 import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
@@ -128,7 +128,7 @@ export default class XmlFileLoader implements Loader {
     const clazz = bean.attr.class
     if (clazz == null) throw new Error('missing class')
     beanDefinition.class = clazz
-    beanDefinition.scope = bean.attr.scope ?? Scope.SINGLETON
+    beanDefinition.scope = bean.attr.scope ?? Scopes.SINGLETON
     if (bean.attr.type != null) {
       beanDefinition.type = bean.attr.type
     }

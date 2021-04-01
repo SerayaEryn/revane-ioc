@@ -45,6 +45,7 @@ import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
 import { LoggingExtension } from '../revane-logging/LoggingExtension'
 import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
 import { BeanFactoryExtension } from '../revane-beanfactory/BeanFactoryExtension'
+import { Scopes } from '../revane-ioc-core/Scopes'
 
 export {
   DefaultBeanDefinition as BeanDefinition,
@@ -77,7 +78,8 @@ export {
   Extension,
   SchedulingExtension,
   LoggingExtension,
-  BeanFactoryExtension
+  BeanFactoryExtension,
+  Scopes
 }
 
 export default class RevaneIOC {

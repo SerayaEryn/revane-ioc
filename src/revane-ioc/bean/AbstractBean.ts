@@ -2,15 +2,15 @@ import Bean from '../../revane-ioc-core/context/bean/Bean'
 import { BeanDefinition } from '../RevaneIOC'
 
 export default abstract class AbstractBean implements Bean {
-  protected entry: BeanDefinition
+  protected beanDefinition: BeanDefinition
   public scope: string
 
   constructor (entry: BeanDefinition) {
-    this.entry = entry
+    this.beanDefinition = entry
   }
 
   public type (): string {
-    return this.entry.type
+    return this.beanDefinition.type
   }
 
   public abstract id (): string
@@ -21,18 +21,18 @@ export default abstract class AbstractBean implements Bean {
 
   public async createInstance (): Promise<any> {
     const parameters: any[] = []
-    for (const dependency of this.entry.dependencies) {
+    for (const dependency of this.beanDefinition.dependencies) {
       parameters.push(await dependency.getInstance())
     }
     let instance = null
-    if (this.entry.isClass()) {
-      if (this.entry.classConstructor == null) {
+    if (this.beanDefinition.isClass()) {
+      if (this.beanDefinition.classConstructor == null) {
         throw new Error('cannot create instance')
       }
       // eslint-disable-next-line new-cap
-      instance = new this.entry.classConstructor(...parameters)
+      instance = new this.beanDefinition.classConstructor(...parameters)
     } else {
-      instance = this.entry.classConstructor ?? this.entry.instance
+      instance = this.beanDefinition.classConstructor ?? this.beanDefinition.instance
     }
     return instance
   }
@@ -43,7 +43,5 @@ export default abstract class AbstractBean implements Bean {
     return await Promise.resolve()
   }
 
-  public async preDestroy (): Promise<any> {
-    return await Promise.resolve()
-  }
+  public abstract preDestroy (): Promise<any>
 }
