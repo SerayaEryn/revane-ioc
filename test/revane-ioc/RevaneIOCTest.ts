@@ -1,9 +1,15 @@
 import { join } from 'path'
 import test from 'ava'
-import Revane, { Options } from '../../src/revane-ioc/RevaneIOC'
+import Revane, { Options, Scopes } from '../../src/revane-ioc/RevaneIOC'
 import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
 import { XmlFileLoaderOptions } from '../../src/revane-ioc/loaders/XmlFileLoaderOptions'
-import { ComponentScanLoaderOptions } from '../../src/revane-ioc/loaders/ComponentScanLoaderOptions'
+import { beanDefinition, MockedExtension } from '../MockedLoader'
+import { Lifecycle1 } from '../../testdata/lifecycle1/Lifecycle1'
+import { Lifecycle2 } from '../../testdata/lifecycle2/Lifecycle2'
+import Test1 from '../../testdata/test1'
+import ConditionalOnMissingBean3 from '../../testdata/conditionalOnMissingBean2/ConditionalOnMissingBean3'
+import ConditionalOnMissingBean2 from '../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean2'
+import ConditionalOnMissingBean1 from '../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean1'
 
 test('should read json configuration file and register beans', async (t) => {
   const options = new Options(
@@ -24,20 +30,6 @@ test('should read json configuration file and register beans', async (t) => {
   t.truthy(bean1)
   t.truthy(bean2)
   t.truthy(bean2.json1)
-})
-
-test('should use auto configuration', async (t) => {
-  const options = new Options(
-    join(__dirname, '../../testdata/autoConfig'),
-    []
-  )
-  options.profile = 'test'
-  options.autoConfiguration = true
-  const revane = new Revane(options)
-  await revane.initialize()
-  const configuration = await revane.get('configuration')
-  await revane.get('test')
-  t.true(configuration.get('test'))
 })
 
 test('should throw error on unknown id', async (t) => {
@@ -409,58 +401,17 @@ test('should throw error on getMultiple if not initialized', async (t) => {
   }
 })
 
-test('should throw error on invalid scope', async (t) => {
-  t.plan(2)
-
-  const options = new Options(
-    join(__dirname, '../../../testdata'),
-    []
-  )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../../testdata/invalidScope'), null, null)
-  ]
-  options.configuration = { disabled: true }
-  options.profile = 'test'
-  const revane = new Revane(options)
-  try {
-    await revane.initialize()
-  } catch (err) {
-    t.truthy(err)
-    t.is(err.code, 'REV_ERR_INVALID_SCOPE')
-  }
-})
-
-test('should throw error if dependency throws error', async (t) => {
-  t.plan(2)
-
-  const options = new Options(
-    join(__dirname, '../../../testdata'),
-    []
-  )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../../testdata/dependencyError'), null, null)
-  ]
-  options.configuration = { disabled: true }
-  options.profile = 'test'
-  const revane = new Revane(options)
-  try {
-    await revane.initialize()
-  } catch (err) {
-    t.truthy(err)
-    t.is(err.code, 'REV_ERR_DEPENDENCY_REGISTER')
-  }
-})
-
 test('should throw error if bean was defined twice', async (t) => {
   t.plan(2)
 
   const options = new Options(
     join(__dirname, '../../../testdata'),
-    []
+    [new MockedExtension([
+      beanDefinition('scan1', Test1),
+      beanDefinition('scan1', Test1)
+    ])]
   )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../../testdata/definedTwice'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: true }
   options.profile = 'test'
   const revane = new Revane(options)
@@ -474,12 +425,13 @@ test('should throw error if bean was defined twice', async (t) => {
 
 test('should not throw error if bean redefinition is allowed', async (t) => {
   const options = new Options(
-    join(__dirname, '../../../testdata/definedTwice2'),
-    []
+    join(__dirname, '../../../testdata/definedTwice'),
+    [new MockedExtension([
+      beanDefinition('scan1', Test1),
+      beanDefinition('scan1', Test1)
+    ])]
   )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../../testdata/definedTwice2'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: false }
   options.profile = 'test'
   const revane = new Revane(options)
@@ -490,11 +442,12 @@ test('should not throw error if bean redefinition is allowed', async (t) => {
 test('should not create conditional bean if not missing', async (t) => {
   const options = new Options(
     join(__dirname, '../../testdata/conditionalOnMissingBean1'),
-    []
+    [new MockedExtension([
+      beanDefinition('conditionalOnMissingBean', ConditionalOnMissingBean1),
+      beanDefinition('conditionalOnMissingBean', ConditionalOnMissingBean2)
+    ])]
   )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/conditionalOnMissingBean1'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: true }
   options.profile = 'test'
   const revane = new Revane(options)
@@ -505,11 +458,11 @@ test('should not create conditional bean if not missing', async (t) => {
 test('should create conditional bean if missing', async (t) => {
   const options = new Options(
     join(__dirname, '../../testdata/conditionalOnMissingBean2'),
-    []
+    [new MockedExtension([
+      beanDefinition('conditionalOnMissingBean', ConditionalOnMissingBean3)
+    ])]
   )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/conditionalOnMissingBean2'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: true }
   options.profile = 'test'
   const revane = new Revane(options)
@@ -556,104 +509,36 @@ test('should throw error on getByType if not initialized', async (t) => {
   }
 })
 
-test('should read json config file, component scan and register beans', async (t) => {
-  t.plan(4)
-
+test('should get beans type component', async (t) => {
+  const beanDefinition1 = beanDefinition('test1', Test1)
+  beanDefinition1.type = 'component'
+  const beanDefinition2 = beanDefinition('test2', Test1)
+  beanDefinition2.type = 'service'
   const options = new Options(
     join(__dirname, '../../testdata'),
-    []
+    [new MockedExtension([beanDefinition1, beanDefinition2])]
   )
-  options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json')),
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config2.xml')),
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/scan'), null, null)
-  ]
-  options.configuration = { disabled: true }
-  options.profile = 'test'
-  const revane = new Revane(options)
-  await revane.initialize()
-  const bean1 = await revane.get('json1')
-  const bean2 = await revane.get('json2')
-  const bean3 = await revane.get('scan1')
-
-  t.truthy(bean1)
-  t.truthy(bean2)
-  t.truthy(bean2.json1)
-  t.truthy(bean3)
-})
-
-test('component scan should handle file without bean', async (t) => {
-  const options = new Options(
-    join(__dirname, '../../testdata'),
-    []
-  )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/scan2'), null, null)
-  ]
-  options.configuration = { disabled: true }
-  options.profile = 'test'
-  const revane = new Revane(options)
-  await revane.initialize()
-  t.pass()
-})
-
-test('should read json config file, component scan and register beans #2', async (t) => {
-  const options = new Options(
-    join(__dirname, '../../testdata'),
-    []
-  )
-  options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json')),
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config2.xml')),
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/scan'), null, null)
-  ]
-  options.configuration = { disabled: true }
-  options.profile = 'test'
-  const revane = new Revane(options)
-  await revane.initialize()
-  const bean1 = await revane.get('json1')
-  const bean2 = await revane.get('json2')
-  const bean3 = await revane.get('scan1')
-
-  t.truthy(bean1)
-  t.truthy(bean2)
-  t.truthy(bean2.json1)
-  t.truthy(bean3)
-})
-
-test('should get components', async (t) => {
-  const options = new Options(
-    join(__dirname, '../../testdata'),
-    []
-  )
-  options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json')),
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config2.xml')),
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/scan'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: true }
   options.profile = 'test'
   const revane = new Revane(options)
   await revane.initialize()
   const beans = await revane.getByType('component')
 
-  t.is(6, beans.length)
-  t.truthy(beans[0].postConstructed)
-  t.truthy(beans[1])
-  t.truthy(beans[2].test6)
-  t.truthy(beans[3].test6)
-  t.truthy(beans[4].arg)
-  t.truthy(beans[5])
+  t.is(1, beans.length)
+  t.truthy(beans[0])
 })
 
 test('should invoke lifecycle methods for bean with scope prototype', async (t) => {
+  const beanDefinition1 = beanDefinition('test', Lifecycle1)
+  beanDefinition1.scope = Scopes.PROTOTYPE
   const options = new Options(
     join(__dirname, '../../testdata/lifecycle'),
-    []
+    [new MockedExtension([
+      beanDefinition1
+    ])]
   )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/lifecycle1'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: true }
   options.profile = 'test'
   const revane = new Revane(options)
@@ -666,13 +551,15 @@ test('should invoke lifecycle methods for bean with scope prototype', async (t) 
 })
 
 test('should not try to call no existant preDestroy hook', async (t) => {
+  const beanDefinition1 = beanDefinition('test', Lifecycle2)
+  beanDefinition1.scope = Scopes.PROTOTYPE
   const options = new Options(
     join(__dirname, '../../testdata/lifecycle'),
-    []
+    [new MockedExtension([
+      beanDefinition1
+    ])]
   )
-  options.loaderOptions = [
-    new ComponentScanLoaderOptions(join(__dirname, '../../testdata/lifecycle2'), null, null)
-  ]
+  options.loaderOptions = []
   options.configuration = { disabled: true }
   options.profile = 'test'
   const revane = new Revane(options)

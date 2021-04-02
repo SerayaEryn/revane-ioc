@@ -16,7 +16,7 @@
       "bin/src/revane-ioc-core/BeanTypeRegistry.js",
       "bin/src/revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js",
       "bin/src/revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js",
-      "bin/src/revane-ioc/loaders/Filter.js",
+      "bin/src/revane-componentscan/Filter.js",
       "bin/src/revane-ioc/Extension.js",
       "bin/src/revane-configuration/loading/LoadingStrategy.js",
       "bin/src/revane-configuration/Configuration.js",

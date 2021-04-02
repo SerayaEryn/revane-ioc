@@ -4,7 +4,6 @@ import DefaultBeanTypeRegistry from '../revane-ioc-core/context/bean/DefaultBean
 
 import JsonFileLoader from './loaders/JsonFileLoader'
 import XmlFileLoader from './loaders/XmlFileLoader'
-import ComponentScanLoader from './loaders/ComponentScanLoader'
 import PrototypeBean from './bean/PrototypeBean'
 import SingletonBean from './bean/SingletonBean'
 import Options from './Options'
@@ -12,15 +11,7 @@ import NotInitializedError from './NotInitializedError'
 import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../revane-ioc-core/Loader'
 import {
-  Configuration,
-  Repository,
-  Service,
-  Component,
-  Controller,
-  Scope,
-  Scheduler,
   ConditionalOnMissingBean,
-  ControllerAdvice,
   PostConstruct,
   PreDestroy
 } from './decorators/Decorators'
@@ -37,21 +28,34 @@ import { LogFactory } from '../revane-logging/LogFactory'
 import { Logger } from 'apheleia'
 
 import { Bean } from '../revane-beanfactory/BeanDecorator'
+import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
 import { buildConfiguration } from './ConfigurationFactory'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder'
 import { LifeCycleBeanFactoryPostProcessor } from './LifeCycleBeanFactoryPostProcessor'
 import { Extension } from './Extension'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension'
 import { LoggingExtension } from '../revane-logging/LoggingExtension'
-import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
 import { BeanFactoryExtension } from '../revane-beanfactory/BeanFactoryExtension'
 import { Scopes } from '../revane-ioc-core/Scopes'
+import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
+import { ComponentScanExtension } from '../revane-componentscan/ComponentScanExtension'
+import { Property } from '../revane-ioc-core/Property'
+import {
+  Component,
+  Configuration,
+  Controller,
+  ControllerAdvice,
+  Repository,
+  Scheduler,
+  Scope,
+  Service
+} from '../revane-componentscan/Decorators'
 
 export {
-  DefaultBeanDefinition as BeanDefinition,
+  BeanDefinition,
+  DefaultBeanDefinition,
   Loader,
   XmlFileLoader,
-  ComponentScanLoader,
   JsonFileLoader,
   RegexFilter,
   Options,
@@ -79,7 +83,9 @@ export {
   SchedulingExtension,
   LoggingExtension,
   BeanFactoryExtension,
-  Scopes
+  Scopes,
+  ComponentScanExtension,
+  Property
 }
 
 export default class RevaneIOC {
@@ -163,7 +169,6 @@ export default class RevaneIOC {
     }
     this.revaneCore?.addPlugin('loader', new XmlFileLoader())
     this.revaneCore?.addPlugin('loader', new JsonFileLoader())
-    this.revaneCore?.addPlugin('loader', new ComponentScanLoader())
     this.revaneCore?.addPlugin('beanFactoryPostProcessor', new LifeCycleBeanFactoryPostProcessor())
     if (!(this.options.configuration?.disabled ?? false)) {
       this.revaneCore?.addPlugin(

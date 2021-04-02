@@ -1,18 +1,18 @@
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import Loader from '../revane-ioc-core/Loader'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
-import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { Extension } from '../revane-ioc/Extension'
 import { Options } from './Options'
 import { SchedulerBeanPostProcessor } from './SchedulerBeanPostProcessor'
 import { SchedulerLoader } from './SchedulerLoader'
 import { TaskScheduler } from './TaskScheduler'
 
-export class SchedulingExtension implements Extension {
+export class SchedulingExtension extends Extension {
   private readonly taskScheduler = new TaskScheduler()
   private enabled = false
 
   constructor (private readonly options: Options | null) {
+    super()
     if (this.options != null) {
       this.enabled = this.options.enabled
     }
@@ -26,10 +26,6 @@ export class SchedulingExtension implements Extension {
     if (this.options == null) {
       this.enabled = enabled
     }
-  }
-
-  public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {
-    return []
   }
 
   public beanFactoryPostProcessors (): BeanFactoryPostProcessor[] {

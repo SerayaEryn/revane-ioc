@@ -1,11 +1,11 @@
 import test from 'ava'
 import SingletonBean from '../../src/revane-ioc/bean/SingletonBean'
-import { BeanDefinition } from '../../src/revane-ioc/RevaneIOC'
+import { DefaultBeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 
 test('should class postContruct on instance', async (t) => {
   const Clazz = await import('../../testdata/test6')
 
-  const beanDefinition = new BeanDefinition('test')
+  const beanDefinition = new DefaultBeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
   beanDefinition.postConstructKey = 'postConstruct'
   const bean = new SingletonBean(beanDefinition, async () => {})
@@ -19,7 +19,7 @@ test('should class postContruct on instance', async (t) => {
 test('should return Promise on preDestroy()', async (t) => {
   const Clazz = await import('../../testdata/test6')
 
-  const beanDefinition = new BeanDefinition('test')
+  const beanDefinition = new DefaultBeanDefinition('test')
   beanDefinition.classConstructor = Clazz.default
   const bean = new SingletonBean(beanDefinition, async () => {})
   await bean.init()

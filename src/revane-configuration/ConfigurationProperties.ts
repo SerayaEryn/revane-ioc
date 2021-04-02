@@ -14,9 +14,12 @@ function createConfigurationPropertiesDecorator () {
       const properties: string[] = tree.body[0].body.body
         .filter((node) => node.type === 'PropertyDefinition')
         .map((node) => node.key.name)
+      const setters: string[] = tree.body[0].body.body
+        .filter((node) => node.type === 'MethodDefinition')
+        .map((node) => node.key.name)
       Reflect.defineMetadata(
         configurationPropertiesSym,
-        new ConfigurationPropertiesData(options.prefix, properties),
+        new ConfigurationPropertiesData(options.prefix, properties, setters),
         Class
       )
       return Class
@@ -28,7 +31,7 @@ export class ConfigurationPropertiesData {
   public prefix: string
   public properties: string[]
 
-  constructor (prefix: string, properties: string[]) {
+  constructor (prefix: string, properties: string[], public setters: string[]) {
     this.prefix = prefix
     this.properties = properties
   }

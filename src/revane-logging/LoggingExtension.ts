@@ -1,12 +1,10 @@
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
 import Loader from '../revane-ioc-core/Loader'
-import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
-import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { Extension } from '../revane-ioc/Extension'
 import { LoggingLoader } from './LoggingLoader'
 import { LoggingOptions } from './LoggingOptions'
 
-export class LoggingExtension implements Extension {
+export class LoggingExtension extends Extension {
   private enabled = true
   private options: LoggingOptions
 
@@ -40,20 +38,10 @@ export class LoggingExtension implements Extension {
     }
   }
 
-  public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {
-    return []
-  }
-
-  public beanFactoryPostProcessors (): BeanFactoryPostProcessor[] {
-    return []
-  }
-
   public beanLoaders (): Loader[] {
     if (this.enabled) {
       return [new LoggingLoader(this.options)]
     }
     return []
   }
-
-  public async close (): Promise<void> {}
 }

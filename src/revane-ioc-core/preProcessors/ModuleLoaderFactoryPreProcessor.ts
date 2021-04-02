@@ -5,7 +5,9 @@ import { BeanDefinition } from '../BeanDefinition'
 
 export class ModuleLoaderBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   async preProcess (beanDefinition: BeanDefinition): Promise<BeanDefinition[]> {
-    beanDefinition.classConstructor = this.getClass(beanDefinition)
+    if (beanDefinition.classConstructor == null) {
+      beanDefinition.classConstructor = this.getClass(beanDefinition)
+    }
     return [beanDefinition]
   }
 

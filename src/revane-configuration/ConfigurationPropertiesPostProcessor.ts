@@ -21,6 +21,13 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
             values[propertyName] = this.configuration.get(key)
           }
         }
+        for (const propertyName of configurationProperties.setters ?? []) {
+          const propertyKey = propertyName.substring(3, 4).toLowerCase() + propertyName.substring(4)
+          const key = `${configurationProperties.prefix}.${propertyKey}`
+          if (this.configuration.has(key)) {
+            instance[propertyName](this.configuration.get(key))
+          }
+        }
       }
     }
     for (const key of Object.keys(values)) {
