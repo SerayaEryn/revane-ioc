@@ -4,14 +4,11 @@ import * as fastXmlParser from 'fast-xml-parser'
 import * as fileSystem from 'fs'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
-import { join } from 'path'
-import ComponentScanLoader from './ComponentScanLoader'
 import { Property } from '../../revane-ioc-core/Property'
 import { BeanDefinition } from '../RevaneIOC'
 import { Scopes } from '../../revane-ioc-core/Scopes'
 import { XmlFileLoaderOptions } from './XmlFileLoaderOptions'
 import UnknownEndingError from '../UnknownEndingError'
-import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -71,17 +68,13 @@ export default class XmlFileLoader implements Loader {
   }
 
   private async loadXmlFile (options: XmlFileLoaderOptions): Promise<DefaultBeanDefinition[]> {
-    const { file, basePackage } = options
+    const { file } = options
     if (!file.endsWith('.xml')) throw new UnknownEndingError()
     const data = await this.loadFile(file)
     const result: Xml = fastXmlParser.parse(data.toString(), xmlParserOptions)
 
     let beanDefinitions: DefaultBeanDefinition[] = []
     const beans = result.beans
-    if (beans['component-scan'] != null || beans['context:component-scan'] != null) {
-      const moreBeanDefinitions = await this.performScan(beans, basePackage)
-      beanDefinitions = beanDefinitions.concat(moreBeanDefinitions)
-    }
 
     if (beans.bean == null) {
       return beanDefinitions
@@ -108,17 +101,6 @@ export default class XmlFileLoader implements Loader {
         }
       })
     })
-  }
-
-  private async performScan (beans: XmlBeans, basePackage: string): Promise<BeanDefinition[]> {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    const componentScan = beans['component-scan'] || beans['context:component-scan']
-    const relativePath = componentScan.attr['base-package']
-    const directory = join(basePackage, relativePath)
-    const componentScanLoader = new ComponentScanLoader()
-    return await componentScanLoader.load(
-      [new ComponentScanLoaderOptions(directory, null, null)]
-    )
   }
 
   private toBeanDefinition (bean: XmlBean): DefaultBeanDefinition {
