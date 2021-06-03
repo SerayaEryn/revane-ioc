@@ -50,6 +50,9 @@ import {
   Scope,
   Service
 } from '../revane-componentscan/Decorators'
+import { XmlFileLoaderOptions } from './loaders/XmlFileLoaderOptions'
+import { ComponentScanLoaderOptions } from '../revane-componentscan/ComponentScanLoaderOptions'
+import { JsonFileLoaderOptions } from './loaders/JsonFileLoaderOptions'
 
 export {
   BeanDefinition,
@@ -60,6 +63,9 @@ export {
   RegexFilter,
   Options,
   LoaderOptions,
+  ComponentScanLoaderOptions,
+  XmlFileLoaderOptions,
+  JsonFileLoaderOptions,
   Repository,
   Service,
   Component,
