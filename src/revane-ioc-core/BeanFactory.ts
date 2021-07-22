@@ -51,8 +51,10 @@ export class BeanFactory {
         throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
       }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
-      const bean = await this.registerBean(preProcessedBeanDefinition, preprocessed)
-      this.context.put([bean])
+      if (!await this.context.has(preProcessedBeanDefinition.id)) {
+        const bean = await this.registerBean(preProcessedBeanDefinition, preprocessed)
+        this.context.put([bean])
+      }
     }
   }
 
