@@ -2,6 +2,7 @@
 
 import { readFile } from 'fs'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
+import { Dependency } from '../../revane-ioc-core/dependencies/Dependency'
 import Loader from '../../revane-ioc-core/Loader'
 import { BeanDefinition } from '../RevaneIOC'
 import UnknownEndingError from '../UnknownEndingError'
@@ -33,7 +34,7 @@ export default class JsonFileLoader implements Loader {
         return beanDefinitions.map((rawBeanDefinition) => {
           const beanDefinition = new DefaultBeanDefinition(rawBeanDefinition.id)
           beanDefinition.class = rawBeanDefinition.class
-          beanDefinition.dependencyIds = rawBeanDefinition.properties ?? []
+          beanDefinition.dependencyIds = this.toDependencies(rawBeanDefinition)
           return beanDefinition
         })
       })
@@ -41,5 +42,16 @@ export default class JsonFileLoader implements Loader {
 
   public type (): string {
     return 'json'
+  }
+
+  private toDependencies (rawBeanDefinition: any): Dependency[] {
+    return (rawBeanDefinition.properties ?? [])
+      .map((property) => {
+        if (property.ref != null) {
+          return new Dependency('bean', property.ref)
+        } else {
+          return new Dependency('value', property.value)
+        }
+      })
   }
 }

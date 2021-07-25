@@ -13,19 +13,23 @@ import { ScopeBeanFactoryPreProcessor } from './preProcessors/ScopeBeanFactoryPr
 import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
 import { ConditionalsBeanFactoryPreProcessor } from './preProcessors/ConditionalsBeanFactoryPreProcessor'
+import { DependencyService } from './dependencies/DependencyService'
+import { BeanDependencyResolver } from './dependencies/BeanDependencyResolver'
+import { ValueDependencyResolver } from './dependencies/ValueDependencyResolver'
+import { DependencyResolver } from './dependencies/DependecyResolver'
 
 export default class RevaneIOCCore {
   protected options: Options
   private readonly context: ApplicationContext = new DefaultApplicationContext()
   private readonly beanTypeRegistry: BeanTypeRegistry
-  private readonly plugins: Map<string, Array<Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor>> = new Map()
+  private readonly plugins: Map<string, Array<Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor | DependencyResolver>> = new Map()
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options
     this.beanTypeRegistry = beanTypeRegistry
   }
 
-  public addPlugin (name: string, plugin: Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor): void {
+  public addPlugin (name: string, plugin: Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor | DependencyResolver): void {
     let pluginsByName = this.plugins.get(name)
     if (pluginsByName == null) {
       pluginsByName = []
@@ -49,7 +53,11 @@ export default class RevaneIOCCore {
       this.context as DefaultApplicationContext,
       this.beanTypeRegistry,
       this.options,
-      this.plugins
+      this.plugins,
+      new DependencyService(([
+        new BeanDependencyResolver(this.context as DefaultApplicationContext),
+        new ValueDependencyResolver()
+      ] as DependencyResolver[]).concat(this.plugins.get('dependencyResolver') as DependencyResolver[] ?? []))
     )
     const loaders: Loader[] = this.plugins.get('loader') as Loader[] ?? []
     const beanLoader = new BeanLoader(loaders)

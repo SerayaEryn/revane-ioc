@@ -1,16 +1,16 @@
 import { BeanFactoryPostProcessor } from './postProcessors/BeanFactoryPostProcessor'
 import { DefaultApplicationContext } from './DefaultApplicationContext'
 import Bean from './context/bean/Bean'
-import ValueBean from './context/bean/ValueBean'
 import DependencyRegisterError from './context/errors/DependencyRegisterError'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import DependencyNotFoundError from './context/errors/DependencyNotFoundError'
 import Options from './Options'
 import BeanDefinedTwiceError from './context/errors/BeanDefinedTwiceError'
 import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor'
-import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
 import { RethrowableError } from './RethrowableError'
+import { DependencyService } from './dependencies/DependencyService'
+import { Dependency } from './dependencies/Dependency'
 
 export class BeanFactory {
   private readonly preProcessors: BeanFactoryPreProcessor[]
@@ -25,13 +25,15 @@ export class BeanFactory {
     context: DefaultApplicationContext,
     beanTypeRegistry: BeanTypeRegistry,
     options: Options,
-    plugins: Map<string, any>
+    plugins: Map<string, any>,
+    private readonly dependencyService: DependencyService
   ) {
     this.preProcessors = preProcessors
     this.postProcessors = postProcessors
     this.context = context
     this.beanTypeRegistry = beanTypeRegistry
     this.options = options
+    this.registerDependency = this.registerDependency.bind(this)
   }
 
   async process (beanDefinitions: BeanDefinition[]): Promise<void> {
@@ -87,60 +89,31 @@ export class BeanFactory {
   }
 
   private async getDependencies (
-    entry: BeanDefinition,
+    beanDefinition: BeanDefinition,
     beanDefinitions: BeanDefinition[]
   ): Promise<Bean[]> {
-    if (!entry.isClass()) {
+    if (!beanDefinition.isClass()) {
       return []
     }
     const dependencies: Bean[] = []
-    for (const property of entry.dependencyIds) {
-      const dependency = await this.getDependecySafe(
-        property,
-        entry.id,
-        beanDefinitions
+    for (const dependency of beanDefinition.dependencyIds) {
+      const dependencyForBean = await this.dependencyService.getDependency(
+        dependency,
+        beanDefinition.id,
+        beanDefinitions,
+        this.registerDependency
       )
-      dependencies.push(dependency)
+      dependencies.push(dependencyForBean)
     }
     return dependencies
   }
 
-  private async getDependecySafe (
-    property: Property,
-    parentId: string,
-    beanDefinitions: BeanDefinition[]
-  ): Promise<Bean> {
-    if (property.value != null) {
-      return new ValueBean(property.value)
-    }
-    await this.ensureDependencyIsPresent(property, parentId, beanDefinitions)
-    const reference = property.ref
-    if (reference == null) {
-      throw new Error()
-    }
-    return await this.context.getBean(reference)
-  }
-
-  private async ensureDependencyIsPresent (
-    property: Property,
-    parentId: string,
-    beanDefinitions: BeanDefinition[]
-  ): Promise<void> {
-    const reference = property.ref
-    if (reference != null && !(await this.hasDependency(reference))) {
-      await this.registerDependency(reference, parentId, beanDefinitions)
-    }
-  }
-
-  private async hasDependency (id: string): Promise<boolean> {
-    return await this.context.has(id)
-  }
-
   private async registerDependency (
-    id: string,
+    dependency: Dependency,
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<void> {
+    const id = dependency.value as string
     try {
       await this.findAndRegisterBean(id, parentId, beanDefinitions)
     } catch (err) {
@@ -153,8 +126,8 @@ export class BeanFactory {
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<void> {
-    const entry = this.findEntry(id, parentId, beanDefinitions)
-    const bean = await this.registerBean(entry, beanDefinitions)
+    const beanDefinition = this.findEntry(id, parentId, beanDefinitions)
+    const bean = await this.registerBean(beanDefinition, beanDefinitions)
     this.context.put([bean])
   }
 

@@ -39,7 +39,6 @@ import { BeanFactoryExtension } from '../revane-beanfactory/BeanFactoryExtension
 import { Scopes } from '../revane-ioc-core/Scopes'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { ComponentScanExtension } from '../revane-componentscan/ComponentScanExtension'
-import { Property } from '../revane-ioc-core/Property'
 import {
   Component,
   Configuration,
@@ -90,8 +89,7 @@ export {
   LoggingExtension,
   BeanFactoryExtension,
   Scopes,
-  ComponentScanExtension,
-  Property
+  ComponentScanExtension
 }
 
 export default class RevaneIOC {

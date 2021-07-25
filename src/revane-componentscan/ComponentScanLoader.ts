@@ -9,7 +9,6 @@ import {
   BeanDefinition,
   DefaultBeanDefinition,
   Loader,
-  Property,
   Scopes
 } from '../revane-ioc/RevaneIOC'
 import { Reflect } from '../revane-utils/Reflect'
@@ -18,6 +17,7 @@ import RegexFilter from './RegexFilter'
 import { recursiveReaddir } from './RecursiveReadDir'
 import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
 import { ModuleLoadError } from './ModuleLoadError'
+import { Dependency } from '../revane-ioc-core/dependencies/Dependency'
 
 const filterByType = {
   regex: RegexFilter
@@ -119,10 +119,8 @@ function getBeanDefinition (key: string | null, module1: any, clazz: any): Defau
   return beanDefinition
 }
 
-function toReference (id: string): Property {
-  return {
-    ref: id
-  }
+function toReference (id: string): Dependency {
+  return new Dependency('bean', id)
 }
 
 function filterByJavascriptFiles (files: string[]): string[] {

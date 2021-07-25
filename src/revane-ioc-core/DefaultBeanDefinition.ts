@@ -1,18 +1,17 @@
 import Bean from './context/bean/Bean'
-import { Property } from './Property'
 import { BeanDefinition } from './BeanDefinition'
 import InvalidScopeError from './context/errors/InvalidScopeError'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import { Constructor } from './Constructor'
 import { uid } from '../revane-utils/Random'
+import { Dependency } from './dependencies/Dependency'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string
   public id: string
   public uid: string = uid()
   public type: string
-  public dependencyIds: Property[]
-  public loadAfter?: Property[]
+  public dependencyIds: Dependency[]
   public path: string
   public scope: string
   public instance?: any

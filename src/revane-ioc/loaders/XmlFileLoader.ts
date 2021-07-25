@@ -1,14 +1,12 @@
-'use strict'
-
 import * as fastXmlParser from 'fast-xml-parser'
 import * as fileSystem from 'fs'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
-import { Property } from '../../revane-ioc-core/Property'
 import { BeanDefinition } from '../RevaneIOC'
 import { Scopes } from '../../revane-ioc-core/Scopes'
 import { XmlFileLoaderOptions } from './XmlFileLoaderOptions'
 import UnknownEndingError from '../UnknownEndingError'
+import { Dependency } from '../../revane-ioc-core/dependencies/Dependency'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -123,8 +121,8 @@ export default class XmlFileLoader implements Loader {
     return beanDefinition
   }
 
-  private getProperties (ref: XmlReference): Property[] {
-    let properties: Property[] = []
+  private getProperties (ref: XmlReference): Dependency[] {
+    let properties: Dependency[] = []
     if (ref != null) {
       if (Array.isArray(ref)) {
         properties = ref.map(toReference)
@@ -136,10 +134,10 @@ export default class XmlFileLoader implements Loader {
   }
 }
 
-function toReference (ref: XmlReference): Property {
+function toReference (ref: XmlReference): Dependency {
   if (ref.attr.bean != null) {
-    return { ref: ref.attr.bean }
+    return new Dependency('bean', ref.attr.bean)
   } else {
-    return { value: ref.attr.value }
+    return new Dependency('value', ref.attr.value)
   }
 }

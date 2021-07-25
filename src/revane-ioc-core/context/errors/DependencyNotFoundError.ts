@@ -1,5 +1,3 @@
-'use strict'
-
 import { RethrowableError } from '../../RethrowableError'
 
 export default class DependencyNotFoundError extends RethrowableError {
