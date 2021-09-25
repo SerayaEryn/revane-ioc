@@ -52,6 +52,7 @@ import {
 import { XmlFileLoaderOptions } from './loaders/XmlFileLoaderOptions'
 import { ComponentScanLoaderOptions } from '../revane-componentscan/ComponentScanLoaderOptions'
 import { JsonFileLoaderOptions } from './loaders/JsonFileLoaderOptions'
+import 'reflect-metadata'
 
 export {
   BeanDefinition,

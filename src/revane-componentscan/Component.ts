@@ -2,7 +2,6 @@ import Options from '../revane-ioc/decorators/Options'
 import { Parser } from 'acorn'
 import * as classFields from 'acorn-class-fields'
 import { dependenciesSym, idSym, typeSym } from './Symbols'
-import { Reflect } from '../revane-utils/Reflect'
 
 export function createComponentDecorator (type: string) {
   return function decorateComponent (options?: Options | string | any) {

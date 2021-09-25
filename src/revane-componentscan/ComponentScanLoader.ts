@@ -11,7 +11,6 @@ import {
   Loader,
   Scopes
 } from '../revane-ioc/RevaneIOC'
-import { Reflect } from '../revane-utils/Reflect'
 import Filter from './Filter'
 import RegexFilter from './RegexFilter'
 import { recursiveReaddir } from './RecursiveReadDir'

@@ -1,4 +1,3 @@
-import { Reflect } from '../revane-utils/Reflect'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
 import Bean from '../revane-ioc-core/context/bean/Bean'

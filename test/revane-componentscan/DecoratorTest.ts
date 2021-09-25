@@ -1,7 +1,6 @@
 import test from 'ava'
 import { dependenciesSym, idSym, scopeSym } from '../../src/revane-componentscan/Symbols'
 import { Scope, Service } from '../../src/revane-ioc/RevaneIOC'
-import { Reflect } from '../../src/revane-utils/Reflect'
 
 test('should add scope and service meta data', t => {
   @Scope('prototype')

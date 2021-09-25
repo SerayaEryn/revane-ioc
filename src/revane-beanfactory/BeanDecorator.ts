@@ -1,5 +1,5 @@
-import { Reflect } from '../revane-utils/Reflect'
 import { beansSym } from './Symbols'
+import 'reflect-metadata'
 
 function createBeanDecorator (): Function {
   return function Bean (maybeId, maybePropertyKey: string, descriptor: PropertyDescriptor) {

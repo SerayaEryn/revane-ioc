@@ -1,9 +1,9 @@
-import { Reflect } from '../revane-utils/Reflect'
 import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { BeanAnnotationBeanDefinition } from './BeanAnnotationBeanDefinition'
 import { beansSym } from './Symbols'
 import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition'
+import 'reflect-metadata'
 
 export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   async preProcess (

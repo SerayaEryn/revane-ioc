@@ -1,7 +1,6 @@
 import { configurationPropertiesSym } from './Symbols'
 import { Parser } from 'acorn'
 import * as classFields from 'acorn-class-fields'
-import { Reflect } from '../revane-utils/Reflect'
 
 export interface ConfigurationPropertiesOptions {
   prefix: string
