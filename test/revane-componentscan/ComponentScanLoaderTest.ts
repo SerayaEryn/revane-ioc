@@ -3,7 +3,7 @@ import test from 'ava'
 import RevaneIOC, { BeanDefinition, ComponentScanExtension, Options } from '../../src/revane-ioc/RevaneIOC'
 import { ComponentScanLoaderOptions } from '../../src/revane-componentscan/ComponentScanLoaderOptions'
 import ComponentScanLoader from '../../src/revane-componentscan/ComponentScanLoader'
-import { Dependency } from '../../src/revane-ioc-core/dependencies/Dependency'
+import { DependencyDefinition } from '../../src/revane-ioc-core/dependencies/DependencyDefinition'
 
 test('should do component scan without filters', async (t): Promise<void> => {
   t.plan(8)
@@ -19,10 +19,10 @@ test('should do component scan without filters', async (t): Promise<void> => {
       t.is(scan1.scope, 'singleton')
       const scan2 = findDefinition(beanDefinitions, 'scan2')
       t.is(scan2.scope, 'singleton')
-      t.deepEqual(scan1.dependencyIds, [new Dependency('bean', 'test6')])
+      t.deepEqual(scan1.dependencyIds, [new DependencyDefinition('bean', 'test6')])
       const scan3 = findDefinition(beanDefinitions, 'scan3')
       t.is(scan3.scope, 'singleton')
-      t.deepEqual(scan3.dependencyIds, [new Dependency('bean', 'test6')])
+      t.deepEqual(scan3.dependencyIds, [new DependencyDefinition('bean', 'test6')])
       const scan4 = findDefinition(beanDefinitions, 'scan4')
       t.is(scan4.scope, 'singleton')
       t.deepEqual(scan4.dependencyIds, [])

@@ -1,15 +1,15 @@
 import { BeanDefinition } from '../BeanDefinition'
 import Bean from '../context/bean/Bean'
-import { Dependency } from './Dependency'
+import { DependencyDefinition } from './DependencyDefinition'
 
 export interface DependencyResolver {
-  isRelevant: (dependency: Dependency) => boolean
+  isRelevant: (dependency: DependencyDefinition) => boolean
   resolve: (
-    dependency: Dependency,
+    dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[],
     ensureDependencyIsPresent: (
-      dependency: Dependency,
+      dependency: DependencyDefinition,
       parentId: string,
       beanDefinitions: BeanDefinition[]
     ) => Promise<void>

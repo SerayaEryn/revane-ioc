@@ -1,4 +1,4 @@
-import { Dependency } from '../src/revane-ioc-core/dependencies/Dependency'
+import { DependencyDefinition } from '../src/revane-ioc-core/dependencies/DependencyDefinition'
 import Loader from '../src/revane-ioc-core/Loader'
 import {
   BeanDefinition,
@@ -12,7 +12,7 @@ export function beanDefinition (id: string, classConstructor: any, dependencyIds
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.scope = Scopes.SINGLETON
   beanDefinition.classConstructor = classConstructor
-  beanDefinition.dependencyIds = dependencyIds.map(it => { return new Dependency('bean', it) })
+  beanDefinition.dependencyIds = dependencyIds.map(it => { return new DependencyDefinition('bean', it) })
   return beanDefinition
 }
 

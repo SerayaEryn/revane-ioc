@@ -1,14 +1,14 @@
 import Bean from './context/bean/Bean'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import { Constructor } from './Constructor'
-import { Dependency } from './dependencies/Dependency'
+import { DependencyDefinition } from './dependencies/DependencyDefinition'
 
 export interface BeanDefinition {
   class: string
   id: string
   uid: string
   type: string
-  dependencyIds: Dependency[]
+  dependencyIds: DependencyDefinition[]
   path: string
   scope: string
   instance?: any

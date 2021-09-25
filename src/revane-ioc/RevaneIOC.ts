@@ -191,6 +191,9 @@ export default class RevaneIOC {
       for (const loader of extension.beanLoaders()) {
         this.revaneCore?.addPlugin('loader', loader)
       }
+      for (const dependencyResolver of extension.dependencyResolvers()) {
+        this.revaneCore?.addPlugin('dependencyResolver', dependencyResolver)
+      }
     }
   }
 

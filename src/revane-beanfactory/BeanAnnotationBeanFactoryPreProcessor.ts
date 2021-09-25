@@ -3,7 +3,7 @@ import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFa
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { BeanAnnotationBeanDefinition } from './BeanAnnotationBeanDefinition'
 import { beansSym } from './Symbols'
-import { Dependency } from '../revane-ioc-core/dependencies/Dependency'
+import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition'
 
 export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   async preProcess (
@@ -20,7 +20,7 @@ export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProc
       const beanDefinition2: BeanDefinition = new BeanAnnotationBeanDefinition(beanFactory.id, beanFactory.propertyKey)
       beanDefinition2.type = beanFactory.type
       beanDefinition2.scope = 'singleton'
-      beanDefinition2.dependencyIds = [new Dependency('bean', beanDefinition.id)]
+      beanDefinition2.dependencyIds = [new DependencyDefinition('bean', beanDefinition.id)]
       createdBeans.push(beanDefinition2)
     }
     return createdBeans

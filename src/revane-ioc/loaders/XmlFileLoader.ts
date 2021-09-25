@@ -6,7 +6,7 @@ import { BeanDefinition } from '../RevaneIOC'
 import { Scopes } from '../../revane-ioc-core/Scopes'
 import { XmlFileLoaderOptions } from './XmlFileLoaderOptions'
 import UnknownEndingError from '../UnknownEndingError'
-import { Dependency } from '../../revane-ioc-core/dependencies/Dependency'
+import { DependencyDefinition } from '../../revane-ioc-core/dependencies/DependencyDefinition'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -121,8 +121,8 @@ export default class XmlFileLoader implements Loader {
     return beanDefinition
   }
 
-  private getProperties (ref: XmlReference): Dependency[] {
-    let properties: Dependency[] = []
+  private getProperties (ref: XmlReference): DependencyDefinition[] {
+    let properties: DependencyDefinition[] = []
     if (ref != null) {
       if (Array.isArray(ref)) {
         properties = ref.map(toReference)
@@ -134,10 +134,10 @@ export default class XmlFileLoader implements Loader {
   }
 }
 
-function toReference (ref: XmlReference): Dependency {
+function toReference (ref: XmlReference): DependencyDefinition {
   if (ref.attr.bean != null) {
-    return new Dependency('bean', ref.attr.bean)
+    return new DependencyDefinition('bean', ref.attr.bean)
   } else {
-    return new Dependency('value', ref.attr.value)
+    return new DependencyDefinition('value', ref.attr.value)
   }
 }

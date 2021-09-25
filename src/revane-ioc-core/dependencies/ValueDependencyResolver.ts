@@ -1,14 +1,14 @@
 import Bean from '../context/bean/Bean'
 import ValueBean from '../context/bean/ValueBean'
 import { DependencyResolver } from './DependecyResolver'
-import { Dependency } from './Dependency'
+import { DependencyDefinition } from './DependencyDefinition'
 
 export class ValueDependencyResolver implements DependencyResolver {
-  public isRelevant (dependency: Dependency): boolean {
+  public isRelevant (dependency: DependencyDefinition): boolean {
     return dependency.type === 'value'
   }
 
-  public async resolve (dependency: Dependency): Promise<Bean> {
+  public async resolve (dependency: DependencyDefinition): Promise<Bean> {
     return new ValueBean(dependency.value)
   }
 }

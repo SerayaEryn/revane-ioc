@@ -4,14 +4,14 @@ import InvalidScopeError from './context/errors/InvalidScopeError'
 import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
 import { Constructor } from './Constructor'
 import { uid } from '../revane-utils/Random'
-import { Dependency } from './dependencies/Dependency'
+import { DependencyDefinition } from './dependencies/DependencyDefinition'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string
   public id: string
   public uid: string = uid()
   public type: string
-  public dependencyIds: Dependency[]
+  public dependencyIds: DependencyDefinition[]
   public path: string
   public scope: string
   public instance?: any

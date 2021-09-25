@@ -10,7 +10,7 @@ import { BeanFactoryPreProcessor } from './preProcessors/BeanFactoryPreProcessor
 import { BeanDefinition } from './BeanDefinition'
 import { RethrowableError } from './RethrowableError'
 import { DependencyService } from './dependencies/DependencyService'
-import { Dependency } from './dependencies/Dependency'
+import { DependencyDefinition } from './dependencies/DependencyDefinition'
 
 export class BeanFactory {
   private readonly preProcessors: BeanFactoryPreProcessor[]
@@ -109,7 +109,7 @@ export class BeanFactory {
   }
 
   private async registerDependency (
-    dependency: Dependency,
+    dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<void> {

@@ -17,7 +17,7 @@ import RegexFilter from './RegexFilter'
 import { recursiveReaddir } from './RecursiveReadDir'
 import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
 import { ModuleLoadError } from './ModuleLoadError'
-import { Dependency } from '../revane-ioc-core/dependencies/Dependency'
+import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition'
 
 const filterByType = {
   regex: RegexFilter
@@ -109,7 +109,8 @@ function getBeanDefinition (key: string | null, module1: any, clazz: any): Defau
   const id = Reflect.getMetadata(idSym, module1)
   const type = Reflect.getMetadata(typeSym, module1)
   const scope = Reflect.getMetadata(scopeSym, module1) ?? Scopes.SINGLETON
-  const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(toReference)
+  const dependencyTypes = Reflect.getMetadata('revane:dependency-types', module1) ?? []
+  const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(it => toReference(it, dependencyTypes))
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.class = clazz
   beanDefinition.dependencyIds = dependencies
@@ -119,8 +120,8 @@ function getBeanDefinition (key: string | null, module1: any, clazz: any): Defau
   return beanDefinition
 }
 
-function toReference (id: string): Dependency {
-  return new Dependency('bean', id)
+function toReference (id: string, dependencyTypes: any): DependencyDefinition {
+  return new DependencyDefinition('bean', id)
 }
 
 function filterByJavascriptFiles (files: string[]): string[] {

@@ -2,21 +2,21 @@ import { BeanDefinition } from '../BeanDefinition'
 import Bean from '../context/bean/Bean'
 import { DefaultApplicationContext } from '../DefaultApplicationContext'
 import { DependencyResolver } from './DependecyResolver'
-import { Dependency } from './Dependency'
+import { DependencyDefinition } from './DependencyDefinition'
 
 export class BeanDependencyResolver implements DependencyResolver {
   constructor (private readonly context: DefaultApplicationContext) {}
 
-  public isRelevant (dependency: Dependency): boolean {
+  public isRelevant (dependency: DependencyDefinition): boolean {
     return dependency.type === 'bean'
   }
 
   public async resolve (
-    dependency: Dependency,
+    dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[],
     registerDependency: (
-      dependency: Dependency,
+      dependency: DependencyDefinition,
       parentId: string,
       beanDefinitions: BeanDefinition[]
     ) => Promise<void>

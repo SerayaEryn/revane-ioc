@@ -54,10 +54,13 @@ export default class RevaneIOCCore {
       this.beanTypeRegistry,
       this.options,
       this.plugins,
-      new DependencyService(([
-        new BeanDependencyResolver(this.context as DefaultApplicationContext),
-        new ValueDependencyResolver()
-      ] as DependencyResolver[]).concat(this.plugins.get('dependencyResolver') as DependencyResolver[] ?? []))
+      new DependencyService(
+        ([
+          new BeanDependencyResolver(this.context as DefaultApplicationContext),
+          new ValueDependencyResolver()
+        ] as DependencyResolver[])
+          .concat(this.plugins.get('dependencyResolver') as DependencyResolver[] ?? [])
+      )
     )
     const loaders: Loader[] = this.plugins.get('loader') as Loader[] ?? []
     const beanLoader = new BeanLoader(loaders)
