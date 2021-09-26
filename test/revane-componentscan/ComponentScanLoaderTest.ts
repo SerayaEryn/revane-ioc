@@ -19,13 +19,28 @@ test('should do component scan without filters', async (t): Promise<void> => {
       t.is(scan1.scope, 'singleton')
       const scan2 = findDefinition(beanDefinitions, 'scan2')
       t.is(scan2.scope, 'singleton')
-      t.deepEqual(scan1.dependencyIds, [new DependencyDefinition('bean', 'test6')])
+      t.deepEqual(scan1.dependencyIds, [new DependencyDefinition('bean', 'test6', Object)])
       const scan3 = findDefinition(beanDefinitions, 'scan3')
       t.is(scan3.scope, 'singleton')
-      t.deepEqual(scan3.dependencyIds, [new DependencyDefinition('bean', 'test6')])
+      t.deepEqual(scan3.dependencyIds, [new DependencyDefinition('bean', 'test6', Object)])
       const scan4 = findDefinition(beanDefinitions, 'scan4')
       t.is(scan4.scope, 'singleton')
       t.deepEqual(scan4.dependencyIds, [])
+    })
+})
+
+test('should do component scan and inject by type', async (t): Promise<void> => {
+  const basePackage = join(__dirname, '../../testdata/injectByType')
+  const options = new ComponentScanLoaderOptions(basePackage, null, null)
+
+  const componentScanResolver = new ComponentScanLoader()
+  return await componentScanResolver.load([options])
+    .then((beanDefinitions) => {
+      t.is(beanDefinitions.length, 2)
+      const scan1 = findDefinition(beanDefinitions, 'test1')
+      t.is(scan1.scope, 'singleton')
+      const scan2 = findDefinition(beanDefinitions, 'test2')
+      t.is(scan2.scope, 'singleton')
     })
 })
 

@@ -16,7 +16,8 @@
       "es2018",
       "es2019"
     ],
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src/**/*",

@@ -53,7 +53,7 @@ export class BeanFactory {
         throw new BeanDefinedTwiceError(exitingBeanDefininaton.id)
       }
       processedBeanDefinitions.set(preProcessedBeanDefinition.id, preProcessedBeanDefinition)
-      if (!await this.context.has(preProcessedBeanDefinition.id)) {
+      if (!await this.context.hasById(preProcessedBeanDefinition.id)) {
         const bean = await this.registerBean(preProcessedBeanDefinition, preprocessed)
         this.context.put([bean])
       }
@@ -113,20 +113,19 @@ export class BeanFactory {
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<void> {
-    const id = dependency.value as string
     try {
-      await this.findAndRegisterBean(id, parentId, beanDefinitions)
+      await this.findAndRegisterBean(dependency, parentId, beanDefinitions)
     } catch (err) {
-      this.throwDependencyError(err, id)
+      this.throwDependencyError(err, dependency.value)
     }
   }
 
   private async findAndRegisterBean (
-    id: string,
+    dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): Promise<void> {
-    const beanDefinition = this.findEntry(id, parentId, beanDefinitions)
+    const beanDefinition = this.findEntry(dependency, parentId, beanDefinitions)
     const bean = await this.registerBean(beanDefinition, beanDefinitions)
     this.context.put([bean])
   }
@@ -139,16 +138,16 @@ export class BeanFactory {
   }
 
   private findEntry (
-    id: string,
+    dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[]
   ): BeanDefinition {
     for (const entry of beanDefinitions) {
-      if (entry.id === id) {
+      if (entry.id === dependency.value || entry.classConstructor === dependency.classType) {
         return entry
       }
     }
-    throw new DependencyNotFoundError(id, parentId)
+    throw new DependencyNotFoundError(dependency.value, parentId)
   }
 
   private throwDependencyError (err: Error | RethrowableError, id: string): void {

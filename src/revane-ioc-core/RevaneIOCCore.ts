@@ -68,18 +68,18 @@ export default class RevaneIOCCore {
     await beanFactory.process(beanDefinitions.flat())
   }
 
-  public async get (id: string): Promise<any> {
-    return await this.context.get(id)
+  public async getById (id: string): Promise<any> {
+    return await this.context.getById(id)
   }
 
-  public async has (id: string): Promise<boolean> {
-    return await this.context.has(id)
+  public async hasById (id: string): Promise<boolean> {
+    return await this.context.hasById(id)
   }
 
-  public async getMultiple (ids: string[]): Promise<any[]> {
+  public async getMultipleById (ids: string[]): Promise<any[]> {
     const beans: any[] = []
     for (const id of ids) {
-      const bean = await this.get(id)
+      const bean = await this.getById(id)
       beans.push(bean)
     }
     return beans

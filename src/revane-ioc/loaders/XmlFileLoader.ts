@@ -136,8 +136,8 @@ export default class XmlFileLoader implements Loader {
 
 function toReference (ref: XmlReference): DependencyDefinition {
   if (ref.attr.bean != null) {
-    return new DependencyDefinition('bean', ref.attr.bean)
+    return new DependencyDefinition('bean', ref.attr.bean, null)
   } else {
-    return new DependencyDefinition('value', ref.attr.value)
+    return new DependencyDefinition('value', ref.attr.value, null)
   }
 }

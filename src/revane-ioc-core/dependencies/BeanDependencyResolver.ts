@@ -22,12 +22,29 @@ export class BeanDependencyResolver implements DependencyResolver {
     ) => Promise<void>
   ): Promise<Bean> {
     const id = dependency.value as string
+    const classType = dependency.classType
     if (id == null) {
       throw new Error()
     }
-    if (!(await this.context.has(id))) {
-      await registerDependency(dependency, parentId, beanDefinitions)
+    if (classType != null && this.isClass(classType)) {
+      if (!(await this.context.hasByClassType(classType))) {
+        await registerDependency(dependency, parentId, beanDefinitions)
+      }
+      return await this.context.getBeanByClassType(classType)
+    } else {
+      if (!(await this.context.hasById(id))) {
+        await registerDependency(dependency, parentId, beanDefinitions)
+      }
+      return await this.context.getBeanById(id)
     }
-    return await this.context.getBean(id)
+  }
+
+  public isClass (classType: any): boolean {
+    try {
+      Object.defineProperty(classType, 'prototype', { writable: true })
+      return false
+    } catch (err) {
+      return typeof classType === 'function'
+    }
   }
 }

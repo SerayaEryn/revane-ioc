@@ -229,26 +229,6 @@ test('should create bean for module', async (t) => {
   t.truthy(bean)
 })
 
-test('should create bean for module with value', async (t) => {
-  const options = new Options(
-    join(__dirname, '../../testdata'),
-    []
-  )
-  options.loaderOptions = [
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config4.xml'))
-  ]
-  options.configuration = { disabled: true }
-  options.profile = 'test'
-  const revane = new Revane(options)
-  await revane.initialize()
-
-  const bean = await revane.get('xml2')
-  const bean2 = await revane.get('xml3')
-  t.truthy(bean)
-  t.truthy(bean2)
-  t.is(bean.xml1, 'xml1')
-})
-
 test('should tearDown', async (t) => {
   const options = new Options(
     join(__dirname, '../../testdata'),

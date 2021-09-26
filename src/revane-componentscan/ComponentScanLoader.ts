@@ -109,7 +109,9 @@ function getBeanDefinition (key: string | null, module1: any, clazz: any): Defau
   const type = Reflect.getMetadata(typeSym, module1)
   const scope = Reflect.getMetadata(scopeSym, module1) ?? Scopes.SINGLETON
   const dependencyTypes = Reflect.getMetadata('revane:dependency-types', module1) ?? []
-  const dependencies = Reflect.getMetadata(dependenciesSym, module1).map(it => toReference(it, dependencyTypes))
+  const dependencyClassTypes = Reflect.getMetadata('design:paramtypes', module1) ?? []
+  const dependencies = Reflect.getMetadata(dependenciesSym, module1)
+    .map((it, index) => toReference(it, dependencyTypes, dependencyClassTypes[index]))
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.class = clazz
   beanDefinition.dependencyIds = dependencies
@@ -119,8 +121,8 @@ function getBeanDefinition (key: string | null, module1: any, clazz: any): Defau
   return beanDefinition
 }
 
-function toReference (id: string, dependencyTypes: any): DependencyDefinition {
-  return new DependencyDefinition('bean', id)
+function toReference (id: string, dependencyTypes: any, classType: any): DependencyDefinition {
+  return new DependencyDefinition('bean', id, classType)
 }
 
 function filterByJavascriptFiles (files: string[]): string[] {

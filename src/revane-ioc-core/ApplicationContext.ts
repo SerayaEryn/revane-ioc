@@ -1,9 +1,12 @@
 import Bean from './context/bean/Bean'
 
 export interface ApplicationContext {
-  get: (id: string) => Promise<any>
-  getBean: (id: string) => Promise<Bean>
-  has: (id: string) => Promise<boolean>
+  getById: (id: string) => Promise<any>
+  getByClassType: (id: string) => Promise<any>
+  getBeanById: (id: string) => Promise<Bean>
+  getBeanByClassType: (id: string) => Promise<Bean>
+  hasById: (id: string) => Promise<boolean>
+  hasByClassType: (classType: any) => Promise<boolean>
   getByType: (type: string) => Promise<any[]>
   setParent: (context: ApplicationContext) => void
   close: () => Promise<void>

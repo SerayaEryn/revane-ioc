@@ -20,7 +20,7 @@ export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProc
       const beanDefinition2: BeanDefinition = new BeanAnnotationBeanDefinition(beanFactory.id, beanFactory.propertyKey)
       beanDefinition2.type = beanFactory.type
       beanDefinition2.scope = 'singleton'
-      beanDefinition2.dependencyIds = [new DependencyDefinition('bean', beanDefinition.id)]
+      beanDefinition2.dependencyIds = [new DependencyDefinition('bean', beanDefinition.id, null)]
       createdBeans.push(beanDefinition2)
     }
     return createdBeans

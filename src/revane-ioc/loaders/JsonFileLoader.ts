@@ -48,9 +48,9 @@ export default class JsonFileLoader implements Loader {
     return (rawBeanDefinition.properties ?? [])
       .map((property) => {
         if (property.ref != null) {
-          return new DependencyDefinition('bean', property.ref)
+          return new DependencyDefinition('bean', property.ref, null)
         } else {
-          return new DependencyDefinition('value', property.value)
+          return new DependencyDefinition('value', property.value, null)
         }
       })
   }

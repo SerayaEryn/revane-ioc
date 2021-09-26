@@ -1,3 +1,4 @@
+import { Constructor } from '../../revane-ioc-core/Constructor'
 import Bean from '../../revane-ioc-core/context/bean/Bean'
 import { BeanDefinition } from '../RevaneIOC'
 
@@ -11,6 +12,10 @@ export default abstract class AbstractBean implements Bean {
 
   public type (): string {
     return this.beanDefinition.type
+  }
+
+  public classType (): Constructor | undefined {
+    return this.beanDefinition.classConstructor
   }
 
   public abstract id (): string

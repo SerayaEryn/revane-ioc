@@ -38,9 +38,13 @@ import { LoggingExtension } from '../revane-logging/LoggingExtension'
 import { BeanFactoryExtension } from '../revane-beanfactory/BeanFactoryExtension'
 import { Scopes } from '../revane-ioc-core/Scopes'
 import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
-import { ComponentScanExtension } from '../revane-componentscan/ComponentScanExtension'
+import { XmlFileLoaderOptions } from './loaders/XmlFileLoaderOptions'
+import { JsonFileLoaderOptions } from './loaders/JsonFileLoaderOptions'
+import 'reflect-metadata'
 import {
   Component,
+  ComponentScanExtension,
+  ComponentScanLoaderOptions,
   Configuration,
   Controller,
   ControllerAdvice,
@@ -48,11 +52,7 @@ import {
   Scheduler,
   Scope,
   Service
-} from '../revane-componentscan/Decorators'
-import { XmlFileLoaderOptions } from './loaders/XmlFileLoaderOptions'
-import { ComponentScanLoaderOptions } from '../revane-componentscan/ComponentScanLoaderOptions'
-import { JsonFileLoaderOptions } from './loaders/JsonFileLoaderOptions'
-import 'reflect-metadata'
+} from '../revane-componentscan/RevaneConponentScan'
 
 export {
   BeanDefinition,
@@ -135,17 +135,17 @@ export default class RevaneIOC {
 
   public async get (id: string): Promise<any> {
     this.checkIfInitialized()
-    return await this.revaneCore.get(id)
+    return await this.revaneCore.getById(id)
   }
 
   public async has (id: string): Promise<boolean> {
     this.checkIfInitialized()
-    return await this.revaneCore.has(id)
+    return await this.revaneCore.hasById(id)
   }
 
   public async getMultiple (ids: string[]): Promise<any[]> {
     this.checkIfInitialized()
-    return await this.revaneCore.getMultiple(ids)
+    return await this.revaneCore.getMultipleById(ids)
   }
 
   public async getByType (type: string): Promise<any[]> {

@@ -1,3 +1,5 @@
+import { Constructor } from '../../Constructor'
+
 export default interface Bean {
   scope: string
   id: () => string
@@ -6,4 +8,5 @@ export default interface Bean {
   postConstruct: () => Promise<any>
   preDestroy: () => Promise<any>
   type: () => string
+  classType: () => Constructor | undefined
 }

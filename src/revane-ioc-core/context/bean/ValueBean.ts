@@ -1,4 +1,5 @@
 import { uid } from '../../../revane-utils/Random'
+import { Constructor } from '../../Constructor'
 import Bean from './Bean'
 
 export default class ValueBean implements Bean {
@@ -7,6 +8,10 @@ export default class ValueBean implements Bean {
 
   constructor (value: any) {
     this.value = value
+  }
+
+  public classType (): Constructor | undefined {
+    return undefined
   }
 
   public id (): string {

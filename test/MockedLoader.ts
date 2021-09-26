@@ -12,7 +12,7 @@ export function beanDefinition (id: string, classConstructor: any, dependencyIds
   const beanDefinition = new DefaultBeanDefinition(id)
   beanDefinition.scope = Scopes.SINGLETON
   beanDefinition.classConstructor = classConstructor
-  beanDefinition.dependencyIds = dependencyIds.map(it => { return new DependencyDefinition('bean', it) })
+  beanDefinition.dependencyIds = dependencyIds.map(it => { return new DependencyDefinition('bean', it, null) })
   return beanDefinition
 }
 
