@@ -1,5 +1,2 @@
-export default class Scan1 {
-  constructor () {
-    // ...
-  }
-}
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
+export default class Scan1 {}

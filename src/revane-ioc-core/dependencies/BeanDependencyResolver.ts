@@ -26,7 +26,7 @@ export class BeanDependencyResolver implements DependencyResolver {
     if (id == null) {
       throw new Error()
     }
-    if (classType != null && this.isClass(classType)) {
+    if (classType != null && this.isClass(classType) && classType !== Object) {
       if (!(await this.context.hasByClassType(classType))) {
         await registerDependency(dependency, parentId, beanDefinitions)
       }
