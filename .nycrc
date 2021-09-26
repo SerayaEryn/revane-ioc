@@ -23,7 +23,8 @@
       "bin/src/revane-configuration/BeanDefinition.js",
       "bin/src/revane-logging/LogFactory.js",
       "bin/src/revane-ioc-core/Constructor.js",
-      "bin/src/revane-scheduler/Options.js"
+      "bin/src/revane-scheduler/Options.js",
+      "bin/src/revane-ioc-core/dependencies/DependencyResolver.js"
   ],
   "reporter": [
     "lcov",

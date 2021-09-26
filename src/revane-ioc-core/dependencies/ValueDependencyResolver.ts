@@ -1,6 +1,6 @@
 import Bean from '../context/bean/Bean'
 import ValueBean from '../context/bean/ValueBean'
-import { DependencyResolver } from './DependecyResolver'
+import { DependencyResolver } from './DependencyResolver'
 import { DependencyDefinition } from './DependencyDefinition'
 
 export class ValueDependencyResolver implements DependencyResolver {

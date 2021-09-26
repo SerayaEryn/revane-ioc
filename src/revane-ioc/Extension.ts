@@ -1,4 +1,4 @@
-import { DependencyResolver } from '../revane-ioc-core/dependencies/DependecyResolver'
+import { DependencyResolver } from '../revane-ioc-core/dependencies/DependencyResolver'
 import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
 import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
 import { Loader, RevaneConfiguration } from './RevaneIOC'

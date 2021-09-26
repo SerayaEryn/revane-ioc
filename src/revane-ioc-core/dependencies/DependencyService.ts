@@ -1,5 +1,5 @@
 import { BeanDefinition } from '../BeanDefinition'
-import { DependencyResolver } from './DependecyResolver'
+import { DependencyResolver } from './DependencyResolver'
 import { DependencyDefinition } from './DependencyDefinition'
 import UnknownDependencyType from './UnknownDependencyType'
 

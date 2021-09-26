@@ -1,7 +1,7 @@
 import { BeanDefinition } from '../BeanDefinition'
 import Bean from '../context/bean/Bean'
 import { DefaultApplicationContext } from '../DefaultApplicationContext'
-import { DependencyResolver } from './DependecyResolver'
+import { DependencyResolver } from './DependencyResolver'
 import { DependencyDefinition } from './DependencyDefinition'
 
 export class BeanDependencyResolver implements DependencyResolver {

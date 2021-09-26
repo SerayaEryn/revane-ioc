@@ -16,7 +16,7 @@ import { ConditionalsBeanFactoryPreProcessor } from './preProcessors/Conditional
 import { DependencyService } from './dependencies/DependencyService'
 import { BeanDependencyResolver } from './dependencies/BeanDependencyResolver'
 import { ValueDependencyResolver } from './dependencies/ValueDependencyResolver'
-import { DependencyResolver } from './dependencies/DependecyResolver'
+import { DependencyResolver } from './dependencies/DependencyResolver'
 
 export default class RevaneIOCCore {
   protected options: Options
