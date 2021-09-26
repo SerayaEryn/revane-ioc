@@ -1,13 +1,12 @@
 import { Loader, LoaderOptions, BeanDefinition } from '../revane-ioc/RevaneIOC'
 import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
 import { DefaultLogFactory } from './DefaultLogFactory'
-import { LoggingOptions } from './LoggingOptions'
 
 export class LoggingLoader implements Loader {
   private readonly logFactory: DefaultLogFactory
 
-  constructor (options: LoggingOptions) {
-    this.logFactory = new DefaultLogFactory(options)
+  constructor (logFactory: DefaultLogFactory) {
+    this.logFactory = logFactory
   }
 
   async load (

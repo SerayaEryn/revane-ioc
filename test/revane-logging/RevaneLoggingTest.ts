@@ -1,7 +1,29 @@
 import * as path from 'path'
 import test from 'ava'
-import RevaneIoc, { BeanFactoryExtension, LogFactory, LoggingExtension, Options } from '../../src/revane-ioc/RevaneIOC'
+import RevaneIoc, { BeanFactoryExtension, ComponentScanExtension, ComponentScanLoaderOptions, LogFactory, LoggingExtension, Options } from '../../src/revane-ioc/RevaneIOC'
 import { LoggingLoader } from '../../src/revane-logging/LoggingLoader'
+import { join } from 'path'
+
+test('should inject logger', async (t) => {
+  const options = new Options(
+    join(__dirname, '../../testdata'),
+    [new ComponentScanExtension(), new LoggingExtension()]
+  )
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(
+      join(__dirname, '../../testdata/logging6'),
+      [],
+      []
+    )
+  ]
+  options.configuration = { disabled: true }
+  options.profile = 'test'
+  const revane = new RevaneIoc(options)
+  await revane.initialize()
+
+  const bean1 = await revane.get('test1')
+  t.true(bean1.logger != null)
+})
 
 test('should disable logging', async (t) => {
   const options = new Options(
@@ -32,8 +54,6 @@ test('should log to file', async (t) => {
 })
 
 test('should log to file if a path was given', async (t) => {
-  // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-  class Test {}
   const options = new Options(
     path.join(__dirname, '../../../testdata/logging3'),
     [new LoggingExtension()]
@@ -46,7 +66,7 @@ test('should log to file if a path was given', async (t) => {
 
   t.true(await revane.has('logFactory'))
   const logFactory: LogFactory = await revane.get('logFactory')
-  const logger = logFactory.getInstance(Test)
+  const logger = logFactory.getInstance('test')
   t.truthy(logger)
   t.is(logger.getLevel(), 'INFO')
 })
@@ -65,12 +85,10 @@ test('should create logger bean', async (t) => {
   const revane = new RevaneIoc(options)
   await revane.initialize()
 
-  t.true(await revane.has('logger'))
+  t.true(await revane.has('rootLogger'))
 })
 
 test('should use rootLevel', async (t) => {
-  // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-  class Test {}
   const options = new Options(
     path.join(__dirname, '../../../testdata/logging4'),
     [new LoggingExtension()]
@@ -83,17 +101,12 @@ test('should use rootLevel', async (t) => {
 
   t.true(await revane.has('logFactory'))
   const logFactory: LogFactory = await revane.get('logFactory')
-  const logger = logFactory.getInstance(Test)
+  const logger = logFactory.getInstance('test')
   t.truthy(logger)
   t.is(logger.getLevel(), 'WARN')
 })
 
 test('should use level for class', async (t) => {
-  // eslint-disable-next-line @typescript-eslint/no-extraneous-class
-  class Test {
-    // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-    constructor () {}
-  }
   const options = new Options(
     path.join(__dirname, '../../../testdata/logging5'),
     [new LoggingExtension()]
@@ -106,7 +119,7 @@ test('should use level for class', async (t) => {
 
   t.true(await revane.has('logFactory'))
   const logFactory: LogFactory = await revane.get('logFactory')
-  const logger = logFactory.getInstance(Test)
+  const logger = logFactory.getInstance('test')
   t.truthy(logger)
   t.is(logger.getLevel(), 'DEBUG')
 })

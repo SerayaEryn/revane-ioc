@@ -1,46 +1,39 @@
 import { LogFactory } from './LogFactory'
 import {
-  createLogger, ConsoleTransport, Logger, SimpleFormat, Transport
+  createLogger, ConsoleTransport, Logger, SimpleFormat, Transport, JsonFormat
 } from 'apheleia'
 import { LoggingOptions } from './LoggingOptions'
 import { createWriteStream } from 'fs'
 import { join } from 'path'
-import { Parser } from 'acorn'
-import * as classFields from 'acorn-class-fields'
 import { Bean } from '../revane-ioc/RevaneIOC'
 
-type Class = new(...args: any[]) => any
-
 export class DefaultLogFactory implements LogFactory {
-  private readonly rootLogger: Logger
+  private readonly rootLogger1: Logger
 
   constructor (private readonly options: LoggingOptions) {
-    this.rootLogger = createLogger({
+    this.rootLogger1 = createLogger({
       transports: this.transports(),
       level: options.rootLevel
     })
-    this.rootLogger.info('Starting Revane application...')
+    this.rootLogger1.info('Starting Revane application...')
   }
 
-  public getInstance (clazz: Class): Logger {
-    const className = clazz.constructor.name
-    const id = getId(getSyntaxTree(clazz))
-    const logger = this.rootLogger.child({ className })
+  public getInstance (id: string): Logger {
+    const logger = this.rootLogger1.child({ beanId: id })
     logger.setLevel(this.options.levels[id] ?? this.options.rootLevel)
     return logger
   }
 
   @Bean
-  public logger (): Logger {
-    return this.rootLogger
+  public rootLogger (): Logger {
+    return this.rootLogger1
   }
 
   private transports (): Transport[] {
     const { file, path, basePackage } = this.options
+    const format = this.options.format === 'JSON' ? new JsonFormat() : new SimpleFormat()
     const transports = [
-      new ConsoleTransport({
-        format: new SimpleFormat()
-      } as any)
+      new ConsoleTransport({ format } as any)
     ]
     if (file != null) {
       transports.push(this.transportFromFile(file, basePackage))
@@ -53,14 +46,16 @@ export class DefaultLogFactory implements LogFactory {
 
   private transportFromFile (file: string, basePackage: string): Transport {
     const path = this.isRelative(file) ? join(basePackage, file) : file
+    const format = this.options.format === 'JSON' ? new JsonFormat() : new SimpleFormat()
     return new Transport({
       stream: createWriteStream(path),
-      format: new SimpleFormat()
+      format
     })
   }
 
   private transportFromPath (path: string, basePackage: string): Transport {
     let absolutePath: string
+    const format = this.options.format === 'JSON' ? new JsonFormat() : new SimpleFormat()
     if (this.isRelative(path)) {
       absolutePath = join(basePackage, path, 'revane.log')
     } else {
@@ -68,23 +63,11 @@ export class DefaultLogFactory implements LogFactory {
     }
     return new Transport({
       stream: createWriteStream(absolutePath),
-      format: new SimpleFormat()
+      format
     })
   }
 
   private isRelative (file: string): boolean {
     return !file.startsWith('/')
   }
-}
-
-function getSyntaxTree (Class): any {
-  const functionAsString = Class.toString()
-  return Parser.extend(classFields).parse(
-    functionAsString, { ecmaVersion: 2020 }
-  )
-}
-
-function getId (tree): string {
-  const className: string = tree.body[0].id.name
-  return className.substring(0, 1).toLowerCase() + className.substring(1)
 }

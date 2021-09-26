@@ -53,6 +53,7 @@ import {
   Scope,
   Service
 } from '../revane-componentscan/RevaneConponentScan'
+import { DependencyResolver } from '../revane-ioc-core/dependencies/DependencyResolver'
 
 export {
   BeanDefinition,
@@ -90,7 +91,8 @@ export {
   LoggingExtension,
   BeanFactoryExtension,
   Scopes,
-  ComponentScanExtension
+  ComponentScanExtension,
+  DependencyResolver
 }
 
 export default class RevaneIOC {
