@@ -24,7 +24,7 @@
     "acorn": "^8.1.0",
     "acorn-class-fields": "^1.0.0",
     "apheleia": "^3.0.0",
-    "cron": "^1.8.2",
+    "cron": "^2.1.0",
     "fast-xml-parser": "^3.12.5",
     "js-yaml": "^4.0.0",
     "reflect-metadata": "^0.1.13",
