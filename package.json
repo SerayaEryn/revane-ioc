@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/express": "^4.11.1",
     "@types/node": "^16.4.0",
-    "ava": "^3.12.1",
+    "ava": "^5.2.0",
     "nyc": "^15.0.0",
     "ts-node": "^10.0.0",
     "ts-standard": "^10.0.0",
