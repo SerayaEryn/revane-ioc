@@ -4,6 +4,7 @@ import RevaneIOC, { BeanDefinition, ComponentScanExtension, Options } from '../.
 import { ComponentScanLoaderOptions } from '../../src/revane-componentscan/ComponentScanLoaderOptions'
 import ComponentScanLoader from '../../src/revane-componentscan/ComponentScanLoader'
 import { DependencyDefinition } from '../../src/revane-ioc-core/dependencies/DependencyDefinition'
+import { Configuration } from '../../src/revane-configuration/Configuration'
 
 test('should do component scan without filters', async (t): Promise<void> => {
   t.plan(8)
@@ -173,7 +174,7 @@ test('should use auto configuration and execute componentscan', async (t) => {
   options.autoConfiguration = true
   const revane = new RevaneIOC(options)
   await revane.initialize()
-  const configuration = await revane.get('configuration')
+  const configuration = await revane.get('configuration') as Configuration
   await revane.get('test')
   t.true(configuration.get('test'))
 })

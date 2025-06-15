@@ -3,7 +3,7 @@ import { Constructor } from '../../Constructor'
 import Bean from './Bean'
 
 export default class ValueBean implements Bean {
-  public scope: string = 'value'
+  public scope = 'value'
   private readonly value: any
 
   constructor (value: any) {

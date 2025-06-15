@@ -29,6 +29,7 @@ export class MockedExtension extends Extension {
 class MockedLoader implements Loader {
   constructor (private readonly beanDefinitions: BeanDefinition[]) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async load (options: LoaderOptions[]): Promise<BeanDefinition[]> {
     return this.beanDefinitions
   }

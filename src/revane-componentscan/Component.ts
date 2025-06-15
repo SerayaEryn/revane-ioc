@@ -1,6 +1,5 @@
 import Options from '../revane-ioc/decorators/Options'
 import { Parser } from 'acorn'
-import * as classFields from 'acorn-class-fields'
 import { dependenciesSym, idSym, typeSym } from './Symbols'
 
 export function createComponentDecorator (type: string) {
@@ -44,8 +43,8 @@ export function createComponentDecorator (type: string) {
 
 function getSyntaxTree (Class): any {
   const functionAsString = Class.toString()
-  return Parser.extend(classFields).parse(
-    functionAsString, { ecmaVersion: 2020 }
+  return Parser.parse(
+    functionAsString, { ecmaVersion: 2023 }
   )
 }
 

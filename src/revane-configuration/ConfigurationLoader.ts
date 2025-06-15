@@ -7,6 +7,7 @@ export class ConfigurationLoader implements Loader {
     this.configuration = configuration
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async load (options: LoaderOptions[]): Promise<BeanDefinition[]> {
     const configuration = new DefaultBeanDefinition('configuration')
     configuration.instance = this.configuration

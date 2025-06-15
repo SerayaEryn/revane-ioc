@@ -4,7 +4,7 @@ import { Extension } from './Extension'
 
 export default class Options {
   public profile?: string
-  public noRedefinition: boolean = true
+  public noRedefinition = true
   public loaderOptions?: LoaderOptions[]
 
   public configuration?: {

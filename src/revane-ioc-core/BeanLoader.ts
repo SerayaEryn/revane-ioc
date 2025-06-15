@@ -6,7 +6,7 @@ export default class BeanLoader {
   constructor (private readonly loaders: Loader[]) {}
 
   public async getBeanDefinitions (options: Options): Promise<BeanDefinition[]> {
-    const promises: Array<Promise<BeanDefinition[]>> = []
+    const promises: Promise<BeanDefinition[]>[] = []
     const loaderOptions = options.loaderOptions
     for (const loader of this.loaders) {
       const loaderOptionsForType = loaderOptions.filter(it => it.type === loader.type())

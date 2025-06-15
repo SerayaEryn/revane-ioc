@@ -11,6 +11,7 @@ export class PropertiesLoadingStrategy implements LoadingStrategy {
     let buffer1: Buffer
     try {
       buffer1 = await readFile(`${configDirectory}/application.properties`)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new ConfigFileNotFound(`${configDirectory}/application.properties`)
     }
@@ -19,6 +20,7 @@ export class PropertiesLoadingStrategy implements LoadingStrategy {
     try {
       const buffer2 = await readFile(`${configDirectory}/application-${profile}.properties`)
       profileConfig = this.parseProperties(replaceEnvironmentVariables(buffer2.toString()))
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (ignore) {
       profileConfig = {}
     }

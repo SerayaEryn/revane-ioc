@@ -10,7 +10,7 @@ import { JsonFileLoaderOptions } from './JsonFileLoaderOptions'
 
 export default class JsonFileLoader implements Loader {
   public async load (options: JsonFileLoaderOptions[]): Promise<BeanDefinition[]> {
-    const promises: Array<Promise<BeanDefinition[]>> = []
+    const promises: Promise<BeanDefinition[]>[] = []
     for (const option of options) {
       promises.push(this.loadJsonFile(option))
     }

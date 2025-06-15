@@ -10,6 +10,7 @@ export class LoggingLoader implements Loader {
   }
 
   async load (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     options: LoaderOptions[]
   ): Promise<BeanDefinition[]> {
     const beanDefinition = new DefaultBeanDefinition('logFactory')

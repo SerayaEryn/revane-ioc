@@ -98,7 +98,7 @@ export {
 export default class RevaneIOC {
   private revaneCore: RevaneCore
   private options: Options
-  private initialized: boolean = false
+  private initialized = false
   private readonly configuration: RevaneConfiguration
 
   constructor (options: Options) {
@@ -109,7 +109,6 @@ export default class RevaneIOC {
 
     const profile = this.options.profile ?? process.env.REVANE_PROFILE ?? 'dev'
     this.options.profile = profile
-
     this.configuration = buildConfiguration(this.options, profile)
   }
 

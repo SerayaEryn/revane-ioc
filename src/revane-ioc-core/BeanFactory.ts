@@ -46,7 +46,7 @@ export class BeanFactory {
         preprocessed = preprocessed.concat(preProcessedBeanDefinitions)
       }
     }
-    const processedBeanDefinitions: Map<string, BeanDefinition> = new Map()
+    const processedBeanDefinitions = new Map<string, BeanDefinition>()
     for (const preProcessedBeanDefinition of preprocessed) {
       const exitingBeanDefininaton = processedBeanDefinitions.get(preProcessedBeanDefinition.id)
       if (exitingBeanDefininaton != null && this.options.noRedefinition !== false) {

@@ -46,6 +46,7 @@ export default class DefaultBeanDefinition implements BeanDefinition {
         writable: true
       })
       return false
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       return typeof this.classConstructor === 'function'
     }

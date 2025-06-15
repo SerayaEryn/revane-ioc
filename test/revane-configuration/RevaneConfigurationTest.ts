@@ -75,6 +75,7 @@ test('Should pass error from strategy', async (t) => {
 })
 
 class TestLoadingStrategy implements LoadingStrategy {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async load (configDirectory: string, profile: string): Promise<object> {
     return {
       test: {
@@ -87,6 +88,7 @@ class TestLoadingStrategy implements LoadingStrategy {
 }
 
 class FailingLoadingStrategy implements LoadingStrategy {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async load (configDirectory: string, profile: string): Promise<object> {
     throw new Error('boooom')
   }

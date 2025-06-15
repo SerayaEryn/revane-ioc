@@ -22,7 +22,7 @@ export default class RevaneIOCCore {
   protected options: Options
   private readonly context: ApplicationContext = new DefaultApplicationContext()
   private readonly beanTypeRegistry: BeanTypeRegistry
-  private readonly plugins: Map<string, Array<Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor | DependencyResolver>> = new Map()
+  private readonly plugins = new Map<string, (Loader | ContextPlugin | BeanFactoryPostProcessor | BeanFactoryPreProcessor | DependencyResolver)[]>()
 
   constructor (options: Options, beanTypeRegistry: BeanTypeRegistry) {
     this.options = options

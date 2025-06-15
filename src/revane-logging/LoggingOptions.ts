@@ -1,7 +1,7 @@
 export class LoggingOptions {
   constructor (
     public rootLevel: string,
-    public levels: { [key: string]: string },
+    public levels: Record<string, string>,
     public basePackage: string,
     public file: string | null,
     public path: string | null,

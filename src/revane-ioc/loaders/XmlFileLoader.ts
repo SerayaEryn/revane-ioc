@@ -50,14 +50,14 @@ interface Xml {
 }
 
 export default class XmlFileLoader implements Loader {
-  static type: string = 'xml'
+  static type = 'xml'
 
   constructor () {
     this.toBeanDefinition = this.toBeanDefinition.bind(this)
   }
 
   public async load (options: XmlFileLoaderOptions[]): Promise<BeanDefinition[]> {
-    const promises: Array<Promise<BeanDefinition[]>> = []
+    const promises: Promise<BeanDefinition[]>[] = []
     for (const option of options) {
       promises.push(this.loadXmlFile(option))
     }

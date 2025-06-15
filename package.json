@@ -2,50 +2,60 @@
   "name": "revane-ioc",
   "version": "2.0.0-rc.15",
   "description": "inversion of control framework",
-  "main": "bin/src/revane-ioc/RevaneIOC.js",
-  "scripts": {
-    "unit": "ava bin/test/**/*",
-    "test": "npm run lint && npm run unit",
-    "lint": "ts-standard -p ./tsconfig.json \"src/**/*\" \"test/**/*\"",
-    "coverage": "npm run compile && nyc npm test",
-    "compile": "tsc -d",
-    "prepublishOnly": "npm run compile -s && eslint bin/** --fix | exit 0"
-  },
-  "engines": {
-    "node": ">=12.13.0"
-  },
-  "author": "Denis Fäcke",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SerayaEryn/revane-ioc.git"
-  },
-  "dependencies": {
-    "acorn": "^8.1.0",
-    "acorn-class-fields": "^1.0.0",
-    "apheleia": "^3.0.0",
-    "cron": "^1.8.2",
-    "fast-xml-parser": "^3.12.5",
-    "js-yaml": "^4.0.0",
-    "reflect-metadata": "^0.1.13",
-    "tslib": "^2.0.0"
-  },
-  "devDependencies": {
-    "@types/express": "^4.11.1",
-    "@types/node": "^16.4.0",
-    "ava": "^3.12.1",
-    "nyc": "^15.0.0",
-    "ts-node": "^10.0.0",
-    "ts-standard": "^10.0.0",
-    "typescript": "^4.0.3"
-  },
   "keywords": [
     "inversion of control",
     "ioc",
     "dependency injection"
   ],
+  "homepage": "https://github.com/SerayaEryn/revane-ioc#readme",
+  "bugs": {
+    "url": "https://github.com/SerayaEryn/revane-ioc/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SerayaEryn/revane-ioc.git"
+  },
+  "license": "MIT",
+  "author": "Denis Fäcke",
+  "type": "commonjs",
+  "main": "bin/src/revane-ioc/RevaneIOC.js",
   "types": "bin/src/revane-ioc/RevaneIOC.d.ts",
+  "directories": {
+    "test": "test"
+  },
   "files": [
     "bin/src"
-  ]
+  ],
+  "scripts": {
+    "unit": "ava bin/test/**/*Test.js",
+    "test": "npm run unit",
+    "lint": "npx eslint .",
+    "coverage": "npm run compile && nyc npm test",
+    "compile": "tsc -d",
+    "prepublishOnly": "npm run compile -s && eslint bin/** --fix | exit 0"
+  },
+  "dependencies": {
+    "acorn": "^8.15.0",
+    "apheleia": "^3.0.0",
+    "cron": "^1.8.2",
+    "fast-xml-parser": "^3.12.5",
+    "js-yaml": "^4.0.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.29.0",
+    "@types/express": "^4.11.1",
+    "@types/node": "^24.0.1",
+    "ava": "^6.4.0",
+    "eslint": "^8.57.1",
+    "nyc": "^15.0.0",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.0",
+    "undici-types": "^7.10.0"
+  },
+  "engines": {
+    "node": ">=24.2.0"
+  }
 }

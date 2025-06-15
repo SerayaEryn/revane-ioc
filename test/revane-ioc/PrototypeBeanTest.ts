@@ -5,12 +5,12 @@ import { DefaultBeanDefinition } from '../../src/revane-ioc/RevaneIOC'
 test('should class postConstruct on instance', async (t) => {
   t.plan(1)
 
-  const Clazz = await import('../../testdata/test6')
+  const Clazz = await import('../../testdata/test6.js')
 
   const beanDefinition = new DefaultBeanDefinition('test')
-  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.classConstructor = Clazz['module.exports']['default'] as any
   beanDefinition.postConstructKey = 'postConstruct'
-  const bean = new PrototypeBean(beanDefinition, async () => {})
+  const bean = new PrototypeBean(beanDefinition)
 
   const instance = await bean.getInstance()
   t.truthy(instance.postConstructed)
@@ -19,11 +19,12 @@ test('should class postConstruct on instance', async (t) => {
 test('should handle missing postConstruct on instance', async (t) => {
   t.plan(1)
 
-  const Clazz = await import('../../testdata/test1')
+  const Clazz = await import('../../testdata/test1.js')
 
   const beanDefinition = new DefaultBeanDefinition('test')
-  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.classConstructor = Clazz.default as any
   beanDefinition.postConstructKey = null
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new PrototypeBean(beanDefinition, async () => {})
 
   t.truthy(await bean.getInstance())
@@ -32,11 +33,12 @@ test('should handle missing postConstruct on instance', async (t) => {
 test('should return Promise on preDestroy()', async (t) => {
   t.plan(1)
 
-  const Clazz = await import('../../testdata/test6')
+  const Clazz = await import('../../testdata/test6.js')
 
   const beanDefinition = new DefaultBeanDefinition('test')
-  beanDefinition.classConstructor = Clazz.default
+  beanDefinition.classConstructor = Clazz.default as any
   beanDefinition.preDestroyKey = 'preDestroy'
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new PrototypeBean(beanDefinition, async () => {})
 
   await bean.preDestroy()
@@ -45,11 +47,12 @@ test('should return Promise on preDestroy()', async (t) => {
 })
 
 test('should return Promise on postConstruct()', async (t) => {
-  const Clazz = await import('../../testdata/test6')
+  const Clazz = await import('../../testdata/test6.js')
 
   const beanDefinition = new DefaultBeanDefinition('test')
   beanDefinition.classConstructor = Clazz as any
   beanDefinition.postConstructKey = 'postConstruct'
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new PrototypeBean(beanDefinition, async () => {})
 
   await bean.postConstruct()

@@ -7,7 +7,7 @@ export default abstract class AbstractBean implements Bean {
 
   constructor (
     protected beanDefinition: BeanDefinition,
-    protected readonly postProcess: (bean: Bean, beanDefinition: BeanDefinition, instance: any) => Promise<void>
+    protected readonly postProcess: (bean: Bean, beanDefinition: BeanDefinition, instance: any) => Promise<void> = async () => {}
   ) {}
 
   public type (): string {
@@ -27,10 +27,10 @@ export default abstract class AbstractBean implements Bean {
     for (const dependency of this.beanDefinition.dependencies) {
       parameters.push(await dependency.getInstance())
     }
-    let instance = null
+    let instance: any = null
     if (this.beanDefinition.isClass()) {
       if (this.beanDefinition.classConstructor == null) {
-        throw new Error('cannot create instance')
+        throw new Error('cannot create instance because constructor is null')
       }
       // eslint-disable-next-line new-cap
       instance = new this.beanDefinition.classConstructor(...parameters)

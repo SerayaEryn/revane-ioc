@@ -1,6 +1,5 @@
 import { configurationPropertiesSym } from './Symbols'
 import { Parser } from 'acorn'
-import * as classFields from 'acorn-class-fields'
 
 export interface ConfigurationPropertiesOptions {
   prefix: string
@@ -38,8 +37,8 @@ export class ConfigurationPropertiesData {
 
 function getSyntaxTree (Class): any {
   const functionAsString = Class.toString()
-  return Parser.extend(classFields).parse(
-    functionAsString, { ecmaVersion: 2020 }
+  return Parser.parse(
+    functionAsString, { ecmaVersion: 2023 }
   )
 }
 

@@ -4,8 +4,8 @@ import NotFoundError from './context/errors/NotFoundError'
 
 export class DefaultApplicationContext implements ApplicationContext {
   private parent: ApplicationContext | null
-  private readonly beansById: Map<string, Bean> = new Map()
-  private readonly beansByType: Map<any, Bean> = new Map()
+  private readonly beansById = new Map<string, Bean>()
+  private readonly beansByType = new Map<any, Bean>()
 
   put (beans: Bean[]): void {
     for (const bean of beans) {

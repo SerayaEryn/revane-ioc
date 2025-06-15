@@ -49,6 +49,6 @@ function isNotNull (value): boolean {
 }
 
 function isRegExpOrDate (value): boolean {
-  var stringValue = Object.prototype.toString.call(value)
+  const stringValue = Object.prototype.toString.call(value)
   return stringValue === '[object RegExp]' || stringValue === '[object Date]'
 }

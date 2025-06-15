@@ -4,6 +4,7 @@ import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFa
 import { Loader, RevaneConfiguration } from './RevaneIOC'
 
 export abstract class Extension {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async initialize (configuration: RevaneConfiguration): Promise<void> {}
 
   public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {

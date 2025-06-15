@@ -30,8 +30,8 @@ test('Should schedule task', async (t) => {
   options.profile = 'test'
   const revane = new RevaneIOC(options)
   await revane.initialize()
-
   await wait()
+  await revane.close()
   t.true((await revane.get('scan56')).executed)
   await revane.close()
 })
@@ -115,6 +115,7 @@ test('Should not schedule tasks', async (t) => {
   options.profile = 'test'
   const revane = new RevaneIOC(options)
   await revane.initialize()
+  await revane.close()
   t.pass()
 })
 
@@ -136,6 +137,7 @@ test('Should handle error in scheduled task', async (t) => {
   await revane.initialize()
   await wait()
   const errorHandler = await revane.get('errorHandler')
+  await revane.close()
   t.true(errorHandler.handledError)
 })
 
@@ -157,6 +159,7 @@ test('Should handle error in scheduled async task', async (t) => {
   await revane.initialize()
   await wait()
   const errorHandler = await revane.get('errorHandler')
+  await revane.close()
   t.true(errorHandler.handledError)
 })
 
@@ -176,18 +179,23 @@ test('Should handle error in scheduled task with default handler', async (t) => 
   const revane = new RevaneIOC(options)
   await revane.initialize()
   await wait()
+  await revane.close()
   t.pass()
 })
 
 test('schedulerLoader should return correct type', (t) => {
+  const scheduler = new TaskScheduler()
   const loader = new SchedulerLoader(
-    new TaskScheduler()
+    scheduler
   )
+
+  scheduler.close()
+  
   t.is(loader.type(), 'taskScheduler')
 })
 
 async function wait (): Promise<void> {
   return await new Promise((resolve) => {
-    setTimeout(resolve, 1100)
+    setTimeout(resolve, 1000)
   })
 }

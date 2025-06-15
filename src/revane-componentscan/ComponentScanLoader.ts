@@ -24,7 +24,7 @@ const filterByType = {
 
 export default class ComponentScanLoader implements Loader {
   public async load (options: ComponentScanLoaderOptions[]): Promise<BeanDefinition[]> {
-    const promises: Array<Promise<BeanDefinition[]>> = []
+    const promises: Promise<BeanDefinition[]>[] = []
     for (const option of options) {
       promises.push(this.scan(option))
     }
@@ -97,7 +97,7 @@ export default class ComponentScanLoader implements Loader {
 }
 
 function getModuleMap (requiredFile: any): Map<string, any> {
-  const moduleMap: Map<string, any> = new Map()
+  const moduleMap = new Map<string, any>()
   for (const key of Object.keys(requiredFile)) {
     moduleMap.set(key, requiredFile[key])
   }

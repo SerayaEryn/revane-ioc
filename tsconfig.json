@@ -3,19 +3,14 @@
     "outDir": "./bin/",
     "sourceMap": false,
     "noImplicitAny": false,
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "removeComments": true,
-    "target": "ES2019",
-    "importHelpers": true,
+    "target": "ES2023",
+    "importHelpers": false,
     "alwaysStrict": true,
     "resolveJsonModule": true,
     "strictNullChecks": true,
-    "lib": [
-      "es2016",
-      "es2017",
-      "es2018",
-      "es2019"
-    ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
@@ -29,10 +24,11 @@
     "testdata/componentScan2/node_modules/**/*.json",
     "testdata/componentScan3/node_modules/**/*",
     "testdata/componentScan3/node_modules/**/*.json",
-    "testdata/**/*.json"
+    "testdata/**/*.json",
   ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
-  ]
+  ],
+  "types": ["reflect-metadata"]
 }

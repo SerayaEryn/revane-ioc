@@ -11,7 +11,7 @@ export class ConfigurationPropertiesPostProcessor implements BeanFactoryPostProc
   }
 
   async postProcess (beanDefinition: BeanDefinition, bean: Bean, instance: any): Promise<void> {
-    const values: { [key: string]: any } = {}
+    const values: Record<string, any> = {}
     if (this.configuration != null) {
       const { configurationProperties } = beanDefinition
       if (configurationProperties != null) {

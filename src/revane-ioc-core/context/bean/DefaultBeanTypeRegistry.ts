@@ -1,7 +1,7 @@
 import BeanTypeRegistry from './BeanTypeRegistry'
 
 export default class DefaultBeanTypeRegistry implements BeanTypeRegistry {
-  private typesByScope: Map<string, any> = new Map()
+  private typesByScope = new Map<string, any>()
 
   public register (beanType: any): void {
     this.typesByScope[beanType.scope] = beanType

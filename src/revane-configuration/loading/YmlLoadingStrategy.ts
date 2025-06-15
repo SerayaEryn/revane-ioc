@@ -12,6 +12,7 @@ export class YmlLoadingStrategy implements LoadingStrategy {
     let buffer1: Buffer
     try {
       buffer1 = await readFile(`${configDirectory}/application.yml`)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new ConfigFileNotFound(`${configDirectory}/application.yml`)
     }
@@ -20,6 +21,7 @@ export class YmlLoadingStrategy implements LoadingStrategy {
     try {
       const buffer2 = await readFile(`${configDirectory}/application-${profile}.yml`)
       profileConfig = load(replaceEnvironmentVariables(buffer2.toString()))
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (ignore) {
       profileConfig = {}
     }

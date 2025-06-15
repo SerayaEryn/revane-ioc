@@ -1,6 +1,8 @@
 import { conditionalOnMissingBeanSym } from './Symbols'
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export function createConditionalOnMissingBeanDecorator (): Function {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   return function decorateWithOptions (maybeTarget?): Function | any {
     if (maybeTarget != null) {
       return decorate(maybeTarget)

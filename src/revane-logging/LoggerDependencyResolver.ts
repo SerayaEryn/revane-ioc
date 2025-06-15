@@ -16,7 +16,9 @@ export class LoggerDependencyResolver implements DependencyResolver {
   async resolve (
     dependency: DependencyDefinition,
     parentId: string,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     beanDefinitions: BeanDefinition[],
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ensureDependencyIsPresent: (
       dependency: DependencyDefinition,
       parentId: string,
@@ -27,6 +29,7 @@ export class LoggerDependencyResolver implements DependencyResolver {
     beanDefinition.instance = this.logFactory.getInstance(parentId)
     const bean = new SingletonBean(
       beanDefinition,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
       async () => { }
     )
     await bean.init()

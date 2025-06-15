@@ -2,7 +2,9 @@ import { CronJob } from 'cron'
 
 export class TaskScheduler {
   private readonly jobs: CronJob[] = []
-  private errorHandler: (error: Error) => void = () => {}
+  private errorHandler: (error: Error) => void = (error) => {
+    console.log(error)
+  }
 
   public schedule (
     cronPattern: string,
@@ -23,8 +25,13 @@ export class TaskScheduler {
 
   private executeTask (asyncFunction: boolean, functionToSchedule: Function): void {
     if (asyncFunction) {
-      functionToSchedule()
-        .catch(this.errorHandler)
+      try {
+        functionToSchedule()
+          .then()
+          .catch(this.errorHandler)
+      } catch (error) {
+        this.errorHandler(error)
+      }
     } else {
       try {
         functionToSchedule()

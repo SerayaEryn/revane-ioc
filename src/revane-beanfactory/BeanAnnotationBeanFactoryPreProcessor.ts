@@ -3,7 +3,7 @@ import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { BeanAnnotationBeanDefinition } from './BeanAnnotationBeanDefinition'
 import { beansSym } from './Symbols'
 import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition'
-import 'reflect-metadata'
+import 'reflect-metadata/lite'
 
 export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   async preProcess (

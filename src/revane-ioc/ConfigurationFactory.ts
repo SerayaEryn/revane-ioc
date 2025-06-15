@@ -10,7 +10,7 @@ export function buildConfiguration (options: Options, profile: string): RevaneCo
       profile,
       options.configurationPath(),
       options.configuration?.required ?? false,
-      options.autoConfiguration ?? options.configuration?.disabled ?? false,
+      disabled(options),
       [
         new JsonLoadingStrategy(),
         new YmlLoadingStrategy(),
@@ -19,4 +19,14 @@ export function buildConfiguration (options: Options, profile: string): RevaneCo
       options.basePackage
     )
   )
+}
+
+function disabled(options: Options): boolean {
+  if (options.autoConfiguration) {
+    return false
+  }
+  if (options.configuration?.disabled != null) {
+    return options.configuration?.disabled
+  }
+  return false
 }

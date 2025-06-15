@@ -24,7 +24,7 @@ export class ConfigurationOptions {
     this.profile = profile
     this.directory = directory
     this.required = required || false
-    this.disabled = disabled || false
+    this.disabled = disabled ?? false
     this.strategies = strategies
     this.basePackage = basePackage
   }
