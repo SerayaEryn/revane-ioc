@@ -95,106 +95,108 @@ export {
   DependencyResolver
 }
 
+const ALLOW_BEAN_REDEFINITION = 'revane.main.allow-bean-definition-overriding'
+
 export default class RevaneIOC {
-  private revaneCore: RevaneCore
-  private options: Options
-  private initialized = false
-  private readonly configuration: RevaneConfiguration
+  #revaneCore: RevaneCore
+  #options: Options
+  #initialized = false
+  readonly #configuration: RevaneConfiguration
 
   constructor (options: Options) {
-    this.options = options
-    if (this.options.autoConfiguration == null) {
-      this.options.autoConfiguration = false
+    this.#options = options
+    if (this.#options.autoConfiguration == null) {
+      this.#options.autoConfiguration = false
     }
 
-    const profile = this.options.profile ?? process.env.REVANE_PROFILE ?? 'dev'
-    this.options.profile = profile
-    this.configuration = buildConfiguration(this.options, profile)
+    const profile = this.#options.profile ?? process.env.REVANE_PROFILE ?? 'dev'
+    this.#options.profile = profile
+    this.#configuration = buildConfiguration(this.#options, profile)
   }
 
   public async initialize (): Promise<void> {
-    await this.configuration.init()
+    await this.#configuration.init()
     this.loadOptionsFromConfiguration()
-    for (const extension of this.options.extensions) {
-      await extension.initialize(this.configuration)
+    for (const extension of this.#options.extensions) {
+      await extension.initialize(this.#configuration)
     }
     const coreOptionsBuilder = new CoreOptionsBuilder()
-    const coreOptions = coreOptionsBuilder.prepareCoreOptions(this.options)
+    const coreOptions = coreOptionsBuilder.prepareCoreOptions(this.#options)
     const beanTypeRegistry = this.beanTypeRegistry()
-    this.revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
+    this.#revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
     await this.addDefaultPlugins()
-    await this.revaneCore.initialize()
-    this.initialized = true
+    await this.#revaneCore.initialize()
+    this.#initialized = true
   }
 
   private loadOptionsFromConfiguration (): void {
-    if (this.configuration.has('revane.main.allow-bean-definition-overriding')) {
-      const allowRedefinition = this.configuration.getBoolean('revane.main.allow-bean-definition-overriding')
-      this.options.noRedefinition = !allowRedefinition
+    if (this.#configuration.has(ALLOW_BEAN_REDEFINITION)) {
+      const allowRedefinition = this.#configuration.getBoolean(ALLOW_BEAN_REDEFINITION)
+      this.#options.noRedefinition = !allowRedefinition
     }
   }
 
   public async get (id: string): Promise<any> {
     this.checkIfInitialized()
-    return await this.revaneCore.getById(id)
+    return await this.#revaneCore.getById(id)
   }
 
   public async has (id: string): Promise<boolean> {
     this.checkIfInitialized()
-    return await this.revaneCore.hasById(id)
+    return await this.#revaneCore.hasById(id)
   }
 
   public async getMultiple (ids: string[]): Promise<any[]> {
     this.checkIfInitialized()
-    return await this.revaneCore.getMultipleById(ids)
+    return await this.#revaneCore.getMultipleById(ids)
   }
 
   public async getByType (type: string): Promise<any[]> {
     this.checkIfInitialized()
-    return await this.revaneCore.getByType(type)
+    return await this.#revaneCore.getByType(type)
   }
 
   public async close (): Promise<void> {
-    for (const extension of this.options.extensions) {
+    for (const extension of this.#options.extensions) {
       await extension.close()
     }
-    await this.revaneCore.close()
+    await this.#revaneCore.close()
   }
 
   public setParent (parent: RevaneIOC): void {
-    this.revaneCore.setParent(parent.getContext())
+    this.#revaneCore.setParent(parent.getContext())
   }
 
   public getContext (): ApplicationContext {
-    return this.revaneCore.getContext()
+    return this.#revaneCore.getContext()
   }
 
   private async addDefaultPlugins (): Promise<void> {
-    if (!(this.options.configuration?.disabled ?? false)) {
-      this.revaneCore.addPlugin('loader', new ConfigurationLoader(this.configuration))
+    if (!(this.#options.configuration?.disabled ?? false)) {
+      this.#revaneCore.addPlugin('loader', new ConfigurationLoader(this.#configuration))
     }
-    this.revaneCore?.addPlugin('loader', new XmlFileLoader())
-    this.revaneCore?.addPlugin('loader', new JsonFileLoader())
-    this.revaneCore?.addPlugin('beanFactoryPostProcessor', new LifeCycleBeanFactoryPostProcessor())
-    if (!(this.options.configuration?.disabled ?? false)) {
-      this.revaneCore?.addPlugin(
+    this.#revaneCore?.addPlugin('loader', new XmlFileLoader())
+    this.#revaneCore?.addPlugin('loader', new JsonFileLoader())
+    this.#revaneCore?.addPlugin('beanFactoryPostProcessor', new LifeCycleBeanFactoryPostProcessor())
+    if (!(this.#options.configuration?.disabled ?? false)) {
+      this.#revaneCore?.addPlugin(
         'beanFactoryPostProcessor',
-        new ConfigurationPropertiesPostProcessor(this.configuration)
+        new ConfigurationPropertiesPostProcessor(this.#configuration)
       )
-      this.revaneCore?.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
+      this.#revaneCore?.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
     }
-    for (const extension of this.options.extensions) {
+    for (const extension of this.#options.extensions) {
       for (const beanFactoryPreProcessor of extension.beanFactoryPreProcessors()) {
-        this.revaneCore?.addPlugin('beanFactoryPreProcessor', beanFactoryPreProcessor)
+        this.#revaneCore?.addPlugin('beanFactoryPreProcessor', beanFactoryPreProcessor)
       }
       for (const beanFactoryPostProcessor of extension.beanFactoryPostProcessors()) {
-        this.revaneCore?.addPlugin('beanFactoryPostProcessor', beanFactoryPostProcessor)
+        this.#revaneCore?.addPlugin('beanFactoryPostProcessor', beanFactoryPostProcessor)
       }
       for (const loader of extension.beanLoaders()) {
-        this.revaneCore?.addPlugin('loader', loader)
+        this.#revaneCore?.addPlugin('loader', loader)
       }
       for (const dependencyResolver of extension.dependencyResolvers()) {
-        this.revaneCore?.addPlugin('dependencyResolver', dependencyResolver)
+        this.#revaneCore?.addPlugin('dependencyResolver', dependencyResolver)
       }
     }
   }
@@ -207,7 +209,7 @@ export default class RevaneIOC {
   }
 
   private checkIfInitialized (): void {
-    if (!this.initialized) {
+    if (!this.#initialized) {
       throw new NotInitializedError()
     }
   }
