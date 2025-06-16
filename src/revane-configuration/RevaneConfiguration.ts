@@ -39,21 +39,8 @@ export class RevaneConfiguration implements Configuration {
   }
 
   public async init (): Promise<void> {
-    for (const strategy of this.options.strategies) {
-      let loadedValues: object = {}
-      try {
-        const { directory: configDirectory, profile } = this.options
-        loadedValues = await strategy.load(configDirectory, profile)
-        this.values = deepMerge(this.values, loadedValues)
-        loadedValues = {}
-      } catch (error) {
-        if (error.code !== 'REV_ERR_CONFIG_FILE_NOT_FOUND') {
-          throw error
-        }
-      }
-    }
-    if (this.options.required) {
-      throw new NoConfigFilesFound()
+    if (!this.options.disabled) {
+      await this.loadConfigFiles()
     }
     this.put('revane.basePackage', this.options.basePackage)
   }
@@ -119,5 +106,24 @@ export class RevaneConfiguration implements Configuration {
       values = values[part]
     }
     return values != null
+  }
+
+  private async loadConfigFiles() {
+    for (const strategy of this.options.strategies) {
+      let loadedValues: object = {}
+      try {
+        const { directory: configDirectory, profile } = this.options
+        loadedValues = await strategy.load(configDirectory, profile)
+        this.values = deepMerge(this.values, loadedValues)
+        loadedValues = {}
+      } catch (error) {
+        if (error.code !== 'REV_ERR_CONFIG_FILE_NOT_FOUND') {
+          throw error
+        }
+      }
+    }
+    if (this.options.required) {
+      throw new NoConfigFilesFound()
+    }
   }
 }

@@ -57,6 +57,25 @@ test('Should throw error if no config files', async (t) => {
   }
 })
 
+test('Should not throw error if disabled', async (t) => {
+  t.plan(5)
+  const testLoadingStrategy = new TestLoadingStrategy()
+  const config = new RevaneConfiguration(new ConfigurationOptions(
+    'test',
+    '.',
+    true,
+    true,
+    [testLoadingStrategy],
+    'test/test'
+  ))
+  await config.init()
+  t.false(config.has('test.bool'))
+  t.false(config.has('test.str'))
+  t.false(config.has('test.int'))
+  t.false(config.has('blub.bla'))
+  t.is(config.getString('revane.basePackage'), 'test/test')
+})
+
 test('Should pass error from strategy', async (t) => {
   t.plan(1)
   const config = new RevaneConfiguration(new ConfigurationOptions(
