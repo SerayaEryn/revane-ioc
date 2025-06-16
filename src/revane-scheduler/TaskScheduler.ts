@@ -1,8 +1,8 @@
 import { CronJob } from 'cron'
 
 export class TaskScheduler {
-  private readonly jobs: CronJob[] = []
-  private errorHandler: (error: Error) => void = (error) => {
+  readonly #jobs: CronJob[] = []
+  #errorHandler: (error: Error) => void = (error) => {
     console.log(error)
   }
 
@@ -20,7 +20,7 @@ export class TaskScheduler {
       true,
       'UTC'
     )
-    this.jobs.push(job)
+    this.#jobs.push(job)
   }
 
   private executeTask (asyncFunction: boolean, functionToSchedule: Function): void {
@@ -28,26 +28,26 @@ export class TaskScheduler {
       try {
         functionToSchedule()
           .then()
-          .catch(this.errorHandler)
+          .catch(this.#errorHandler)
       } catch (error) {
-        this.errorHandler(error)
+        this.#errorHandler(error)
       }
     } else {
       try {
         functionToSchedule()
       } catch (error) {
-        this.errorHandler(error)
+        this.#errorHandler(error)
       }
     }
   }
 
   public close (): void {
-    for (const job of this.jobs) {
+    for (const job of this.#jobs) {
       job.stop()
     }
   }
 
   public setErrorHandler (errorHandler: (error: Error) => void): void {
-    this.errorHandler = errorHandler
+    this.#errorHandler = errorHandler
   }
 }

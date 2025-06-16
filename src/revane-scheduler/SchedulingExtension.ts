@@ -8,13 +8,13 @@ import { SchedulerLoader } from './SchedulerLoader'
 import { TaskScheduler } from './TaskScheduler'
 
 export class SchedulingExtension extends Extension {
-  private readonly taskScheduler = new TaskScheduler()
-  private enabled = false
+  readonly #taskScheduler = new TaskScheduler()
+  #enabled = false
 
   constructor (private readonly options: Options | null) {
     super()
     if (this.options != null) {
-      this.enabled = this.options.enabled
+      this.#enabled = this.options.enabled
     }
   }
 
@@ -24,21 +24,21 @@ export class SchedulingExtension extends Extension {
       enabled = configuration.getBoolean('revane.scheduling.enabled')
     }
     if (this.options == null) {
-      this.enabled = enabled
+      this.#enabled = enabled
     }
   }
 
   public beanFactoryPostProcessors (): BeanFactoryPostProcessor[] {
     return [
-      new SchedulerBeanPostProcessor(this.taskScheduler, this.enabled)
+      new SchedulerBeanPostProcessor(this.#taskScheduler, this.#enabled)
     ]
   }
 
   public beanLoaders (): Loader[] {
-    return [new SchedulerLoader(this.taskScheduler)]
+    return [new SchedulerLoader(this.#taskScheduler)]
   }
 
   public async close (): Promise<void> {
-    return this.taskScheduler.close()
+    return this.#taskScheduler.close()
   }
 }
