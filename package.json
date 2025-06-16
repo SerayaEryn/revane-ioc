@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "acorn": "^8.15.0",
-    "apheleia": "^4.0.0-rc.2",
+    "apheleia": "^4.0.0",
     "cron": "^1.8.2",
     "fast-xml-parser": "^5.2.5",
     "js-yaml": "^4.1.0",
