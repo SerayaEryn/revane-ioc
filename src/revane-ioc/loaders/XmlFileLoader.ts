@@ -1,4 +1,4 @@
-import * as fastXmlParser from 'fast-xml-parser'
+import { XMLParser } from 'fast-xml-parser'
 import * as fileSystem from 'fs'
 import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
 import Loader from '../../revane-ioc-core/Loader'
@@ -69,7 +69,13 @@ export default class XmlFileLoader implements Loader {
     const { file } = options
     if (!file.endsWith('.xml')) throw new UnknownEndingError()
     const data = await this.loadFile(file)
-    const result: Xml = fastXmlParser.parse(data.toString(), xmlParserOptions)
+    const parserOptions = {
+      ignoreAttributes : false,
+      attributeNamePrefix : "",
+      attributesGroupName : "attr"
+    };
+    const xmlParser = new XMLParser(parserOptions)
+    const result: Xml = xmlParser.parse(data.toString(), xmlParserOptions)
 
     let beanDefinitions: DefaultBeanDefinition[] = []
     const beans = result.beans
@@ -78,7 +84,7 @@ export default class XmlFileLoader implements Loader {
       return beanDefinitions
     }
     if (Array.isArray(beans.bean)) {
-      beanDefinitions = beanDefinitions.concat(beans.bean.map(this.toBeanDefinition))
+      beanDefinitions = beanDefinitions.filter(it => it as any !== '').concat(beans.bean.map(this.toBeanDefinition))
     } else {
       beanDefinitions.push(this.toBeanDefinition(beans.bean))
     }
