@@ -4,18 +4,19 @@ import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
 import { TaskScheduler } from './TaskScheduler'
 import { NoCronPatternProvided } from './NoCronPatternProvided'
 import { InvalidCronPatternProvided } from './InvalidCronPatternProvided'
+import { isAsyncFunction } from 'node:util/types'
 
 export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
-  private readonly schedulingService: TaskScheduler
-  private readonly enabled: boolean
+  readonly #schedulingService: TaskScheduler
+  readonly #enabled: boolean
 
   constructor (schedulingService: TaskScheduler, enabled: boolean) {
-    this.schedulingService = schedulingService
-    this.enabled = enabled
+    this.#schedulingService = schedulingService
+    this.#enabled = enabled
   }
 
   public async postProcess (beanDefinition: BeanDefinition, bean: Bean, instance: any): Promise<void> {
-    if (!this.enabled) {
+    if (!this.#enabled) {
       return
     }
     const scheduled = Reflect.getMetadata('scheduled', instance.constructor.prototype)
@@ -29,12 +30,7 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
       throw new InvalidCronPatternProvided(scheduled.cronPattern)
     }
     const { propertyKey, cronPattern } = scheduled
-    const isAsyncFunction = this.isAsyncFunction(instance[propertyKey])
     const functionToSchedule = instance[propertyKey].bind(instance)
-    this.schedulingService.schedule(cronPattern, functionToSchedule, isAsyncFunction)
-  }
-
-  private isAsyncFunction (f: Function): boolean {
-    return f.constructor.name === 'AsyncFunction'
+    this.#schedulingService.schedule(cronPattern, functionToSchedule, isAsyncFunction(instance[propertyKey]))
   }
 }
