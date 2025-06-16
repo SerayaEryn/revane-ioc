@@ -7,7 +7,7 @@
     "moduleResolution": "nodenext",
     "removeComments": true,
     "target": "ES2023",
-    "importHelpers": false,
+    "importHelpers": true,
     "alwaysStrict": true,
     "resolveJsonModule": true,
     "strictNullChecks": true,
