@@ -9,7 +9,11 @@ export default tseslint.config(
   tseslint.configs.stylistic,
   {
     rules: {
-        "@typescript-eslint/no-explicit-any": 0
+        "@typescript-eslint/no-explicit-any": 0,
+        "@typescript-eslint/no-unused-vars": ["error", {
+            "argsIgnorePattern": "^_",
+            "caughtErrorsIgnorePattern": "^_"
+        }]
     }
   }
 );
