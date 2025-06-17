@@ -1,6 +1,6 @@
-import { BeanDefinition } from '../BeanDefinition'
-import Bean from '../context/bean/Bean'
-import { DependencyDefinition } from './DependencyDefinition'
+import { BeanDefinition } from '../BeanDefinition.js'
+import Bean from '../context/bean/Bean.js'
+import { DependencyDefinition } from './DependencyDefinition.js'
 
 export interface DependencyResolver {
   isRelevant: (dependency: DependencyDefinition) => boolean

@@ -1,10 +1,10 @@
-import Bean from './context/bean/Bean'
-import { BeanDefinition } from './BeanDefinition'
-import InvalidScopeError from './context/errors/InvalidScopeError'
-import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
-import { Constructor } from './Constructor'
-import { uid } from '../revane-utils/Random'
-import { DependencyDefinition } from './dependencies/DependencyDefinition'
+import Bean from './context/bean/Bean.js'
+import { BeanDefinition } from './BeanDefinition.js'
+import InvalidScopeError from './context/errors/InvalidScopeError.js'
+import BeanTypeRegistry from './context/bean/BeanTypeRegistry.js'
+import { Constructor } from './Constructor.js'
+import { uid } from '../revane-utils/Random.js'
+import { DependencyDefinition } from './dependencies/DependencyDefinition.js'
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string

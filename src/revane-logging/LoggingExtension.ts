@@ -1,11 +1,11 @@
-import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
-import Loader from '../revane-ioc-core/Loader'
-import { Extension } from '../revane-ioc/Extension'
-import { DependencyResolver } from '../revane-ioc/RevaneIOC'
-import { DefaultLogFactory } from './DefaultLogFactory'
-import { LoggerDependencyResolver } from './LoggerDependencyResolver'
-import { LoggingLoader } from './LoggingLoader'
-import { LoggingOptions } from './LoggingOptions'
+import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration.js'
+import Loader from '../revane-ioc-core/Loader.js'
+import { Extension } from '../revane-ioc/Extension.js'
+import { DependencyResolver } from '../revane-ioc/RevaneIOC.js'
+import { DefaultLogFactory } from './DefaultLogFactory.js'
+import { LoggerDependencyResolver } from './LoggerDependencyResolver.js'
+import { LoggingLoader } from './LoggingLoader.js'
+import { LoggingOptions } from './LoggingOptions.js'
 
 export class LoggingExtension extends Extension {
   private enabled = true

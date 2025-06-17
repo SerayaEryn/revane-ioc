@@ -1,7 +1,7 @@
-import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor'
-import Options from '../Options'
-import { BeanDefinition } from '../BeanDefinition'
-import { Scopes } from '../../revane-ioc/RevaneIOC'
+import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor.js'
+import Options from '../Options.js'
+import { BeanDefinition } from '../BeanDefinition.js'
+import { Scopes } from '../../revane-ioc/RevaneIOC.js'
 
 export class ScopeBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   private readonly options: Options

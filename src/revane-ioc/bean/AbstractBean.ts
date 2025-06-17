@@ -1,6 +1,6 @@
-import { Constructor } from '../../revane-ioc-core/Constructor'
-import Bean from '../../revane-ioc-core/context/bean/Bean'
-import { BeanDefinition } from '../RevaneIOC'
+import { Constructor } from '../../revane-ioc-core/Constructor.js'
+import Bean from '../../revane-ioc-core/context/bean/Bean.js'
+import { BeanDefinition } from '../RevaneIOC.js'
 
 export default abstract class AbstractBean implements Bean {
   public scope: string

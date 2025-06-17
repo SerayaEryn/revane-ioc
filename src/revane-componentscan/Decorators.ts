@@ -1,5 +1,5 @@
-import { createComponentDecorator } from './Component'
-import { createScopeDecorator } from './Scope'
+import { createComponentDecorator } from './Component.js'
+import { createScopeDecorator } from './Scope.js'
 
 const Configuration = createComponentDecorator('configuration')
 const Repository = createComponentDecorator('repository')

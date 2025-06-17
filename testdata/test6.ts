@@ -1,4 +1,4 @@
-import { PostConstruct } from '../src/revane-ioc/RevaneIOC'
+import { PostConstruct } from '../src/revane-ioc/RevaneIOC.js'
 
 export default class Test1 {
   postConstructed = false

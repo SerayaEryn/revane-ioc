@@ -1,7 +1,7 @@
 import test from 'ava'
-import BeanLoader from '../../src/revane-ioc-core/BeanLoader'
-import Loader from '../../src/revane-ioc-core/Loader'
-import DefaultBeanDefinition from '../../src/revane-ioc-core/DefaultBeanDefinition'
+import BeanLoader from '../../src/revane-ioc-core/BeanLoader.js'
+import Loader from '../../src/revane-ioc-core/Loader.js'
+import DefaultBeanDefinition from '../../src/revane-ioc-core/DefaultBeanDefinition.js'
 
 test('should reject on errors in loaders', async (t) => {
   t.plan(1)

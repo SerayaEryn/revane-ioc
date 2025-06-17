@@ -1,4 +1,4 @@
-import { ConfigurationProperties } from '../../src/revane-configuration/ConfigurationProperties'
+import { ConfigurationProperties } from '../../src/revane-configuration/ConfigurationProperties.js'
 
 @ConfigurationProperties({ prefix: 'test' })
 export class ConfigurationProperties1 {

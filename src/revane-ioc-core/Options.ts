@@ -1,4 +1,4 @@
-import { LoaderOptions } from './LoaderOptions'
+import { LoaderOptions } from './LoaderOptions.js'
 
 export interface RegexFilter {
   type: string

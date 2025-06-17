@@ -1,4 +1,4 @@
-import { Bean, PostConstruct, PreDestroy } from '../src/revane-ioc/RevaneIOC'
+import { Bean, PostConstruct, PreDestroy } from '../src/revane-ioc/RevaneIOC.js'
 
 export default class BeanFactory {
   @Bean

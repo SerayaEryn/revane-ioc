@@ -1,11 +1,11 @@
 import { join } from 'path'
 import test from 'ava'
-import XmlFileLoader from '../../src/revane-ioc/loaders/XmlFileLoader'
-import { XmlFileLoaderOptions } from '../../src/revane-ioc/loaders/XmlFileLoaderOptions'
+import XmlFileLoader from '../../src/revane-ioc/loaders/XmlFileLoader.js'
+import { XmlFileLoaderOptions } from '../../src/revane-ioc/loaders/XmlFileLoaderOptions.js'
 
 test('should read xml configuration file and register beans', async (t): Promise<void> => {
   t.plan(1)
-  const file = join(__dirname, '../../../testdata/xml/config.xml')
+  const file = join(import.meta.dirname, '../../../testdata/xml/config.xml')
 
   const xmlFileResolver = new XmlFileLoader()
 
@@ -16,7 +16,7 @@ test('should read xml configuration file and register beans', async (t): Promise
 })
 
 test('should reject on error', async (t) => {
-  const file = join(__dirname, '../../../testdata/json/configa.json')
+  const file = join(import.meta.dirname, '../../../testdata/json/configa.json')
 
   const xmlFileLoader = new XmlFileLoader()
 

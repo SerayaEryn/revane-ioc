@@ -1,7 +1,7 @@
-import Bean from './context/bean/Bean'
-import BeanTypeRegistry from './context/bean/BeanTypeRegistry'
-import { Constructor } from './Constructor'
-import { DependencyDefinition } from './dependencies/DependencyDefinition'
+import Bean from './context/bean/Bean.js'
+import BeanTypeRegistry from './context/bean/BeanTypeRegistry.js'
+import { Constructor } from './Constructor.js'
+import { DependencyDefinition } from './dependencies/DependencyDefinition.js'
 
 export interface BeanDefinition {
   class: string

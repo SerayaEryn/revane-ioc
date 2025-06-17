@@ -1,9 +1,9 @@
-import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
-import Bean from '../revane-ioc-core/context/bean/Bean'
-import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
-import { TaskScheduler } from './TaskScheduler'
-import { NoCronPatternProvided } from './NoCronPatternProvided'
-import { InvalidCronPatternProvided } from './InvalidCronPatternProvided'
+import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js'
+import Bean from '../revane-ioc-core/context/bean/Bean.js'
+import { BeanDefinition } from '../revane-ioc-core/BeanDefinition.js'
+import { TaskScheduler } from './TaskScheduler.js'
+import { NoCronPatternProvided } from './NoCronPatternProvided.js'
+import { InvalidCronPatternProvided } from './InvalidCronPatternProvided.js'
 import { isAsyncFunction } from 'node:util/types'
 
 export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {

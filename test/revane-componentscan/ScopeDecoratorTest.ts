@@ -1,6 +1,6 @@
 import test from 'ava'
-import { scopeSym } from '../../src/revane-componentscan/Symbols'
-import { Scope } from '../../src/revane-ioc/RevaneIOC'
+import { scopeSym } from '../../src/revane-componentscan/Symbols.js'
+import { Scope } from '../../src/revane-ioc/RevaneIOC.js'
 
 test('should add scope meta data', t => {
   class TestClass {} // eslint-disable-line

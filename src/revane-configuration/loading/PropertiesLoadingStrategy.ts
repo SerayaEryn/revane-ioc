@@ -1,8 +1,8 @@
 import { promises } from 'fs'
-import { deepMerge } from '../../revane-utils/Deepmerge'
-import { ConfigFileNotFound } from './ConfigFileNotFound'
-import { replaceEnvironmentVariables } from './EnvironmentLoader'
-import { LoadingStrategy } from './LoadingStrategy'
+import { deepMerge } from '../../revane-utils/Deepmerge.js'
+import { ConfigFileNotFound } from './ConfigFileNotFound.js'
+import { replaceEnvironmentVariables } from './EnvironmentLoader.js'
+import { LoadingStrategy } from './LoadingStrategy.js'
 
 const { readFile } = promises
 

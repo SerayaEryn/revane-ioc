@@ -1,12 +1,12 @@
-import { DependencyDefinition } from '../src/revane-ioc-core/dependencies/DependencyDefinition'
-import Loader from '../src/revane-ioc-core/Loader'
+import { DependencyDefinition } from '../src/revane-ioc-core/dependencies/DependencyDefinition.js'
+import Loader from '../src/revane-ioc-core/Loader.js'
 import {
   BeanDefinition,
   DefaultBeanDefinition,
   Extension,
   LoaderOptions,
   Scopes
-} from '../src/revane-ioc/RevaneIOC'
+} from '../src/revane-ioc/RevaneIOC.js'
 
 export function beanDefinition (id: string, classConstructor: any, dependencyIds: string[] = []): BeanDefinition {
   const beanDefinition = new DefaultBeanDefinition(id)

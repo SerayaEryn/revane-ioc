@@ -1,9 +1,9 @@
-import { LoadingStrategy } from './loading/LoadingStrategy'
-import { Configuration } from './Configuration'
-import { NoConfigFilesFound } from './NoConfigFilesFound'
-import { KeyNotPresentInConfig } from './KeyNotPresentInConfig'
-import { TypeMismatch } from './TypeMismatch'
-import { deepMerge } from '../revane-utils/Deepmerge'
+import { LoadingStrategy } from './loading/LoadingStrategy.js'
+import { Configuration } from './Configuration.js'
+import { NoConfigFilesFound } from './NoConfigFilesFound.js'
+import { KeyNotPresentInConfig } from './KeyNotPresentInConfig.js'
+import { TypeMismatch } from './TypeMismatch.js'
+import { deepMerge } from '../revane-utils/Deepmerge.js'
 
 export class ConfigurationOptions {
   profile: string

@@ -1,4 +1,4 @@
-import { Component, Logger } from '../../src/revane-ioc/RevaneIOC'
+import { Component, Logger } from '../../src/revane-ioc/RevaneIOC.js'
 
 @Component
 export class Test1 {

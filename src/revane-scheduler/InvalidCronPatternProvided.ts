@@ -1,4 +1,4 @@
-import { RethrowableError } from '../revane-ioc-core/RethrowableError'
+import { RethrowableError } from '../revane-ioc-core/RethrowableError.js'
 
 export class InvalidCronPatternProvided extends RethrowableError {
   public code = 'REV_ERR_INVALID_CRON_PATTERN_PROVIDED'

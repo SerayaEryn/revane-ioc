@@ -1,4 +1,4 @@
-import { RethrowableError } from '../RethrowableError'
+import { RethrowableError } from '../RethrowableError.js'
 
 export default class UnknownDependencyType extends RethrowableError {
   public code = 'REV_ERR_UNKNOWN_DEPENDENCY_TYPE'

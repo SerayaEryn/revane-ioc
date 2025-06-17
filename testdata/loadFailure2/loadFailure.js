@@ -1,3 +1,3 @@
-'use strict';
+const TEST = null
 
-module.exports = null
+export { TEST }

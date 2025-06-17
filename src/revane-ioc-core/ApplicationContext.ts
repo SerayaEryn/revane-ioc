@@ -1,4 +1,4 @@
-import Bean from './context/bean/Bean'
+import Bean from './context/bean/Bean.js'
 
 export interface ApplicationContext {
   getById: (id: string) => Promise<any>

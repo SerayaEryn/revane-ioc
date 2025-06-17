@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "author": "Denis Fäcke",
-  "type": "commonjs",
+  "type": "module",
   "main": "bin/src/revane-ioc/RevaneIOC.js",
   "types": "bin/src/revane-ioc/RevaneIOC.d.ts",
   "directories": {
@@ -28,15 +28,16 @@
   ],
   "scripts": {
     "unit": "ava bin/test/**/*Test.js",
-    "test": "npm run unit",
+    "test": "npm run postbuild && npm run unit",
     "lint": "npx eslint .",
     "coverage": "npm run compile && nyc npm test",
     "compile": "tsc -d",
-    "prepublishOnly": "npm run compile -s && eslint bin/** --fix | exit 0"
+    "prepublishOnly": "npm run compile -s && eslint bin/** --fix | exit 0",
+    "postbuild": "cpy 'testdata/**/*.json' bin/testdata && cpy 'testdata/**/*.yml' bin/testdata"
   },
   "dependencies": {
     "acorn": "^8.15.0",
-    "apheleia": "^4.0.0",
+    "apheleia": "^4.0.1",
     "cron": "^4.3.1",
     "fast-xml-parser": "^5.2.5",
     "reflect-metadata": "^0.2.2",
@@ -48,6 +49,7 @@
     "@types/express": "^4.11.1",
     "@types/node": "^24.0.1",
     "ava": "^6.4.0",
+    "cpy-cli": "^5.0.0",
     "eslint": "^8.57.1",
     "nyc": "^15.0.0",
     "ts-node": "^10.9.2",

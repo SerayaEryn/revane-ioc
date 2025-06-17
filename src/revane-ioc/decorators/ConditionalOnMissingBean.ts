@@ -1,4 +1,4 @@
-import { conditionalOnMissingBeanSym } from './Symbols'
+import { conditionalOnMissingBeanSym } from './Symbols.js'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export function createConditionalOnMissingBeanDecorator (): Function {

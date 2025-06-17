@@ -1,6 +1,6 @@
 import test from 'ava'
-import PrototypeBean from '../../src/revane-ioc/bean/PrototypeBean'
-import { DefaultBeanDefinition } from '../../src/revane-ioc/RevaneIOC'
+import PrototypeBean from '../../src/revane-ioc/bean/PrototypeBean.js'
+import { DefaultBeanDefinition } from '../../src/revane-ioc/RevaneIOC.js'
 
 test('should class postConstruct on instance', async (t) => {
   t.plan(1)
@@ -8,7 +8,7 @@ test('should class postConstruct on instance', async (t) => {
   const Clazz = await import('../../testdata/test6.js')
 
   const beanDefinition = new DefaultBeanDefinition('test')
-  beanDefinition.classConstructor = Clazz['module.exports']['default'] as any
+  beanDefinition.classConstructor = Clazz.default as any
   beanDefinition.postConstructKey = 'postConstruct'
   const bean = new PrototypeBean(beanDefinition)
 

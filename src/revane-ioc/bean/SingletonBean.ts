@@ -1,5 +1,5 @@
-import AbstractBean from './AbstractBean'
-import { Scopes } from '../../revane-ioc-core/Scopes'
+import AbstractBean from './AbstractBean.js'
+import { Scopes } from '../../revane-ioc-core/Scopes.js'
 
 export default class SingletonBean extends AbstractBean {
   public static scope: string = Scopes.SINGLETON

@@ -1,15 +1,15 @@
 import * as path from 'path'
 import test from 'ava'
-import RevaneIOC, { BeanFactoryExtension, Options } from '../../src/revane-ioc/RevaneIOC'
-import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
+import RevaneIOC, { BeanFactoryExtension, Options } from '../../src/revane-ioc/RevaneIOC.js'
+import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions.js'
 
 test('should create bean using beanFactory', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../'),
+    path.join(import.meta.dirname, '../../../'),
     [new BeanFactoryExtension()]
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(path.join(__dirname, '../../../testdata/beanFactory.json'))
+    new JsonFileLoaderOptions(path.join(import.meta.dirname, '../../../testdata/beanFactory.json'))
   ]
   options.profile = 'test'
   options.configuration = { disabled: true }

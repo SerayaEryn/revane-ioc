@@ -1,4 +1,4 @@
-import { Constructor } from '../../Constructor'
+import { Constructor } from '../../Constructor.js'
 
 export default interface Bean {
   scope: string

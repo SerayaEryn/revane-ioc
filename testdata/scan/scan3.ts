@@ -1,4 +1,4 @@
-import { Component, ConfigurationProperties } from '../../src/revane-ioc/RevaneIOC'
+import { Component, ConfigurationProperties } from '../../src/revane-ioc/RevaneIOC.js'
 
 @ConfigurationProperties({ prefix: 'test' })
 @Component({ dependencies: ['test6'], id: 'scan3' })

@@ -1,17 +1,17 @@
 import * as path from 'path'
 import test from 'ava'
-import RevaneIoc, { BeanFactoryExtension, ComponentScanExtension, ComponentScanLoaderOptions, LogFactory, LoggingExtension, Options } from '../../src/revane-ioc/RevaneIOC'
-import { LoggingLoader } from '../../src/revane-logging/LoggingLoader'
+import RevaneIoc, { BeanFactoryExtension, ComponentScanExtension, ComponentScanLoaderOptions, LogFactory, LoggingExtension, Options } from '../../src/revane-ioc/RevaneIOC.js'
+import { LoggingLoader } from '../../src/revane-logging/LoggingLoader.js'
 import { join } from 'path'
 
 test('should inject logger', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     [new ComponentScanExtension(), new LoggingExtension()]
   )
   options.loaderOptions = [
     new ComponentScanLoaderOptions(
-      join(__dirname, '../../testdata/logging6'),
+      join(import.meta.dirname, '../../testdata/logging6'),
       [],
       []
     )
@@ -27,7 +27,7 @@ test('should inject logger', async (t) => {
 
 test('should disable logging', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../testdata/logging1'),
+    path.join(import.meta.dirname, '../../../testdata/logging1'),
     [new LoggingExtension()]
   )
   options.loaderOptions = []
@@ -41,7 +41,7 @@ test('should disable logging', async (t) => {
 
 test('should log to file', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../testdata/logging2'),
+    path.join(import.meta.dirname, '../../../testdata/logging2'),
     [new LoggingExtension()]
   )
   options.loaderOptions = []
@@ -55,7 +55,7 @@ test('should log to file', async (t) => {
 
 test('should log to file if a path was given', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../testdata/logging3'),
+    path.join(import.meta.dirname, '../../../testdata/logging3'),
     [new LoggingExtension()]
   )
   options.loaderOptions = []
@@ -73,7 +73,7 @@ test('should log to file if a path was given', async (t) => {
 
 test('should create logger bean', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../testdata/logging3'),
+    path.join(import.meta.dirname, '../../../testdata/logging3'),
     [
       new BeanFactoryExtension(),
       new LoggingExtension()
@@ -90,7 +90,7 @@ test('should create logger bean', async (t) => {
 
 test('should use rootLevel', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../testdata/logging4'),
+    path.join(import.meta.dirname, '../../../testdata/logging4'),
     [new LoggingExtension()]
   )
   options.loaderOptions = []
@@ -108,7 +108,7 @@ test('should use rootLevel', async (t) => {
 
 test('should use level for class', async (t) => {
   const options = new Options(
-    path.join(__dirname, '../../../testdata/logging5'),
+    path.join(import.meta.dirname, '../../../testdata/logging5'),
     [new LoggingExtension()]
   )
   options.loaderOptions = []

@@ -1,6 +1,6 @@
 import { join } from 'path'
-import { LoaderOptions } from '../revane-ioc-core/LoaderOptions'
-import { Extension } from './Extension'
+import { LoaderOptions } from '../revane-ioc-core/LoaderOptions.js'
+import { Extension } from './Extension.js'
 
 export default class Options {
   public profile?: string

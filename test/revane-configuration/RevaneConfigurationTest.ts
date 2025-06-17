@@ -1,6 +1,6 @@
 import test from 'ava'
-import { LoadingStrategy } from '../../src/revane-configuration/loading/LoadingStrategy'
-import { RevaneConfiguration, ConfigurationOptions } from '../../src/revane-configuration/RevaneConfiguration'
+import { LoadingStrategy } from '../../src/revane-configuration/loading/LoadingStrategy.js'
+import { RevaneConfiguration, ConfigurationOptions } from '../../src/revane-configuration/RevaneConfiguration.js'
 
 test('Should load values', async (t) => {
   const testLoadingStrategy = new TestLoadingStrategy()

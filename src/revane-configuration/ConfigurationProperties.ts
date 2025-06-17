@@ -1,4 +1,4 @@
-import { configurationPropertiesSym } from './Symbols'
+import { configurationPropertiesSym } from './Symbols.js'
 import { Parser } from 'acorn'
 
 export interface ConfigurationPropertiesOptions {

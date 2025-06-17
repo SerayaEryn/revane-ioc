@@ -4,19 +4,20 @@ import {
   typeSym,
   scopeSym,
   dependenciesSym
-} from './Symbols'
+} from './Symbols.js'
 import {
   BeanDefinition,
   DefaultBeanDefinition,
   Loader,
   Scopes
-} from '../revane-ioc/RevaneIOC'
-import Filter from './Filter'
-import RegexFilter from './RegexFilter'
-import { recursiveReaddir } from './RecursiveReadDir'
-import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
-import { ModuleLoadError } from './ModuleLoadError'
-import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition'
+} from '../revane-ioc/RevaneIOC.js'
+import Filter from './Filter.js'
+import RegexFilter from './RegexFilter.js'
+import { recursiveReaddir } from './RecursiveReadDir.js'
+import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions.js'
+import { ModuleLoadError } from './ModuleLoadError.js'
+import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition.js'
+import { pathWithEnding } from '../revane-utils/FileUtil.js'
 
 const filterByType = {
   regex: RegexFilter
@@ -46,12 +47,15 @@ export default class ComponentScanLoader implements Loader {
       let requiredFile: any
       let moduleMap: Map<string, any>
       try {
-        requiredFile = require(file) // eslint-disable-line
+        requiredFile = await import(pathWithEnding(file, '.js'))
         moduleMap = getModuleMap(requiredFile)
       } catch (error) {
         throw new ModuleLoadError(file, error)
       }
       if (moduleMap.size === 0) {
+        if (requiredFile == null) {
+          throw new ModuleLoadError(file, new Error())
+        }
         if (this.isNoComponent(requiredFile)) {
           continue
         }
@@ -59,6 +63,9 @@ export default class ComponentScanLoader implements Loader {
       } else {
         for (const key of moduleMap.keys()) {
           const aModule = moduleMap.get(key)
+          if (aModule == null) {
+            throw new ModuleLoadError(file, new Error())
+          }
           if (this.isNoComponent(aModule)) {
             continue
           }
@@ -128,7 +135,7 @@ function toReference (id: string, dependencyTypes: any, classType: any): Depende
 function filterByJavascriptFiles (files: string[]): string[] {
   const filteredFiles: string[] = []
   for (const file of files) {
-    if (file.endsWith('.js')) {
+    if (file.endsWith('.js') || file.endsWith('.mjs')) {
       filteredFiles.push(file)
     }
   }

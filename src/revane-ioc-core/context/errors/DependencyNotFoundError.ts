@@ -1,4 +1,4 @@
-import { RethrowableError } from '../../RethrowableError'
+import { RethrowableError } from '../../RethrowableError.js'
 
 export default class DependencyNotFoundError extends RethrowableError {
   public code = 'REV_ERR_DEPENDENCY_NOT_FOUND'

@@ -1,4 +1,4 @@
-import { Service } from '../src/revane-ioc/RevaneIOC'
+import { Service } from '../src/revane-ioc/RevaneIOC.js'
 
 @Service
 export default class Test7 {

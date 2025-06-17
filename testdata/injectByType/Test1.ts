@@ -1,5 +1,5 @@
-import { Component } from '../../src/revane-ioc/RevaneIOC'
-import { Test2 } from './Test2'
+import { Component } from '../../src/revane-ioc/RevaneIOC.js'
+import { Test2 } from './Test2.js'
 
 @Component
 export class Test1 {

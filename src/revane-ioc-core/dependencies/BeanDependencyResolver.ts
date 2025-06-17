@@ -1,8 +1,8 @@
-import { BeanDefinition } from '../BeanDefinition'
-import Bean from '../context/bean/Bean'
-import { DefaultApplicationContext } from '../DefaultApplicationContext'
-import { DependencyResolver } from './DependencyResolver'
-import { DependencyDefinition } from './DependencyDefinition'
+import { BeanDefinition } from '../BeanDefinition.js'
+import Bean from '../context/bean/Bean.js'
+import { DefaultApplicationContext } from '../DefaultApplicationContext.js'
+import { DependencyResolver } from './DependencyResolver.js'
+import { DependencyDefinition } from './DependencyDefinition.js'
 
 export class BeanDependencyResolver implements DependencyResolver {
   constructor (private readonly context: DefaultApplicationContext) {}

@@ -1,12 +1,12 @@
 import { XMLParser } from 'fast-xml-parser'
 import * as fileSystem from 'fs'
-import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
-import Loader from '../../revane-ioc-core/Loader'
-import { BeanDefinition } from '../RevaneIOC'
-import { Scopes } from '../../revane-ioc-core/Scopes'
-import { XmlFileLoaderOptions } from './XmlFileLoaderOptions'
-import UnknownEndingError from '../UnknownEndingError'
-import { DependencyDefinition } from '../../revane-ioc-core/dependencies/DependencyDefinition'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition.js'
+import Loader from '../../revane-ioc-core/Loader.js'
+import { BeanDefinition } from '../RevaneIOC.js'
+import { Scopes } from '../../revane-ioc-core/Scopes.js'
+import { XmlFileLoaderOptions } from './XmlFileLoaderOptions.js'
+import UnknownEndingError from '../UnknownEndingError.js'
+import { DependencyDefinition } from '../../revane-ioc-core/dependencies/DependencyDefinition.js'
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,

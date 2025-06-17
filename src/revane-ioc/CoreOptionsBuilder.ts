@@ -1,7 +1,7 @@
-import { ComponentScanLoaderOptions } from '../revane-componentscan/ComponentScanLoaderOptions'
-import CoreOptions from '../revane-ioc-core/Options'
-import { Scopes } from '../revane-ioc-core/Scopes'
-import Options from './Options'
+import { ComponentScanLoaderOptions } from '../revane-componentscan/ComponentScanLoaderOptions.js'
+import CoreOptions from '../revane-ioc-core/Options.js'
+import { Scopes } from '../revane-ioc-core/Scopes.js'
+import Options from './Options.js'
 
 export class CoreOptionsBuilder {
   public prepareCoreOptions (options: Options): CoreOptions {

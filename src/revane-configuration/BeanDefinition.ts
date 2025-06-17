@@ -1,6 +1,6 @@
-import { ConfigurationPropertiesData } from './ConfigurationProperties'
+import { ConfigurationPropertiesData } from './ConfigurationProperties.js'
 
-declare module '../revane-ioc-core/BeanDefinition' {
+declare module '../revane-ioc-core/BeanDefinition.js' {
   interface BeanDefinition {
     configurationProperties?: ConfigurationPropertiesData
   }

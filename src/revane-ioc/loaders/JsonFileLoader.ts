@@ -1,12 +1,10 @@
-'use strict'
-
 import { readFile } from 'fs'
-import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition'
-import { DependencyDefinition } from '../../revane-ioc-core/dependencies/DependencyDefinition'
-import Loader from '../../revane-ioc-core/Loader'
-import { BeanDefinition } from '../RevaneIOC'
-import UnknownEndingError from '../UnknownEndingError'
-import { JsonFileLoaderOptions } from './JsonFileLoaderOptions'
+import DefaultBeanDefinition from '../../revane-ioc-core/DefaultBeanDefinition.js'
+import { DependencyDefinition } from '../../revane-ioc-core/dependencies/DependencyDefinition.js'
+import Loader from '../../revane-ioc-core/Loader.js'
+import { BeanDefinition } from '../RevaneIOC.js'
+import UnknownEndingError from '../UnknownEndingError.js'
+import { JsonFileLoaderOptions } from './JsonFileLoaderOptions.js'
 
 export default class JsonFileLoader implements Loader {
   public async load (options: JsonFileLoaderOptions[]): Promise<BeanDefinition[]> {

@@ -1,5 +1,5 @@
-import { ComponentScanExtension } from './ComponentScanExtension'
-import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions'
+import { ComponentScanExtension } from './ComponentScanExtension.js'
+import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions.js'
 import {
   Component,
   Configuration,
@@ -9,9 +9,9 @@ import {
   Scheduler,
   Scope,
   Service
-} from './Decorators'
-import Filter from './Filter'
-import RegexFilter from './RegexFilter'
+} from './Decorators.js'
+import Filter from './Filter.js'
+import RegexFilter from './RegexFilter.js'
 
 export {
   ComponentScanExtension,

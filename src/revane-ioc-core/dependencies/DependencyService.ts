@@ -1,8 +1,8 @@
-import { BeanDefinition } from '../BeanDefinition'
-import { DependencyResolver } from './DependencyResolver'
-import { DependencyDefinition } from './DependencyDefinition'
-import UnknownDependencyType from './UnknownDependencyType'
-import Bean from '../context/bean/Bean'
+import { BeanDefinition } from '../BeanDefinition.js'
+import { DependencyResolver } from './DependencyResolver.js'
+import { DependencyDefinition } from './DependencyDefinition.js'
+import UnknownDependencyType from './UnknownDependencyType.js'
+import Bean from '../context/bean/Bean.js'
 
 export class DependencyService {
   constructor (private readonly dependencyResolvers: DependencyResolver[]) {}

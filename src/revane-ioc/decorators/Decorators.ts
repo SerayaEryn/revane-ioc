@@ -1,5 +1,5 @@
-import { createConditionalOnMissingBeanDecorator } from './ConditionalOnMissingBean'
-import { createLifeCycleDecorator } from './LifeCycleDecorators'
+import { createConditionalOnMissingBeanDecorator } from './ConditionalOnMissingBean.js'
+import { createLifeCycleDecorator } from './LifeCycleDecorators.js'
 
 const ConditionalOnMissingBean = createConditionalOnMissingBeanDecorator()
 const PostConstruct = createLifeCycleDecorator('postConstruct')

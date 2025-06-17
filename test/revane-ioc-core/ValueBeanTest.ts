@@ -1,5 +1,5 @@
 import test from 'ava'
-import ValueBean from '../../src/revane-ioc-core/context/bean/ValueBean'
+import ValueBean from '../../src/revane-ioc-core/context/bean/ValueBean.js'
 
 test('should return Promise on postContruct()', async (t) => {
   const bean = new ValueBean('test')

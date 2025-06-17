@@ -1,11 +1,11 @@
 'use strict';
 
-const Component = require('../../bin/src/revane-ioc/RevaneIOC').Component;
+import { Component } from '../../bin/src/revane-ioc/RevaneIOC.js';
 
-class Scan1 {
+const Scan1 = Component('scan2')(class Scan1 {
   constructor() {
     throw new Error('booom')
   }
-}
+})
 
-exports.default = Component('scan2')(Scan1);
+export { Scan1 }

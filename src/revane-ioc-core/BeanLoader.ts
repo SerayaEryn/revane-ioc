@@ -1,6 +1,6 @@
-import Options from './Options'
-import Loader from './Loader'
-import { BeanDefinition } from './BeanDefinition'
+import Options from './Options.js'
+import Loader from './Loader.js'
+import { BeanDefinition } from './BeanDefinition.js'
 
 export default class BeanLoader {
   constructor (private readonly loaders: Loader[]) {}

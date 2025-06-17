@@ -1,8 +1,8 @@
-import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy'
-import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy'
-import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy'
-import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
-import { Options } from './RevaneIOC'
+import { JsonLoadingStrategy } from '../revane-configuration/loading/JsonLoadingStrategy.js'
+import { PropertiesLoadingStrategy } from '../revane-configuration/loading/PropertiesLoadingStrategy.js'
+import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingStrategy.js'
+import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration.js'
+import { Options } from './RevaneIOC.js'
 
 export function buildConfiguration (options: Options, profile: string): RevaneConfiguration {
   return new RevaneConfiguration(

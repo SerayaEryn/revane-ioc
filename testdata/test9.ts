@@ -1,4 +1,4 @@
-import { Controller } from '../src/revane-ioc/RevaneIOC'
+import { Controller } from '../src/revane-ioc/RevaneIOC.js'
 
 @Controller
 export default class Test9 {

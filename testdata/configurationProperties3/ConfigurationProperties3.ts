@@ -1,8 +1,8 @@
 'use strict';
 
-import { Scope } from '../../src/revane-componentscan/Decorators'
-import { Scopes } from '../../src/revane-ioc-core/Scopes'
-import { ConfigurationProperties } from '../../src/revane-ioc/RevaneIOC'
+import { Scope } from '../../src/revane-componentscan/Decorators.js'
+import { Scopes } from '../../src/revane-ioc-core/Scopes.js'
+import { ConfigurationProperties } from '../../src/revane-ioc/RevaneIOC.js'
 
 @Scope(Scopes.PROTOTYPE)
 @ConfigurationProperties({ prefix: 'test' })

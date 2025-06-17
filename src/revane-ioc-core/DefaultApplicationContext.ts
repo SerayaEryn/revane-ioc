@@ -1,6 +1,6 @@
-import { ApplicationContext } from './ApplicationContext'
-import Bean from './context/bean/Bean'
-import NotFoundError from './context/errors/NotFoundError'
+import { ApplicationContext } from './ApplicationContext.js'
+import Bean from './context/bean/Bean.js'
+import NotFoundError from './context/errors/NotFoundError.js'
 
 export class DefaultApplicationContext implements ApplicationContext {
   private parent: ApplicationContext | null

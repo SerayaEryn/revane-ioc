@@ -1,5 +1,5 @@
-import { uid } from '../../../revane-utils/Random'
-import { Constructor } from '../../Constructor'
+import { uid } from '../../../revane-utils/Random.js'
+import { Constructor } from '../../Constructor.js'
 import Bean from './Bean'
 
 export default class ValueBean implements Bean {

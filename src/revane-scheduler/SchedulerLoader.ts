@@ -1,6 +1,6 @@
-import { Loader, LoaderOptions, BeanDefinition } from '../revane-ioc/RevaneIOC'
-import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition'
-import { TaskScheduler } from './TaskScheduler'
+import { Loader, LoaderOptions, BeanDefinition } from '../revane-ioc/RevaneIOC.js'
+import DefaultBeanDefinition from '../revane-ioc-core/DefaultBeanDefinition.js'
+import { TaskScheduler } from './TaskScheduler.js'
 
 export class SchedulerLoader implements Loader {
   #taskScheduler: TaskScheduler

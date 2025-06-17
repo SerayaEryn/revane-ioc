@@ -1,6 +1,6 @@
-import Options from '../revane-ioc/decorators/Options'
+import Options from '../revane-ioc/decorators/Options.js'
 import { Parser } from 'acorn'
-import { dependenciesSym, idSym, typeSym } from './Symbols'
+import { dependenciesSym, idSym, typeSym } from './Symbols.js'
 
 export function createComponentDecorator (type: string) {
   return function decorateComponent (options?: Options | string | any) {

@@ -1,6 +1,6 @@
-import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor'
-import DefaultBeanDefinition from '../DefaultBeanDefinition'
-import Options from '../Options'
+import { BeanFactoryPreProcessor } from './BeanFactoryPreProcessor.js'
+import DefaultBeanDefinition from '../DefaultBeanDefinition.js'
+import Options from '../Options.js'
 import { join } from 'path'
 
 export class PathBeanFactoryPreProcessor implements BeanFactoryPreProcessor {

@@ -1,6 +1,6 @@
-import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
-import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
-import Bean from '../revane-ioc-core/context/bean/Bean'
+import { BeanDefinition } from '../revane-ioc-core/BeanDefinition.js'
+import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js'
+import Bean from '../revane-ioc-core/context/bean/Bean.js'
 
 export class LifeCycleBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
   async postProcess (beanDefinition: BeanDefinition, bean: Bean, instance: any): Promise<void> {

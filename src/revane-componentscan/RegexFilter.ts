@@ -1,6 +1,4 @@
-'use strict'
-
-import Filter from './Filter'
+import Filter from './Filter.js'
 
 export default class RegexFilter implements Filter {
   private readonly regex: RegExp

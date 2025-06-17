@@ -1,4 +1,4 @@
-import { Component, PostConstruct, PreDestroy, Scope, Scopes } from "../../src/revane-ioc/RevaneIOC"
+import { Component, PostConstruct, PreDestroy, Scope, Scopes } from "../../src/revane-ioc/RevaneIOC.js"
 
 let callCount = 0
 

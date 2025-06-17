@@ -1,4 +1,4 @@
-import { beansSym } from './Symbols'
+import { beansSym } from './Symbols.js'
 import 'reflect-metadata'
 
 function createBeanDecorator (): Function {

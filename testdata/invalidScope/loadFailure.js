@@ -1,9 +1,9 @@
 'use strict';
 
-const { Scope, Component } = require('../../bin/src/revane-ioc/RevaneIOC')
+import { Scope, Component } from '../../bin/src/revane-ioc/RevaneIOC.js'
 
-class Xml3 {
+const Xml3 = Scope('boooom')(Component(class Xml3 {
   constructor() {}
-}
+}))
 
-module.exports = Scope('boooom')(Component(Xml3))
+export { Xml3 }

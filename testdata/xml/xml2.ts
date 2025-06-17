@@ -1,4 +1,4 @@
-import { PreDestroy } from '../../src/revane-ioc/RevaneIOC'
+import { PreDestroy } from '../../src/revane-ioc/RevaneIOC.js'
 
 export default class Xml2 {
   xml1: any

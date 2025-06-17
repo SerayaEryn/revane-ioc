@@ -1,4 +1,4 @@
-import { ConfigurationProperties } from '../../src/revane-ioc/RevaneIOC'
+import { ConfigurationProperties } from '../../src/revane-ioc/RevaneIOC.js'
 
 @ConfigurationProperties({ prefix: 'test' })
 export class ConfigurationProperties7 {

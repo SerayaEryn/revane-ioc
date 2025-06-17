@@ -1,6 +1,4 @@
-'use strict'
-
-import { Component } from '../../src/revane-ioc/RevaneIOC'
+import { Component } from '../../src/revane-ioc/RevaneIOC.js'
 
 @Component('scan2')
 export default class Scan1 {

@@ -1,8 +1,8 @@
-import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
-import { BeanDefinition } from '../revane-ioc-core/BeanDefinition'
-import { BeanAnnotationBeanDefinition } from './BeanAnnotationBeanDefinition'
-import { beansSym } from './Symbols'
-import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition'
+import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js'
+import { BeanDefinition } from '../revane-ioc-core/BeanDefinition.js'
+import { BeanAnnotationBeanDefinition } from './BeanAnnotationBeanDefinition.js'
+import { beansSym } from './Symbols.js'
+import { DependencyDefinition } from '../revane-ioc-core/dependencies/DependencyDefinition.js'
 import 'reflect-metadata/lite'
 
 export class BeanAnnotationBeanFactoryPreProcessor implements BeanFactoryPreProcessor {

@@ -1,6 +1,6 @@
-import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor'
-import { Extension } from '../revane-ioc/Extension'
-import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor'
+import { BeanFactoryPreProcessor } from '../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js'
+import { Extension } from '../revane-ioc/Extension.js'
+import { BeanAnnotationBeanFactoryPreProcessor } from './BeanAnnotationBeanFactoryPreProcessor.js'
 
 export class BeanFactoryExtension extends Extension {
   public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {

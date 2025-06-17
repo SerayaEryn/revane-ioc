@@ -1,11 +1,11 @@
-import { LogFactory } from './LogFactory'
+import { LogFactory } from './LogFactory.js'
 import {
   createLogger, ConsoleTransport, Logger, SimpleFormat, Transport, JsonFormat
 } from 'apheleia'
-import { LoggingOptions } from './LoggingOptions'
+import { LoggingOptions } from './LoggingOptions.js'
 import { createWriteStream } from 'fs'
 import { join } from 'path'
-import { Bean } from '../revane-ioc/RevaneIOC'
+import { Bean } from '../revane-ioc/RevaneIOC.js'
 
 export class DefaultLogFactory implements LogFactory {
   private readonly rootLogger1: Logger

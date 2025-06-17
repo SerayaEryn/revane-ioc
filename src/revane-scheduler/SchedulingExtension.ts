@@ -1,11 +1,11 @@
-import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration'
-import Loader from '../revane-ioc-core/Loader'
-import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor'
-import { Extension } from '../revane-ioc/Extension'
-import { Options } from './Options'
-import { SchedulerBeanPostProcessor } from './SchedulerBeanPostProcessor'
-import { SchedulerLoader } from './SchedulerLoader'
-import { TaskScheduler } from './TaskScheduler'
+import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration.js'
+import Loader from '../revane-ioc-core/Loader.js'
+import { BeanFactoryPostProcessor } from '../revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js'
+import { Extension } from '../revane-ioc/Extension.js'
+import { Options } from './Options.js'
+import { SchedulerBeanPostProcessor } from './SchedulerBeanPostProcessor.js'
+import { SchedulerLoader } from './SchedulerLoader.js'
+import { TaskScheduler } from './TaskScheduler.js'
 
 export class SchedulingExtension extends Extension {
   readonly #taskScheduler = new TaskScheduler()

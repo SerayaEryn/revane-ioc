@@ -1,4 +1,4 @@
-import { LoaderOptions } from '../revane-ioc/RevaneIOC'
+import { LoaderOptions } from '../revane-ioc/RevaneIOC.js'
 
 export class ComponentScanLoaderOptions extends LoaderOptions {
   constructor (

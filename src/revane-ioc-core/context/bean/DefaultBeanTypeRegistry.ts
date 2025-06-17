@@ -1,4 +1,4 @@
-import BeanTypeRegistry from './BeanTypeRegistry'
+import BeanTypeRegistry from './BeanTypeRegistry.js'
 
 export default class DefaultBeanTypeRegistry implements BeanTypeRegistry {
   private typesByScope = new Map<string, any>()

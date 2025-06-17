@@ -1,4 +1,4 @@
-import { BeanDefinition } from '../BeanDefinition'
+import { BeanDefinition } from '../BeanDefinition.js'
 
 export interface BeanFactoryPreProcessor {
   preProcess: (

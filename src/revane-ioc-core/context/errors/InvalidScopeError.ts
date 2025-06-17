@@ -1,6 +1,4 @@
-'use strict'
-
-import { RethrowableError } from '../../RethrowableError'
+import { RethrowableError } from '../../RethrowableError.js'
 
 export default class InvalidScopeError extends RethrowableError {
   public code = 'REV_ERR_INVALID_SCOPE'

@@ -3,17 +3,17 @@ import RevaneIOC, {
   ComponentScanExtension,
   ComponentScanLoaderOptions,
   Options
-} from '../../src/revane-ioc/RevaneIOC'
+} from '../../src/revane-ioc/RevaneIOC.js'
 import test from 'ava'
 
 test('should get beans type component', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     [new ComponentScanExtension()]
   )
   options.loaderOptions = [
     new ComponentScanLoaderOptions(
-      join(__dirname, '../../testdata/injectByType'),
+      join(import.meta.dirname, '../../testdata/injectByType'),
       [],
       []
     )
@@ -31,12 +31,12 @@ test('should get beans type component', async (t) => {
 
 test('should not use object type for inejction', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     [new ComponentScanExtension()]
   )
   options.loaderOptions = [
     new ComponentScanLoaderOptions(
-      join(__dirname, '../../testdata/scan3'),
+      join(import.meta.dirname, '../../testdata/scan3'),
       [],
       []
     )

@@ -1,23 +1,23 @@
 import { join } from 'path'
 import test from 'ava'
-import Revane, { Options, Scopes } from '../../src/revane-ioc/RevaneIOC'
-import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions'
-import { XmlFileLoaderOptions } from '../../src/revane-ioc/loaders/XmlFileLoaderOptions'
-import { beanDefinition, MockedExtension } from '../MockedLoader'
-import { Lifecycle1 } from '../../testdata/lifecycle1/Lifecycle1'
-import { Lifecycle2 } from '../../testdata/lifecycle2/Lifecycle2'
-import Test1 from '../../testdata/test1'
-import ConditionalOnMissingBean3 from '../../testdata/conditionalOnMissingBean2/ConditionalOnMissingBean3'
-import ConditionalOnMissingBean2 from '../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean2'
-import ConditionalOnMissingBean1 from '../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean1'
+import Revane, { Options, Scopes } from '../../src/revane-ioc/RevaneIOC.js'
+import { JsonFileLoaderOptions } from '../../src/revane-ioc/loaders/JsonFileLoaderOptions.js'
+import { XmlFileLoaderOptions } from '../../src/revane-ioc/loaders/XmlFileLoaderOptions.js'
+import { beanDefinition, MockedExtension } from '../MockedLoader.js'
+import { Lifecycle1 } from '../../testdata/lifecycle1/Lifecycle1.js'
+import { Lifecycle2 } from '../../testdata/lifecycle2/Lifecycle2.js'
+import Test1 from '../../testdata/test1.js'
+import ConditionalOnMissingBean3 from '../../testdata/conditionalOnMissingBean2/ConditionalOnMissingBean3.js'
+import ConditionalOnMissingBean2 from '../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean2.js'
+import ConditionalOnMissingBean1 from '../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean1.js'
 
 test('should read json configuration file and register beans', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -34,11 +34,11 @@ test('should read json configuration file and register beans', async (t) => {
 
 test('should throw error on unknown id', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -51,11 +51,11 @@ test('should throw error on unknown id', async (t) => {
 
 test('should throw error if not initialized #1', async (t) => {
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -69,11 +69,11 @@ test('should throw error if not initialized #1', async (t) => {
 
 test('should throw error if not initialized #2', async (t) => {
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -87,11 +87,11 @@ test('should throw error if not initialized #2', async (t) => {
 
 test('should throw error if not initialized #3', async (t) => {
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -105,22 +105,22 @@ test('should throw error if not initialized #3', async (t) => {
 
 test('should use parent context', async (t) => {
   const options1 = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options1.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options1.configuration = { disabled: true }
   options1.profile = 'test'
   const revane1 = new Revane(options1)
 
   const options2 = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options2.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config4.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config4.json'))
   ]
   options2.configuration = { disabled: true }
   options2.profile = 'test'
@@ -144,11 +144,11 @@ test('should read json configuration file and register beans #2', async (t) => {
   t.plan(4)
 
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config3.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config3.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -168,11 +168,11 @@ test('should return if beans exist()', async (t) => {
   t.plan(4)
 
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config3.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config3.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -189,12 +189,12 @@ test('should read json and xml configuration file and register beans', async (t)
   t.plan(6)
 
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json')),
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config.xml'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json')),
+    new XmlFileLoaderOptions(join(import.meta.dirname, '../../../testdata/xml/config.xml'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -215,11 +215,11 @@ test('should read json and xml configuration file and register beans', async (t)
 
 test('should create bean for module', async (t) => {
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config3.xml'))
+    new XmlFileLoaderOptions(join(import.meta.dirname, '../../../testdata/xml/config3.xml'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -231,11 +231,11 @@ test('should create bean for module', async (t) => {
 
 test('should tearDown', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new XmlFileLoaderOptions(join(__dirname, '../../../testdata/xml/config4.xml'))
+    new XmlFileLoaderOptions(join(import.meta.dirname, '../../../testdata/xml/config4.xml'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -250,7 +250,7 @@ test('should read not reject on missing paths', async (t): Promise<void> => {
   t.plan(1)
 
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.configuration = { disabled: true }
@@ -264,11 +264,11 @@ test('should read not reject on missing paths', async (t): Promise<void> => {
 
 test('should read json config file and reject on missing dependency', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config2.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config2.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -282,11 +282,11 @@ test('should read json config file and reject on missing dependency', async (t) 
 
 test('should reject error on unknown configuration file ending - json', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config2.test'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config2.test'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -300,12 +300,12 @@ test('should reject error on unknown configuration file ending - json', async (t
 
 test('should reject error on unknown configuration file ending - xml', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
     new XmlFileLoaderOptions(
-      join(__dirname, '../../../testdata/json/config2.test')
+      join(import.meta.dirname, '../../../testdata/json/config2.test')
     )
   ]
   options.configuration = { disabled: true }
@@ -322,11 +322,11 @@ test('should throw error on get() if not initialized', async (t): Promise<void> 
   t.plan(2)
 
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -343,11 +343,11 @@ test('should throw error on has() if not initialized', async (t): Promise<void> 
   t.plan(2)
 
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -364,11 +364,11 @@ test('should throw error on getMultiple if not initialized', async (t) => {
   t.plan(2)
 
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -385,7 +385,7 @@ test('should throw error if bean was defined twice', async (t) => {
   t.plan(2)
 
   const options = new Options(
-    join(__dirname, '../../../testdata'),
+    join(import.meta.dirname, '../../../testdata'),
     [new MockedExtension([
       beanDefinition('scan1', Test1),
       beanDefinition('scan1', Test1)
@@ -405,7 +405,7 @@ test('should throw error if bean was defined twice', async (t) => {
 
 test('should not throw error if bean redefinition is allowed', async (t) => {
   const options = new Options(
-    join(__dirname, '../../../testdata/definedTwice'),
+    join(import.meta.dirname, '../../../testdata/definedTwice'),
     [new MockedExtension([
       beanDefinition('scan1', Test1),
       beanDefinition('scan1', Test1)
@@ -421,7 +421,7 @@ test('should not throw error if bean redefinition is allowed', async (t) => {
 
 test('should not create conditional bean if not missing', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata/conditionalOnMissingBean1'),
+    join(import.meta.dirname, '../../testdata/conditionalOnMissingBean1'),
     [new MockedExtension([
       beanDefinition('conditionalOnMissingBean', ConditionalOnMissingBean1),
       beanDefinition('conditionalOnMissingBean', ConditionalOnMissingBean2)
@@ -437,7 +437,7 @@ test('should not create conditional bean if not missing', async (t) => {
 
 test('should create conditional bean if missing', async (t) => {
   const options = new Options(
-    join(__dirname, '../../testdata/conditionalOnMissingBean2'),
+    join(import.meta.dirname, '../../testdata/conditionalOnMissingBean2'),
     [new MockedExtension([
       beanDefinition('conditionalOnMissingBean', ConditionalOnMissingBean3)
     ])]
@@ -451,13 +451,13 @@ test('should create conditional bean if missing', async (t) => {
 })
 
 test('should return multiple beans', async (t) => {
-  const basePackage = join(__dirname, '../../testdata')
+  const basePackage = join(import.meta.dirname, '../../testdata')
   const options = new Options(
     basePackage,
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -472,11 +472,11 @@ test('should throw error on getByType if not initialized', async (t) => {
   t.plan(2)
 
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     []
   )
   options.loaderOptions = [
-    new JsonFileLoaderOptions(join(__dirname, '../../../testdata/json/config.json'))
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config.json'))
   ]
   options.configuration = { disabled: true }
   options.profile = 'test'
@@ -495,7 +495,7 @@ test('should get beans type component', async (t) => {
   const beanDefinition2 = beanDefinition('test2', Test1)
   beanDefinition2.type = 'service'
   const options = new Options(
-    join(__dirname, '../../testdata'),
+    join(import.meta.dirname, '../../testdata'),
     [new MockedExtension([beanDefinition1, beanDefinition2])]
   )
   options.loaderOptions = []
@@ -513,7 +513,7 @@ test('should invoke lifecycle methods for bean with scope prototype', async (t) 
   const beanDefinition1 = beanDefinition('test', Lifecycle1)
   beanDefinition1.scope = Scopes.PROTOTYPE
   const options = new Options(
-    join(__dirname, '../../testdata/lifecycle'),
+    join(import.meta.dirname, '../../testdata/lifecycle'),
     [new MockedExtension([
       beanDefinition1
     ])]
@@ -534,7 +534,7 @@ test('should not try to call no existant preDestroy hook', async (t) => {
   const beanDefinition1 = beanDefinition('test', Lifecycle2)
   beanDefinition1.scope = Scopes.PROTOTYPE
   const options = new Options(
-    join(__dirname, '../../testdata/lifecycle'),
+    join(import.meta.dirname, '../../testdata/lifecycle'),
     [new MockedExtension([
       beanDefinition1
     ])]

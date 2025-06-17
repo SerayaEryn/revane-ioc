@@ -1,4 +1,4 @@
-import { TaskScheduler } from '../../src/revane-scheduler/TaskScheduler'
+import { TaskScheduler } from '../../src/revane-scheduler/TaskScheduler.js'
 
 export default class SchedulingErrorhandler3 {
   handledError = false

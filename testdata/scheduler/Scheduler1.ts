@@ -1,4 +1,4 @@
-import { Scheduled } from '../../src/revane-ioc/RevaneIOC'
+import { Scheduled } from '../../src/revane-ioc/RevaneIOC.js'
 
 export default class Scheduler1 {
   public executed = false
