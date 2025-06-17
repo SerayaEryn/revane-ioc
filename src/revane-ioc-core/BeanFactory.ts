@@ -11,6 +11,7 @@ import { BeanDefinition } from './BeanDefinition.js'
 import { RethrowableError } from './RethrowableError.js'
 import { DependencyService } from './dependencies/DependencyService.js'
 import { DependencyDefinition } from './dependencies/DependencyDefinition.js'
+import CircularDependencyError from './context/errors/CircularDependencyError.js'
 
 export class BeanFactory {
   private readonly preProcessors: BeanFactoryPreProcessor[]
@@ -97,6 +98,9 @@ export class BeanFactory {
     }
     const dependencies: Bean[] = []
     for (const dependency of beanDefinition.dependencyIds) {
+      if (beanDefinition.id == dependency.value) {
+        throw new CircularDependencyError(beanDefinition.id)
+      }
       const dependencyForBean = await this.dependencyService.getDependency(
         dependency,
         beanDefinition.id,

@@ -141,6 +141,27 @@ test('should throw error if dependency throws error', async (t) => {
   }
 })
 
+test('should throw error if dependency has itself as dependency', async (t) => {
+  t.plan(2)
+
+  const options = new Options(
+    join(import.meta.dirname, '../../../testdata'),
+    [new ComponentScanExtension()]
+  )
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(join(import.meta.dirname, '../../../testdata/dependencyError2'), null, null)
+  ]
+  options.configuration = { disabled: true }
+  options.profile = 'test'
+  const revane = new RevaneIOC(options)
+  try {
+    await revane.initialize()
+  } catch (err) {
+    t.truthy(err)
+    t.is(err.code, 'REV_ERR_DEPENDENCY_REGISTER')
+  }
+})
+
 test('component scan should handle file without bean', async (t) => {
   const options = new Options(
     join(import.meta.dirname, '../../testdata'),
