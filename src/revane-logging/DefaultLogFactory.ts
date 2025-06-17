@@ -8,25 +8,24 @@ import { join } from 'path'
 import { Bean } from '../revane-ioc/RevaneIOC.js'
 
 export class DefaultLogFactory implements LogFactory {
-  private readonly rootLogger1: Logger
+  readonly #rootLogger: Logger
 
   constructor (private readonly options: LoggingOptions) {
-    this.rootLogger1 = createLogger({
+    this.#rootLogger = createLogger({
       transports: this.transports(),
       level: options.rootLevel
     })
-    this.rootLogger1.info('Starting Revane application...')
   }
 
   public getInstance (id: string): Logger {
-    const logger = this.rootLogger1.child({ beanId: id })
+    const logger = this.#rootLogger.child({ beanId: id })
     logger.setLevel(this.options.levels[id] ?? this.options.rootLevel)
     return logger
   }
 
   @Bean
   public rootLogger (): Logger {
-    return this.rootLogger1
+    return this.#rootLogger
   }
 
   private transports (): Transport[] {
