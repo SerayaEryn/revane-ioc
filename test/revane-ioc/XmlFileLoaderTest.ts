@@ -1,4 +1,4 @@
-import { join } from node:";
+import { join } from "node:path";
 import test from "ava";
 import XmlFileLoader from "../../src/revane-ioc/loaders/XmlFileLoader.js";
 import { XmlFileLoaderOptions } from "../../src/revane-ioc/loaders/XmlFileLoaderOptions.js";
