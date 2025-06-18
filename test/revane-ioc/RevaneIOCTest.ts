@@ -185,6 +185,24 @@ test('should return if beans exist()', async (t) => {
   t.truthy(!await revane.has('test'))
 })
 
+test('should fallback to default profile', async (t) => {
+  t.plan(2)
+
+  const options = new Options(
+    join(import.meta.dirname, '../../testdata'),
+    []
+  )
+  options.loaderOptions = [
+    new JsonFileLoaderOptions(join(import.meta.dirname, '../../../testdata/json/config3.json'))
+  ]
+  const revane = new Revane(options)
+  await revane.initialize()
+  const configuration = await revane.get('configuration')
+
+  t.is(configuration.get('revane.original-profile'), null)
+  t.is(configuration.getString('revane.profile'), 'default')
+})
+
 test('should read json and xml configuration file and register beans', async (t) => {
   t.plan(6)
 

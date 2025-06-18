@@ -3,8 +3,8 @@ import { LoaderOptions } from '../revane-ioc-core/LoaderOptions.js'
 import { Extension } from './Extension.js'
 
 export default class Options {
-  public profile?: string
-  public noRedefinition = true
+  public profile: string | null
+  public noRedefinition: boolean | null
   public loaderOptions?: LoaderOptions[]
 
   public configuration?: {

@@ -54,6 +54,7 @@ import {
   Service
 } from '../revane-componentscan/RevaneConponentScan.js'
 import { DependencyResolver } from '../revane-ioc-core/dependencies/DependencyResolver.js'
+import { ConfigurationExtension } from '../revane-configuration/ConfigurationExtension.js'
 
 export {
   BeanDefinition,
@@ -95,8 +96,6 @@ export {
   DependencyResolver
 }
 
-const ALLOW_BEAN_REDEFINITION = 'revane.main.allow-bean-definition-overriding'
-
 export default class RevaneIOC {
   #revaneCore: RevaneCore
   #options: Options
@@ -109,33 +108,27 @@ export default class RevaneIOC {
       this.#options.autoConfiguration = false
     }
 
-    const profile = this.#options.profile ?? process.env.REVANE_PROFILE ?? 'dev'
+    const profile = this.#options.profile ?? process.env.REVANE_PROFILE ?? null
     this.#options.profile = profile
     this.#configuration = buildConfiguration(this.#options, profile)
+    this.#options.extensions = [
+      new ConfigurationExtension(this.#configuration, !(this.#options.configuration?.disabled ?? false)),
+      ...this.#options.extensions
+    ]
   }
 
   public async initialize (): Promise<void> {
-    await this.#configuration.init()
-    this.loadOptionsFromConfiguration()
     for (const extension of this.#options.extensions) {
       await extension.initialize(this.#configuration)
     }
     const coreOptionsBuilder = new CoreOptionsBuilder()
-    const coreOptions = coreOptionsBuilder.prepareCoreOptions(this.#options)
+    const coreOptions = coreOptionsBuilder.prepareCoreOptions(this.#options, this.#configuration)
     const beanTypeRegistry = this.beanTypeRegistry()
     this.#revaneCore = new RevaneCore(coreOptions, beanTypeRegistry)
     await this.addDefaultPlugins()
     await this.#revaneCore.initialize()
     this.#initialized = true
   }
-
-  private loadOptionsFromConfiguration (): void {
-    if (this.#configuration.has(ALLOW_BEAN_REDEFINITION)) {
-      const allowRedefinition = this.#configuration.getBoolean(ALLOW_BEAN_REDEFINITION)
-      this.#options.noRedefinition = !allowRedefinition
-    }
-  }
-
   public async get (id: string): Promise<any> {
     this.checkIfInitialized()
     return await this.#revaneCore.getById(id)
@@ -172,19 +165,9 @@ export default class RevaneIOC {
   }
 
   private async addDefaultPlugins (): Promise<void> {
-    if (!(this.#options.configuration?.disabled ?? false)) {
-      this.#revaneCore.addPlugin('loader', new ConfigurationLoader(this.#configuration))
-    }
     this.#revaneCore?.addPlugin('loader', new XmlFileLoader())
     this.#revaneCore?.addPlugin('loader', new JsonFileLoader())
     this.#revaneCore?.addPlugin('beanFactoryPostProcessor', new LifeCycleBeanFactoryPostProcessor())
-    if (!(this.#options.configuration?.disabled ?? false)) {
-      this.#revaneCore?.addPlugin(
-        'beanFactoryPostProcessor',
-        new ConfigurationPropertiesPostProcessor(this.#configuration)
-      )
-      this.#revaneCore?.addPlugin('beanFactoryPreProcessor', new ConfigurationPropertiesPreProcessor())
-    }
     for (const extension of this.#options.extensions) {
       for (const beanFactoryPreProcessor of extension.beanFactoryPreProcessors()) {
         this.#revaneCore?.addPlugin('beanFactoryPreProcessor', beanFactoryPreProcessor)

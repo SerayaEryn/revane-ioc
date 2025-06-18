@@ -6,7 +6,7 @@ import { TypeMismatch } from './TypeMismatch.js'
 import { deepMerge } from '../revane-utils/Deepmerge.js'
 
 export class ConfigurationOptions {
-  profile: string
+  profile: string | null
   directory: string
   required: boolean
   disabled: boolean
@@ -14,7 +14,7 @@ export class ConfigurationOptions {
   basePackage: string
 
   constructor (
-    profile: string,
+    profile: string | null,
     directory: string,
     required: boolean,
     disabled: boolean,
@@ -39,10 +39,12 @@ export class RevaneConfiguration implements Configuration {
   }
 
   public async init (): Promise<void> {
+    this.put('revane.original-profile', this.options.profile)
+    this.put('revane.profile', this.options.profile ?? 'default')
+    this.put('revane.basePackage', this.options.basePackage)
     if (!this.options.disabled) {
       await this.loadConfigFiles()
     }
-    this.put('revane.basePackage', this.options.basePackage)
   }
 
   public put (key: string, value: any): void {
@@ -109,10 +111,11 @@ export class RevaneConfiguration implements Configuration {
   }
 
   private async loadConfigFiles() {
+    const profile = this.getString('revane.profile')
     for (const strategy of this.options.strategies) {
       let loadedValues: object = {}
       try {
-        const { directory: configDirectory, profile } = this.options
+        const { directory: configDirectory } = this.options
         loadedValues = await strategy.load(configDirectory, profile)
         this.values = deepMerge(this.values, loadedValues)
         loadedValues = {}

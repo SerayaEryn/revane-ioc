@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "unit": "ava bin/test/**/*Test.js",
-    "test": "npm run postbuild && npm run unit",
+    "test": "npm run compile && npm run postbuild && npm run unit",
     "lint": "npx eslint .",
     "coverage": "npm run compile && c8 npm run test",
     "compile": "tsc -d",

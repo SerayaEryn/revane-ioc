@@ -4,7 +4,7 @@ import { YmlLoadingStrategy } from '../revane-configuration/loading/YmlLoadingSt
 import { ConfigurationOptions, RevaneConfiguration } from '../revane-configuration/RevaneConfiguration.js'
 import { Options } from './RevaneIOC.js'
 
-export function buildConfiguration (options: Options, profile: string): RevaneConfiguration {
+export function buildConfiguration (options: Options, profile: string | null): RevaneConfiguration {
   return new RevaneConfiguration(
     new ConfigurationOptions(
       profile,

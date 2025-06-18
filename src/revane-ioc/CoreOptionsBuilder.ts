@@ -2,9 +2,12 @@ import { ComponentScanLoaderOptions } from '../revane-componentscan/ComponentSca
 import CoreOptions from '../revane-ioc-core/Options.js'
 import { Scopes } from '../revane-ioc-core/Scopes.js'
 import Options from './Options.js'
+import { RevaneConfiguration } from './RevaneIOC.js'
+
+const ALLOW_BEAN_REDEFINITION = 'revane.main.allow-bean-definition-overriding'
 
 export class CoreOptionsBuilder {
-  public prepareCoreOptions (options: Options): CoreOptions {
+  public prepareCoreOptions (options: Options, configuration: RevaneConfiguration): CoreOptions {
     const coreOptions: CoreOptions = new CoreOptions()
     coreOptions.loaderOptions = options.loaderOptions ?? []
     if (options.autoConfiguration === true) {
@@ -14,7 +17,14 @@ export class CoreOptionsBuilder {
     }
     coreOptions.defaultScope = Scopes.SINGLETON
     coreOptions.basePackage = options.basePackage
-    coreOptions.noRedefinition = options.noRedefinition
+    if (options.noRedefinition != null) {
+      coreOptions.noRedefinition = options.noRedefinition
+    } else if (configuration.has(ALLOW_BEAN_REDEFINITION)) {
+      const allowRedefinition = configuration.getBoolean(ALLOW_BEAN_REDEFINITION)
+      coreOptions.noRedefinition = !allowRedefinition
+    } else {
+      coreOptions.noRedefinition = true
+    }
     return coreOptions
   }
 }
