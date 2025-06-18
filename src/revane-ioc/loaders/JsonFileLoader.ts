@@ -1,4 +1,4 @@
-import { readFile } from "fs";
+import { readFile } from "node:fs";
 import DefaultBeanDefinition from "../../revane-ioc-core/DefaultBeanDefinition.js";
 import { DependencyDefinition } from "../../revane-ioc-core/dependencies/DependencyDefinition.js";
 import Loader from "../../revane-ioc-core/Loader.js";

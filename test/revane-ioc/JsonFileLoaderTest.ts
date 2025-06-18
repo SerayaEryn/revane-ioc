@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from "node:path";
 import test from "ava";
 import JsonFileLoader from "../../src/revane-ioc/loaders/JsonFileLoader.js";
 import { JsonFileLoaderOptions } from "../../src/revane-ioc/loaders/JsonFileLoaderOptions.js";

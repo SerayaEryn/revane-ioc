@@ -1,4 +1,4 @@
-import * as path from "path";
+import * as path from "node:path";
 import test from "ava";
 import RevaneIoc, {
   BeanFactoryExtension,
@@ -9,7 +9,7 @@ import RevaneIoc, {
   Options,
 } from "../../src/revane-ioc/RevaneIOC.js";
 import { LoggingLoader } from "../../src/revane-logging/LoggingLoader.js";
-import { join } from "path";
+import { join } from "node:path";
 
 test("should inject logger", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), [

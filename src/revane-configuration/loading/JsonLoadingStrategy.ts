@@ -1,5 +1,5 @@
 import { LoadingStrategy } from "./LoadingStrategy.js";
-import { promises } from "fs";
+import { promises } from "node:fs";
 import { ConfigFileNotFound } from "./ConfigFileNotFound.js";
 import { replaceEnvironmentVariables } from "./EnvironmentLoader.js";
 import { deepMerge } from "../../revane-utils/Deepmerge.js";

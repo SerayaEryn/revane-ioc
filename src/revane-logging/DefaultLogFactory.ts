@@ -8,8 +8,8 @@ import {
   JsonFormat,
 } from "apheleia";
 import { LoggingOptions } from "./LoggingOptions.js";
-import { createWriteStream } from "fs";
-import { join } from "path";
+import { createWriteStream } from "node:fs";
+import { join } from "node:path";
 import { Bean } from "../revane-ioc/RevaneIOC.js";
 
 export class DefaultLogFactory implements LogFactory {

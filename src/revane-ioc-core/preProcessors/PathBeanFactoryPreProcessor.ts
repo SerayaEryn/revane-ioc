@@ -1,7 +1,7 @@
 import { BeanFactoryPreProcessor } from "./BeanFactoryPreProcessor.js";
 import DefaultBeanDefinition from "../DefaultBeanDefinition.js";
 import Options from "../Options.js";
-import { join } from "path";
+import { join } from "node:path";
 
 export class PathBeanFactoryPreProcessor implements BeanFactoryPreProcessor {
   private readonly options: Options;

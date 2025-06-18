@@ -1,4 +1,4 @@
-import { promises } from "fs";
+import { promises } from "node:fs";
 import { deepMerge } from "../../revane-utils/Deepmerge.js";
 import { ConfigFileNotFound } from "./ConfigFileNotFound.js";
 import { replaceEnvironmentVariables } from "./EnvironmentLoader.js";

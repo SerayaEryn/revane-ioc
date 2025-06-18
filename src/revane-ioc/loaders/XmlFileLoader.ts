@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
-import * as fileSystem from "fs";
+import * as fileSystem from "node:fs";
 import DefaultBeanDefinition from "../../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../../revane-ioc-core/Loader.js";
 import { BeanDefinition } from "../RevaneIOC.js";

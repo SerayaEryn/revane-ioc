@@ -1,5 +1,5 @@
-import { promises } from "fs";
-import { join } from "path";
+import { promises } from "node:fs";
+import { join } from "node:path";
 
 const { stat, readdir } = promises;
 

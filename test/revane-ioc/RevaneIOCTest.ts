@@ -1,4 +1,4 @@
-import { join } from "path";
+import { join } from "node:path";
 import test from "ava";
 import Revane, { Options, Scopes } from "../../src/revane-ioc/RevaneIOC.js";
 import { JsonFileLoaderOptions } from "../../src/revane-ioc/loaders/JsonFileLoaderOptions.js";

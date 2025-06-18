@@ -1,5 +1,5 @@
 import test from "ava";
-import { join } from "path";
+import { join } from "node:path";
 import RevaneIOC, {
   Options,
   SchedulingExtension,

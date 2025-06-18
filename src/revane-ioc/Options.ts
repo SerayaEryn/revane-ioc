@@ -1,4 +1,4 @@
-import { join } from "path";
+import { join } from "node:path";
 import { LoaderOptions } from "../revane-ioc-core/LoaderOptions.js";
 import { Extension } from "./Extension.js";
 
