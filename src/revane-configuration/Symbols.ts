@@ -1,5 +1,3 @@
-const configurationPropertiesSym = Symbol('revane.configurationProperties')
+const configurationPropertiesSym = Symbol("revane.configurationProperties");
 
-export {
-  configurationPropertiesSym
-}
+export { configurationPropertiesSym };

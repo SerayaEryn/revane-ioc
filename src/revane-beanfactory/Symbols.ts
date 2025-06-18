@@ -1,5 +1,3 @@
-const beansSym = Symbol('revane.beans')
+const beansSym = Symbol("revane.beans");
 
-export {
-  beansSym
-}
+export { beansSym };

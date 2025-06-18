@@ -1,49 +1,51 @@
-import { configurationPropertiesSym } from './Symbols.js'
-import { Parser } from 'acorn'
+import { configurationPropertiesSym } from "./Symbols.js";
+import { Parser } from "acorn";
 
 export interface ConfigurationPropertiesOptions {
-  prefix: string
+  prefix: string;
 }
 
-function createConfigurationPropertiesDecorator () {
-  return function decoratoteConfigurationProperties (options: ConfigurationPropertiesOptions) {
-    return function define (Class) {
-      const tree = getSyntaxTree(Class)
+function createConfigurationPropertiesDecorator() {
+  return function decoratoteConfigurationProperties(
+    options: ConfigurationPropertiesOptions,
+  ) {
+    return function define(Class) {
+      const tree = getSyntaxTree(Class);
       const properties: string[] = tree.body[0].body.body
-        .filter((node) => node.type === 'PropertyDefinition')
-        .map((node) => node.key.name)
+        .filter((node) => node.type === "PropertyDefinition")
+        .map((node) => node.key.name);
       const setters: string[] = tree.body[0].body.body
-        .filter((node) => node.type === 'MethodDefinition')
-        .map((node) => node.key.name)
+        .filter((node) => node.type === "MethodDefinition")
+        .map((node) => node.key.name);
       Reflect.defineMetadata(
         configurationPropertiesSym,
         new ConfigurationPropertiesData(options.prefix, properties, setters),
-        Class
-      )
-      return Class
-    }
-  }
+        Class,
+      );
+      return Class;
+    };
+  };
 }
 
 export class ConfigurationPropertiesData {
-  public prefix: string
-  public properties: string[]
+  public prefix: string;
+  public properties: string[];
 
-  constructor (prefix: string, properties: string[], public setters: string[]) {
-    this.prefix = prefix
-    this.properties = properties
+  constructor(
+    prefix: string,
+    properties: string[],
+    public setters: string[],
+  ) {
+    this.prefix = prefix;
+    this.properties = properties;
   }
 }
 
-function getSyntaxTree (Class): any {
-  const functionAsString = Class.toString()
-  return Parser.parse(
-    functionAsString, { ecmaVersion: 2023 }
-  )
+function getSyntaxTree(Class): any {
+  const functionAsString = Class.toString();
+  return Parser.parse(functionAsString, { ecmaVersion: 2023 });
 }
 
-const ConfigurationProperties = createConfigurationPropertiesDecorator()
+const ConfigurationProperties = createConfigurationPropertiesDecorator();
 
-export {
-  ConfigurationProperties
-}
+export { ConfigurationProperties };

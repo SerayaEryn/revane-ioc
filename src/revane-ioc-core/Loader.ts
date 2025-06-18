@@ -1,6 +1,6 @@
-import { LoaderOptions, BeanDefinition } from '../revane-ioc/RevaneIOC.js'
+import { LoaderOptions, BeanDefinition } from "../revane-ioc/RevaneIOC.js";
 
 export default interface Loader {
-  load: (options: LoaderOptions[]) => Promise<BeanDefinition[]>
-  type: () => string
+  load: (options: LoaderOptions[]) => Promise<BeanDefinition[]>;
+  type: () => string;
 }

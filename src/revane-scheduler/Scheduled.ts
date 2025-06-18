@@ -1,20 +1,23 @@
-function createScheduledDecorator (): Function {
-  return function decoratoteScheduledFactory (cronPattern: string) {
-    return function define (target, propertyKey: string, descriptor: PropertyDescriptor): void {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+function createScheduledDecorator(): Function {
+  return function decoratoteScheduledFactory(cronPattern: string) {
+    return function define(
+      target,
+      propertyKey: string,
+      _: PropertyDescriptor,
+    ): void {
       Reflect.defineMetadata(
-        'scheduled',
+        "scheduled",
         {
           cronPattern,
-          propertyKey
+          propertyKey,
         },
-        target
-      )
-    }
-  }
+        target,
+      );
+    };
+  };
 }
 
-const Scheduled = createScheduledDecorator()
+const Scheduled = createScheduledDecorator();
 
-export {
-  Scheduled
-}
+export { Scheduled };

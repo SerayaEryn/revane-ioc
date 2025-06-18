@@ -1,12 +1,12 @@
-import { LoaderOptions } from '../revane-ioc/RevaneIOC.js'
+import { LoaderOptions } from "../revane-ioc/RevaneIOC.js";
 
 export class ComponentScanLoaderOptions extends LoaderOptions {
-  constructor (
+  constructor(
     public basePackage: string,
     public includeFilters: any[] | null,
-    public excludeFilters: any[] | null
+    public excludeFilters: any[] | null,
   ) {
-    super()
-    this.type = 'scan'
+    super();
+    this.type = "scan";
   }
 }

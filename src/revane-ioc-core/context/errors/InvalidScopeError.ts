@@ -1,10 +1,10 @@
-import { RethrowableError } from '../../RethrowableError.js'
+import { RethrowableError } from "../../RethrowableError.js";
 
 export default class InvalidScopeError extends RethrowableError {
-  public code = 'REV_ERR_INVALID_SCOPE'
+  public code = "REV_ERR_INVALID_SCOPE";
 
-  constructor (scope: string) {
-    super('invalid scope: ' + scope)
-    Error.captureStackTrace(this, InvalidScopeError)
+  constructor(scope: string) {
+    super("invalid scope: " + scope);
+    Error.captureStackTrace(this, InvalidScopeError);
   }
 }

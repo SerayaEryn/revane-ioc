@@ -1,51 +1,56 @@
-import { Constructor } from '../../revane-ioc-core/Constructor.js'
-import Bean from '../../revane-ioc-core/context/bean/Bean.js'
-import { BeanDefinition } from '../RevaneIOC.js'
+import { Constructor } from "../../revane-ioc-core/Constructor.js";
+import Bean from "../../revane-ioc-core/context/bean/Bean.js";
+import { BeanDefinition } from "../RevaneIOC.js";
 
 export default abstract class AbstractBean implements Bean {
-  public scope: string
+  public scope: string;
 
-  constructor (
+  constructor(
     protected beanDefinition: BeanDefinition,
-    protected readonly postProcess: (bean: Bean, beanDefinition: BeanDefinition, instance: any) => Promise<void> = async () => {}
+    protected readonly postProcess: (
+      bean: Bean,
+      beanDefinition: BeanDefinition,
+      instance: any,
+    ) => Promise<void> = async () => {},
   ) {}
 
-  public type (): string {
-    return this.beanDefinition.type
+  public type(): string {
+    return this.beanDefinition.type;
   }
 
-  public classType (): Constructor | undefined {
-    return this.beanDefinition.classConstructor
+  public classType(): Constructor | undefined {
+    return this.beanDefinition.classConstructor;
   }
 
-  public abstract id (): string
+  public abstract id(): string;
 
-  public abstract getInstance (): Promise<any>
+  public abstract getInstance(): Promise<any>;
 
-  public async createInstance (): Promise<any> {
-    const parameters: any[] = []
+  public async createInstance(): Promise<any> {
+    const parameters: any[] = [];
     for (const dependency of this.beanDefinition.dependencies) {
-      parameters.push(await dependency.getInstance())
+      parameters.push(await dependency.getInstance());
     }
-    let instance: any = null
+    let instance: any = null;
     if (this.beanDefinition.isClass()) {
       if (this.beanDefinition.classConstructor == null) {
-        throw new Error('cannot create instance because constructor is null')
+        throw new Error("cannot create instance because constructor is null");
       }
       // eslint-disable-next-line new-cap
-      instance = new this.beanDefinition.classConstructor(...parameters)
+      instance = new this.beanDefinition.classConstructor(...parameters);
     } else {
-      instance = this.beanDefinition.classConstructor ?? this.beanDefinition.instance
+      instance =
+        this.beanDefinition.classConstructor ?? this.beanDefinition.instance;
     }
-    await this.postProcess(this, this.beanDefinition, instance)
-    return instance
+    await this.postProcess(this, this.beanDefinition, instance);
+    return instance;
   }
 
-  public abstract init (): Promise<void>
+  public abstract init(): Promise<void>;
 
-  public async postConstruct (): Promise<any> {
-    return await Promise.resolve()
+  public async postConstruct(): Promise<any> {
+    return await Promise.resolve();
   }
 
-  public abstract preDestroy (): Promise<any>
+  public abstract preDestroy(): Promise<any>;
 }

@@ -1,5 +1,5 @@
-import { Logger } from 'apheleia'
+import { Logger } from "apheleia";
 
 export interface LogFactory {
-  getInstance: (id: string) => Logger
+  getInstance: (id: string) => Logger;
 }

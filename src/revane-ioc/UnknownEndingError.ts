@@ -1,8 +1,8 @@
 export default class UnknownEndingError extends Error {
-  public code = 'REV_ERR_UNKNOWN_ENDING'
+  public code = "REV_ERR_UNKNOWN_ENDING";
 
-  constructor () {
-    super('unsupported file type')
-    Error.captureStackTrace(this, UnknownEndingError)
+  constructor() {
+    super("unsupported file type");
+    Error.captureStackTrace(this, UnknownEndingError);
   }
 }

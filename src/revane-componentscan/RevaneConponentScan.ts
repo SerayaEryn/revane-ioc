@@ -1,5 +1,5 @@
-import { ComponentScanExtension } from './ComponentScanExtension.js'
-import { ComponentScanLoaderOptions } from './ComponentScanLoaderOptions.js'
+import { ComponentScanExtension } from "./ComponentScanExtension.js";
+import { ComponentScanLoaderOptions } from "./ComponentScanLoaderOptions.js";
 import {
   Component,
   Configuration,
@@ -8,10 +8,10 @@ import {
   Repository,
   Scheduler,
   Scope,
-  Service
-} from './Decorators.js'
-import Filter from './Filter.js'
-import RegexFilter from './RegexFilter.js'
+  Service,
+} from "./Decorators.js";
+import Filter from "./Filter.js";
+import RegexFilter from "./RegexFilter.js";
 
 export {
   ComponentScanExtension,
@@ -25,5 +25,5 @@ export {
   Controller,
   ControllerAdvice,
   Scheduler,
-  Scope
-}
+  Scope,
+};

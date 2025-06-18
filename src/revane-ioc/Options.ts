@@ -1,29 +1,29 @@
-import { join } from 'path'
-import { LoaderOptions } from '../revane-ioc-core/LoaderOptions.js'
-import { Extension } from './Extension.js'
+import { join } from "path";
+import { LoaderOptions } from "../revane-ioc-core/LoaderOptions.js";
+import { Extension } from "./Extension.js";
 
 export default class Options {
-  public profile: string | null
-  public noRedefinition: boolean | null
-  public loaderOptions?: LoaderOptions[]
+  public profile: string | null;
+  public noRedefinition: boolean | null;
+  public loaderOptions?: LoaderOptions[];
 
   public configuration?: {
-    directory?: string
-    required?: boolean
-    disabled?: boolean
-  }
+    directory?: string;
+    required?: boolean;
+    disabled?: boolean;
+  };
 
-  public autoConfiguration?: boolean
+  public autoConfiguration?: boolean;
 
-  constructor (
+  constructor(
     public basePackage: string,
-    public extensions: Extension[]
+    public extensions: Extension[],
   ) {}
 
-  public configurationPath (): string {
-    if (this.configuration?.directory?.startsWith('/') === true) {
-      return this.configuration.directory
+  public configurationPath(): string {
+    if (this.configuration?.directory?.startsWith("/") === true) {
+      return this.configuration.directory;
     }
-    return join(this.basePackage, this.configuration?.directory ?? '/config')
+    return join(this.basePackage, this.configuration?.directory ?? "/config");
   }
 }

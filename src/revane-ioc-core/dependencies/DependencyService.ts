@@ -1,23 +1,23 @@
-import { BeanDefinition } from '../BeanDefinition.js'
-import { DependencyResolver } from './DependencyResolver.js'
-import { DependencyDefinition } from './DependencyDefinition.js'
-import UnknownDependencyType from './UnknownDependencyType.js'
-import Bean from '../context/bean/Bean.js'
+import { BeanDefinition } from "../BeanDefinition.js";
+import { DependencyResolver } from "./DependencyResolver.js";
+import { DependencyDefinition } from "./DependencyDefinition.js";
+import UnknownDependencyType from "./UnknownDependencyType.js";
+import Bean from "../context/bean/Bean.js";
 
 export class DependencyService {
-  constructor (private readonly dependencyResolvers: DependencyResolver[]) {}
+  constructor(private readonly dependencyResolvers: DependencyResolver[]) {}
 
-  async getDependency (
+  async getDependency(
     dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[],
     registerDependency: (
       dependency: DependencyDefinition,
       parentId: string,
-      beanDefinitions: BeanDefinition[]
-    ) => Promise<void>
+      beanDefinitions: BeanDefinition[],
+    ) => Promise<void>,
   ): Promise<Bean> {
-    let error: Error | null = null
+    let error: Error | null = null;
     for (const dependencyResolver of this.dependencyResolvers) {
       if (dependencyResolver.isRelevant(dependency)) {
         try {
@@ -25,17 +25,17 @@ export class DependencyService {
             dependency,
             parentId,
             beanDefinitions,
-            registerDependency
-          )
+            registerDependency,
+          );
         } catch (err) {
-          error = err
-          continue
+          error = err;
+          continue;
         }
       }
     }
     if (error != null) {
-      throw error
+      throw error;
     }
-    throw new UnknownDependencyType(dependency.type)
+    throw new UnknownDependencyType(dependency.type);
   }
 }

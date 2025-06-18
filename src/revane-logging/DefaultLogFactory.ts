@@ -1,72 +1,78 @@
-import { LogFactory } from './LogFactory.js'
+import { LogFactory } from "./LogFactory.js";
 import {
-  createLogger, ConsoleTransport, Logger, SimpleFormat, Transport, JsonFormat
-} from 'apheleia'
-import { LoggingOptions } from './LoggingOptions.js'
-import { createWriteStream } from 'fs'
-import { join } from 'path'
-import { Bean } from '../revane-ioc/RevaneIOC.js'
+  createLogger,
+  ConsoleTransport,
+  Logger,
+  SimpleFormat,
+  Transport,
+  JsonFormat,
+} from "apheleia";
+import { LoggingOptions } from "./LoggingOptions.js";
+import { createWriteStream } from "fs";
+import { join } from "path";
+import { Bean } from "../revane-ioc/RevaneIOC.js";
 
 export class DefaultLogFactory implements LogFactory {
-  readonly #rootLogger: Logger
+  readonly #rootLogger: Logger;
 
-  constructor (private readonly options: LoggingOptions) {
+  constructor(private readonly options: LoggingOptions) {
     this.#rootLogger = createLogger({
       transports: this.transports(),
-      level: options.rootLevel
-    })
+      level: options.rootLevel,
+    });
   }
 
-  public getInstance (id: string): Logger {
-    const logger = this.#rootLogger.child({ beanId: id })
-    logger.setLevel(this.options.levels[id] ?? this.options.rootLevel)
-    return logger
+  public getInstance(id: string): Logger {
+    const logger = this.#rootLogger.child({ beanId: id });
+    logger.setLevel(this.options.levels[id] ?? this.options.rootLevel);
+    return logger;
   }
 
   @Bean
-  public rootLogger (): Logger {
-    return this.#rootLogger
+  public rootLogger(): Logger {
+    return this.#rootLogger;
   }
 
-  private transports (): Transport[] {
-    const { file, path, basePackage } = this.options
-    const format = this.options.format === 'JSON' ? new JsonFormat() : new SimpleFormat()
-    const transports = [
-      new ConsoleTransport({ format } as any)
-    ]
+  private transports(): Transport[] {
+    const { file, path, basePackage } = this.options;
+    const format =
+      this.options.format === "JSON" ? new JsonFormat() : new SimpleFormat();
+    const transports = [new ConsoleTransport({ format } as any)];
     if (file != null) {
-      transports.push(this.transportFromFile(file, basePackage))
+      transports.push(this.transportFromFile(file, basePackage));
     }
     if (path != null) {
-      transports.push(this.transportFromPath(path, basePackage))
+      transports.push(this.transportFromPath(path, basePackage));
     }
-    return transports
+    return transports;
   }
 
-  private transportFromFile (file: string, basePackage: string): Transport {
-    const path = this.isRelative(file) ? join(basePackage, file) : file
-    const format = this.options.format === 'JSON' ? new JsonFormat() : new SimpleFormat()
+  private transportFromFile(file: string, basePackage: string): Transport {
+    const path = this.isRelative(file) ? join(basePackage, file) : file;
+    const format =
+      this.options.format === "JSON" ? new JsonFormat() : new SimpleFormat();
     return new Transport({
       stream: createWriteStream(path),
-      format
-    })
+      format,
+    });
   }
 
-  private transportFromPath (path: string, basePackage: string): Transport {
-    let absolutePath: string
-    const format = this.options.format === 'JSON' ? new JsonFormat() : new SimpleFormat()
+  private transportFromPath(path: string, basePackage: string): Transport {
+    let absolutePath: string;
+    const format =
+      this.options.format === "JSON" ? new JsonFormat() : new SimpleFormat();
     if (this.isRelative(path)) {
-      absolutePath = join(basePackage, path, 'revane.log')
+      absolutePath = join(basePackage, path, "revane.log");
     } else {
-      absolutePath = join(path, 'revane.log')
+      absolutePath = join(path, "revane.log");
     }
     return new Transport({
       stream: createWriteStream(absolutePath),
-      format
-    })
+      format,
+    });
   }
 
-  private isRelative (file: string): boolean {
-    return !file.startsWith('/')
+  private isRelative(file: string): boolean {
+    return !file.startsWith("/");
   }
 }

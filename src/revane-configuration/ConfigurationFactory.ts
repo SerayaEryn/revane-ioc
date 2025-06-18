@@ -1,10 +1,16 @@
-import { JsonLoadingStrategy } from './loading/JsonLoadingStrategy.js'
-import { PropertiesLoadingStrategy } from './loading/PropertiesLoadingStrategy.js'
-import { YmlLoadingStrategy } from './loading/YmlLoadingStrategy.js'
-import { ConfigurationOptions, RevaneConfiguration } from './RevaneConfiguration.js'
-import { Options } from '../revane-ioc/RevaneIOC.js'
+import { JsonLoadingStrategy } from "./loading/JsonLoadingStrategy.js";
+import { PropertiesLoadingStrategy } from "./loading/PropertiesLoadingStrategy.js";
+import { YmlLoadingStrategy } from "./loading/YmlLoadingStrategy.js";
+import {
+  ConfigurationOptions,
+  RevaneConfiguration,
+} from "./RevaneConfiguration.js";
+import { Options } from "../revane-ioc/RevaneIOC.js";
 
-export function buildConfiguration (options: Options, profile: string | null): RevaneConfiguration {
+export function buildConfiguration(
+  options: Options,
+  profile: string | null,
+): RevaneConfiguration {
   return new RevaneConfiguration(
     new ConfigurationOptions(
       profile,
@@ -14,19 +20,19 @@ export function buildConfiguration (options: Options, profile: string | null): R
       [
         new JsonLoadingStrategy(),
         new YmlLoadingStrategy(),
-        new PropertiesLoadingStrategy()
+        new PropertiesLoadingStrategy(),
       ],
-      options.basePackage
-    )
-  )
+      options.basePackage,
+    ),
+  );
 }
 
 function disabled(options: Options): boolean {
   if (options.autoConfiguration) {
-    return false
+    return false;
   }
   if (options.configuration?.disabled != null) {
-    return options.configuration?.disabled
+    return options.configuration?.disabled;
   }
-  return false
+  return false;
 }

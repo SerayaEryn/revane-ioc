@@ -1,4 +1,4 @@
 export enum Scopes {
-  SINGLETON = 'singleton',
-  PROTOTYPE = 'prototype'
+  SINGLETON = "singleton",
+  PROTOTYPE = "prototype",
 }

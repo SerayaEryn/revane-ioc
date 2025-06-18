@@ -1,3 +1,3 @@
 export abstract class LoaderOptions {
-  type: string
+  type: string;
 }

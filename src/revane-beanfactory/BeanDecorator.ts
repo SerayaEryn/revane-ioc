@@ -1,30 +1,37 @@
-import { beansSym } from './Symbols.js'
-import 'reflect-metadata'
+import { beansSym } from "./Symbols.js";
+import "reflect-metadata";
 
-function createBeanDecorator (): Function {
-  return function Bean (maybeId, maybePropertyKey: string, descriptor: PropertyDescriptor) {
-    if (typeof maybeId === 'string' || maybeId == null) {
-      return function define (target, propertyKey: string, descriptor: PropertyDescriptor): void {
-        addBean(target, maybeId ?? propertyKey, propertyKey)
-      }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+function createBeanDecorator(): Function {
+  return function Bean(
+    maybeId,
+    maybePropertyKey: string,
+    _: PropertyDescriptor,
+  ) {
+    if (typeof maybeId === "string" || maybeId == null) {
+      return function define(
+        target,
+        propertyKey: string,
+        _: PropertyDescriptor,
+      ): void {
+        addBean(target, maybeId ?? propertyKey, propertyKey);
+      };
     } else {
-      addBean(maybeId, maybePropertyKey, maybePropertyKey)
+      addBean(maybeId, maybePropertyKey, maybePropertyKey);
     }
-  }
+  };
 }
 
-function addBean (target, id: string, propertyKey: string): void {
-  const beans = Reflect.getMetadata(beansSym, target) ?? []
+function addBean(target, id: string, propertyKey: string): void {
+  const beans = Reflect.getMetadata(beansSym, target) ?? [];
   beans.push({
     id,
-    type: 'component',
-    propertyKey
-  })
-  Reflect.defineMetadata(beansSym, beans, target)
+    type: "component",
+    propertyKey,
+  });
+  Reflect.defineMetadata(beansSym, beans, target);
 }
 
-const Bean = createBeanDecorator()
+const Bean = createBeanDecorator();
 
-export {
-  Bean
-}
+export { Bean };

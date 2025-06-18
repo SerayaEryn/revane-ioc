@@ -10,41 +10,41 @@ import { ConfigurationPropertiesPreProcessor } from "./ConfigurationPropertiesPr
 import { RevaneConfiguration } from "./RevaneConfiguration.js";
 
 export class ConfigurationExtension extends Extension {
-  #configuration: RevaneConfiguration
-  #enabled: boolean
+  #configuration: RevaneConfiguration;
+  #enabled: boolean;
 
   constructor(options: Options, profile: string | null) {
-    super()
-    this.#configuration = buildConfiguration(options, profile)
-    this.#enabled = !(options.configuration?.disabled ?? false)
+    super();
+    this.#configuration = buildConfiguration(options, profile);
+    this.#enabled = !(options.configuration?.disabled ?? false);
   }
 
-  public async initialize (configuration: RevaneConfiguration): Promise<void> {
-    await this.#configuration.init()
-  }
-  
-  public beanFactoryPreProcessors (): BeanFactoryPreProcessor[] {
-    if (this.#enabled) {
-      return [new ConfigurationPropertiesPreProcessor()]
-    }
-    return []
+  public async initialize(_: RevaneConfiguration): Promise<void> {
+    await this.#configuration.init();
   }
 
-  public beanFactoryPostProcessors (): BeanFactoryPostProcessor[] {
+  public beanFactoryPreProcessors(): BeanFactoryPreProcessor[] {
     if (this.#enabled) {
-      return [new ConfigurationPropertiesPostProcessor(this.#configuration)]
+      return [new ConfigurationPropertiesPreProcessor()];
     }
-    return []
+    return [];
   }
 
-  public beanLoaders (): Loader[] {
+  public beanFactoryPostProcessors(): BeanFactoryPostProcessor[] {
     if (this.#enabled) {
-      return [new ConfigurationLoader(this.#configuration)]
+      return [new ConfigurationPropertiesPostProcessor(this.#configuration)];
     }
-    return []
+    return [];
+  }
+
+  public beanLoaders(): Loader[] {
+    if (this.#enabled) {
+      return [new ConfigurationLoader(this.#configuration)];
+    }
+    return [];
   }
 
   public get(): RevaneConfiguration {
-    return this.#configuration
+    return this.#configuration;
   }
 }

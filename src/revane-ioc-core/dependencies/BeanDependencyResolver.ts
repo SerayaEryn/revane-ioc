@@ -1,51 +1,51 @@
-import { BeanDefinition } from '../BeanDefinition.js'
-import Bean from '../context/bean/Bean.js'
-import { DefaultApplicationContext } from '../DefaultApplicationContext.js'
-import { DependencyResolver } from './DependencyResolver.js'
-import { DependencyDefinition } from './DependencyDefinition.js'
+import { BeanDefinition } from "../BeanDefinition.js";
+import Bean from "../context/bean/Bean.js";
+import { DefaultApplicationContext } from "../DefaultApplicationContext.js";
+import { DependencyResolver } from "./DependencyResolver.js";
+import { DependencyDefinition } from "./DependencyDefinition.js";
 
 export class BeanDependencyResolver implements DependencyResolver {
-  constructor (private readonly context: DefaultApplicationContext) {}
+  constructor(private readonly context: DefaultApplicationContext) {}
 
-  public isRelevant (dependency: DependencyDefinition): boolean {
-    return dependency.type === 'bean'
+  public isRelevant(dependency: DependencyDefinition): boolean {
+    return dependency.type === "bean";
   }
 
-  public async resolve (
+  public async resolve(
     dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[],
     registerDependency: (
       dependency: DependencyDefinition,
       parentId: string,
-      beanDefinitions: BeanDefinition[]
-    ) => Promise<void>
+      beanDefinitions: BeanDefinition[],
+    ) => Promise<void>,
   ): Promise<Bean> {
-    const id = dependency.value as string
-    const classType = dependency.classType
+    const id = dependency.value as string;
+    const classType = dependency.classType;
     if (id == null) {
-      throw new Error()
+      throw new Error();
     }
     if (classType != null && this.isClass(classType) && classType !== Object) {
       if (!(await this.context.hasByClassType(classType))) {
-        await registerDependency(dependency, parentId, beanDefinitions)
+        await registerDependency(dependency, parentId, beanDefinitions);
       }
-      return await this.context.getBeanByClassType(classType)
+      return await this.context.getBeanByClassType(classType);
     } else {
       if (!(await this.context.hasById(id))) {
-        await registerDependency(dependency, parentId, beanDefinitions)
+        await registerDependency(dependency, parentId, beanDefinitions);
       }
-      return await this.context.getBeanById(id)
+      return await this.context.getBeanById(id);
     }
   }
 
-  public isClass (classType: any): boolean {
+  public isClass(classType: any): boolean {
     try {
-      Object.defineProperty(classType, 'prototype', { writable: true })
-      return false
+      Object.defineProperty(classType, "prototype", { writable: true });
+      return false;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      return typeof classType === 'function'
+      return typeof classType === "function";
     }
   }
 }
