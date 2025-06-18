@@ -15,7 +15,7 @@ export class TaskScheduler {
     const job = new CronJob(
       cronPattern,
       () => {
-        this.executeTask(isAsyncFunction, functionToSchedule);
+        this.#executeTask(isAsyncFunction, functionToSchedule);
       },
       null,
       true,
@@ -24,9 +24,19 @@ export class TaskScheduler {
     this.#jobs.push(job);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  private executeTask(
+  public close(): void {
+    for (const job of this.#jobs) {
+      job.stop();
+    }
+  }
+
+  public setErrorHandler(errorHandler: (error: Error) => void): void {
+    this.#errorHandler = errorHandler;
+  }
+
+  #executeTask(
     asyncFunction: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     functionToSchedule: Function,
   ): void {
     if (asyncFunction) {
@@ -42,15 +52,5 @@ export class TaskScheduler {
         this.#errorHandler(error);
       }
     }
-  }
-
-  public close(): void {
-    for (const job of this.#jobs) {
-      job.stop();
-    }
-  }
-
-  public setErrorHandler(errorHandler: (error: Error) => void): void {
-    this.#errorHandler = errorHandler;
   }
 }

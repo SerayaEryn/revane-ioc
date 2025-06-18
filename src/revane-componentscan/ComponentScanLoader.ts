@@ -12,6 +12,7 @@ import { ComponentScanLoaderOptions } from "./ComponentScanLoaderOptions.js";
 import { ModuleLoadError } from "./ModuleLoadError.js";
 import { DependencyDefinition } from "../revane-ioc-core/dependencies/DependencyDefinition.js";
 import { pathWithEnding } from "../revane-utils/FileUtil.js";
+import { access, constants } from "node:fs/promises";
 
 const filterByType = {
   regex: RegexFilter,
@@ -23,25 +24,27 @@ export default class ComponentScanLoader implements Loader {
   ): Promise<BeanDefinition[]> {
     const promises: Promise<BeanDefinition[]>[] = [];
     for (const option of options) {
-      promises.push(this.scan(option));
+      promises.push(this.#scan(option));
     }
     const allBeanDefinitions = await Promise.all(promises);
     return allBeanDefinitions.flat();
   }
 
-  private async scan(
-    options: ComponentScanLoaderOptions,
-  ): Promise<BeanDefinition[]> {
+  public type(): string {
+    return "scan";
+  }
+
+  async #scan(options: ComponentScanLoaderOptions): Promise<BeanDefinition[]> {
     const { basePackage } = options;
     const includeFilters = convert(options.includeFilters ?? []);
     const excludeFilters = convert(options.excludeFilters ?? []);
     const files = await recursiveReaddir(basePackage);
     const flatFiles = files.flat();
     const filesFilteredByJavascript = filterByJavascriptFiles(flatFiles);
-    const filesFilteredByPackage = this.filterByPackage(
+    const filesFilteredByPackage = this.#filterByPackage(
       filesFilteredByJavascript,
     );
-    const filteredFiles = this.applyFilters(
+    const filteredFiles = this.#applyFilters(
       filesFilteredByPackage,
       includeFilters,
       excludeFilters,
@@ -51,7 +54,8 @@ export default class ComponentScanLoader implements Loader {
       let requiredFile: any;
       let moduleMap: Map<string, any>;
       try {
-        requiredFile = await import(pathWithEnding(file, ".js"));
+        const fileEnding = await this.#fileEnding(file);
+        requiredFile = await import(pathWithEnding(file, fileEnding));
         moduleMap = getModuleMap(requiredFile);
       } catch (error) {
         throw new ModuleLoadError(file, error);
@@ -60,7 +64,7 @@ export default class ComponentScanLoader implements Loader {
         if (requiredFile == null) {
           throw new ModuleLoadError(file, new Error());
         }
-        if (this.isNoComponent(requiredFile)) {
+        if (this.#isNoComponent(requiredFile)) {
           continue;
         }
         result.push(getBeanDefinition(null, requiredFile, file));
@@ -70,7 +74,7 @@ export default class ComponentScanLoader implements Loader {
           if (aModule == null) {
             throw new ModuleLoadError(file, new Error());
           }
-          if (this.isNoComponent(aModule)) {
+          if (this.#isNoComponent(aModule)) {
             continue;
           }
           result.push(getBeanDefinition(key, aModule, file));
@@ -80,15 +84,28 @@ export default class ComponentScanLoader implements Loader {
     return result;
   }
 
-  private isNoComponent(aModule: any): boolean {
+  async #fileEnding(file: string): Promise<string> {
+    if (file.endsWith(".js") || file.lastIndexOf(".") === -1) {
+      return ".js";
+    }
+    if (file.endsWith(".mjs")) {
+      return ".mjs";
+    }
+    try {
+      const fileMjs = pathWithEnding(file, ".mjs");
+      await access(fileMjs, constants.R_OK);
+      return ".mjs";
+    } catch (_) {
+      console.log(_);
+    } // eslint-disable-line no-empty
+    return ".js";
+  }
+
+  #isNoComponent(aModule: any): boolean {
     return Reflect.getMetadata(idSym, aModule) == null;
   }
 
-  public type(): string {
-    return "scan";
-  }
-
-  private applyFilters(
+  #applyFilters(
     files: string[],
     includeFilters: Filter[],
     excludeFilters: Filter[],
@@ -103,7 +120,7 @@ export default class ComponentScanLoader implements Loader {
     return filtered;
   }
 
-  private filterByPackage(files: string[]): string[] {
+  #filterByPackage(files: string[]): string[] {
     return files.filter((file) => !file.includes("/node_modules"));
   }
 }

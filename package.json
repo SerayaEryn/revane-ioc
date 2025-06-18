@@ -34,7 +34,7 @@
     "coverage": "npm run compile && c8 npm run test",
     "compile": "tsc -d",
     "prepublishOnly": "npm run compile -s && eslint bin/** --fix | exit 0",
-    "postbuild": "cpy 'testdata/**/*.json' bin/testdata && cpy 'testdata/**/*.yml' bin/testdata"
+    "postbuild": "cpy 'testdata/**/*.json' bin/testdata && cpy 'testdata/**/*.yml' bin/testdata && cpy 'testdata/**/*.mjs' bin/testdata"
   },
   "dependencies": {
     "acorn": "^8.15.0",

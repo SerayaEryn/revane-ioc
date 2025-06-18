@@ -36,6 +36,19 @@ test("should do component scan without filters", async (t): Promise<void> => {
   t.deepEqual(scan4.dependencyIds, []);
 });
 
+test("should support .mjs files", async (t): Promise<void> => {
+  t.plan(2);
+
+  const basePackage = join(import.meta.dirname, "../../testdata/mjs");
+  const options = new ComponentScanLoaderOptions(basePackage, null, null);
+
+  const componentScanResolver = new ComponentScanLoader();
+  const beanDefinitions = await componentScanResolver.load([options]);
+  t.is(beanDefinitions.length, 1);
+  const scan1 = findDefinition(beanDefinitions, "mjs");
+  t.is(scan1.scope, "singleton");
+});
+
 test("should do component scan and inject by type", async (t): Promise<void> => {
   const basePackage = join(import.meta.dirname, "../../testdata/injectByType");
   const options = new ComponentScanLoaderOptions(basePackage, null, null);
