@@ -90,6 +90,13 @@ export class RevaneConfiguration implements Configuration {
     return value;
   }
 
+  public getBooleanOrElse(key: string, fallback: boolean): boolean {
+    if (!this.has(key)) {
+      return fallback;
+    }
+    return this.getBoolean(key);
+  }
+
   public getNumber(key: string): number {
     const value = this.get(key);
     if (typeof value !== "number") {

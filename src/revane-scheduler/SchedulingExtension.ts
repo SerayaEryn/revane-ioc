@@ -19,12 +19,11 @@ export class SchedulingExtension extends Extension {
   }
 
   public async initialize(configuration: RevaneConfiguration): Promise<void> {
-    let enabled = false;
-    if (configuration.has("revane.scheduling.enabled")) {
-      enabled = configuration.getBoolean("revane.scheduling.enabled");
-    }
     if (this.options == null) {
-      this.#enabled = enabled;
+      this.#enabled = configuration.getBooleanOrElse(
+        "revane.scheduling.enabled",
+        false,
+      );
     }
   }
 
