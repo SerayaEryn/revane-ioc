@@ -17,21 +17,16 @@ import {
 } from './decorators/Decorators.js'
 import { RevaneConfiguration } from '../revane-configuration/RevaneConfiguration.js'
 import { ContextPlugin } from '../revane-ioc-core/context/ContextPlugin.js'
-import { ConfigurationPropertiesPostProcessor } from '../revane-configuration/ConfigurationPropertiesPostProcessor.js'
-import { ConfigurationPropertiesPreProcessor } from '../revane-configuration/ConfigurationPropertiesPreProcessor.js'
 import { ApplicationContext } from '../revane-ioc-core/ApplicationContext.js'
 import { ConfigurationProperties } from '../revane-configuration/ConfigurationProperties.js'
 import { Scheduled } from '../revane-scheduler/Scheduled.js'
-import { ConfigurationLoader } from '../revane-configuration/ConfigurationLoader.js'
 import BeanTypeRegistry from '../revane-ioc-core/context/bean/BeanTypeRegistry.js'
 import { LogFactory } from '../revane-logging/LogFactory.js'
 import { Logger } from 'apheleia'
 
 import { Bean } from '../revane-beanfactory/BeanDecorator.js'
 import { LoaderOptions } from '../revane-ioc-core/LoaderOptions.js'
-import { buildConfiguration } from '../revane-configuration/ConfigurationFactory.js'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder.js'
-import { LifeCycleBeanFactoryPostProcessor } from './LifeCycleBeanFactoryPostProcessor.js'
 import { Extension } from './Extension.js'
 import { SchedulingExtension } from '../revane-scheduler/SchedulingExtension.js'
 import { LoggingExtension } from '../revane-logging/LoggingExtension.js'
@@ -55,6 +50,7 @@ import {
 } from '../revane-componentscan/RevaneConponentScan.js'
 import { DependencyResolver } from '../revane-ioc-core/dependencies/DependencyResolver.js'
 import { ConfigurationExtension } from '../revane-configuration/ConfigurationExtension.js'
+import { LifeCycleExtension } from '../revane-lifecycle/LifeCycleExtension.js'
 
 export {
   BeanDefinition,
@@ -114,6 +110,7 @@ export default class RevaneIOC {
     this.#configuration = configurationExtension.get()
     this.#options.extensions = [
       configurationExtension,
+      new LifeCycleExtension(),
       ...this.#options.extensions
     ]
   }
@@ -130,6 +127,7 @@ export default class RevaneIOC {
     await this.#revaneCore.initialize()
     this.#initialized = true
   }
+
   public async get (id: string): Promise<any> {
     this.checkIfInitialized()
     return await this.#revaneCore.getById(id)
@@ -168,7 +166,6 @@ export default class RevaneIOC {
   private async addDefaultPlugins (): Promise<void> {
     this.#revaneCore?.addPlugin('loader', new XmlFileLoader())
     this.#revaneCore?.addPlugin('loader', new JsonFileLoader())
-    this.#revaneCore?.addPlugin('beanFactoryPostProcessor', new LifeCycleBeanFactoryPostProcessor())
     for (const extension of this.#options.extensions) {
       for (const beanFactoryPreProcessor of extension.beanFactoryPreProcessors()) {
         this.#revaneCore?.addPlugin('beanFactoryPreProcessor', beanFactoryPreProcessor)
