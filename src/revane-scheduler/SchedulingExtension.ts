@@ -10,16 +10,18 @@ import { TaskScheduler } from "./TaskScheduler.js";
 export class SchedulingExtension extends Extension {
   readonly #taskScheduler = new TaskScheduler();
   #enabled = false;
+  #options: Options | null = null;
 
-  constructor(private readonly options: Options | null) {
+  constructor(options: Options | null) {
     super();
-    if (this.options != null) {
-      this.#enabled = this.options.enabled;
+    this.#options = options;
+    if (this.#options != null) {
+      this.#enabled = this.#options.enabled;
     }
   }
 
   public async initialize(configuration: RevaneConfiguration): Promise<void> {
-    if (this.options == null) {
+    if (this.#options == null || this.#options.enabled == null) {
       this.#enabled = configuration.getBooleanOrElse(
         "revane.scheduling.enabled",
         false,
