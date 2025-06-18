@@ -2,6 +2,8 @@ import Loader from "../revane-ioc-core/Loader.js";
 import { BeanFactoryPostProcessor } from "../revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js";
 import { BeanFactoryPreProcessor } from "../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js";
 import { Extension } from "../revane-ioc/Extension.js";
+import Options from "../revane-ioc/Options.js";
+import { buildConfiguration } from "./ConfigurationFactory.js";
 import { ConfigurationLoader } from "./ConfigurationLoader.js";
 import { ConfigurationPropertiesPostProcessor } from "./ConfigurationPropertiesPostProcessor.js";
 import { ConfigurationPropertiesPreProcessor } from "./ConfigurationPropertiesPreProcessor.js";
@@ -11,10 +13,10 @@ export class ConfigurationExtension extends Extension {
   #configuration: RevaneConfiguration
   #enabled: boolean
 
-  constructor(configuration: RevaneConfiguration, enabled: boolean) {
+  constructor(options: Options, profile: string | null) {
     super()
-    this.#configuration = configuration
-    this.#enabled = enabled
+    this.#configuration = buildConfiguration(options, profile)
+    this.#enabled = !(options.configuration?.disabled ?? false)
   }
 
   public async initialize (configuration: RevaneConfiguration): Promise<void> {

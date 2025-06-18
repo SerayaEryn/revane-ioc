@@ -29,7 +29,7 @@ import { Logger } from 'apheleia'
 
 import { Bean } from '../revane-beanfactory/BeanDecorator.js'
 import { LoaderOptions } from '../revane-ioc-core/LoaderOptions.js'
-import { buildConfiguration } from './ConfigurationFactory.js'
+import { buildConfiguration } from '../revane-configuration/ConfigurationFactory.js'
 import { CoreOptionsBuilder } from './CoreOptionsBuilder.js'
 import { LifeCycleBeanFactoryPostProcessor } from './LifeCycleBeanFactoryPostProcessor.js'
 import { Extension } from './Extension.js'
@@ -110,9 +110,10 @@ export default class RevaneIOC {
 
     const profile = this.#options.profile ?? process.env.REVANE_PROFILE ?? null
     this.#options.profile = profile
-    this.#configuration = buildConfiguration(this.#options, profile)
+    const configurationExtension = new ConfigurationExtension(this.#options, profile)
+    this.#configuration = configurationExtension.get()
     this.#options.extensions = [
-      new ConfigurationExtension(this.#configuration, !(this.#options.configuration?.disabled ?? false)),
+      configurationExtension,
       ...this.#options.extensions
     ]
   }
