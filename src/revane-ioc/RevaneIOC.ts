@@ -47,7 +47,6 @@ import {
 import { DependencyResolver } from "../revane-ioc-core/dependencies/DependencyResolver.js";
 import { ConfigurationExtension } from "../revane-configuration/ConfigurationExtension.js";
 import { LifeCycleExtension } from "../revane-lifecycle/LifeCycleExtension.js";
-import { SingleBeanExtension } from "./SingleBeanExtension.js";
 import { ConditionalOnFile } from "../revane-conditional/file/ConditionalOnFile.js";
 import { ConditionalOnMissingBean } from "../revane-conditional/missing-bean/ConditionalOnMissingBean.js";
 import { ConditionalExtension } from "../revane-conditional/ConditionalExtension.js";
@@ -154,13 +153,6 @@ export default class RevaneIOC {
   public async getByType(type: string): Promise<any[]> {
     this.checkIfInitialized();
     return await this.#revaneCore.getByType(type);
-  }
-
-  public async registerBean(id: string, instance: any): Promise<void> {
-    const beanDefinition = new DefaultBeanDefinition(id);
-    beanDefinition.scope = "singleton";
-    beanDefinition.instance = instance;
-    this.#options.extensions.push(new SingleBeanExtension(beanDefinition));
   }
 
   public async close(): Promise<void> {
