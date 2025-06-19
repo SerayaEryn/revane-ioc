@@ -45,6 +45,9 @@ export class RevaneConfiguration implements Configuration {
     if (!this.options.disabled) {
       await this.loadConfigFiles();
     }
+    if (!this.has("revane.favicon.enabled")) {
+      this.put("revane.favicon.enabled", true);
+    }
   }
 
   public put(key: string, value: any): void {

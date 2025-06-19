@@ -43,6 +43,7 @@ test("Should load values", async (t) => {
   } catch (error) {
     t.is(error.code, "REV_ERR_KEY_TYPE_MISMATCH");
   }
+  t.true(config.getBoolean("revane.favicon.enabled"));
 });
 
 test("Should throw error if no config files", async (t) => {
