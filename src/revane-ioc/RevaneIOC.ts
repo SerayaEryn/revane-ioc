@@ -10,7 +10,10 @@ import Options from "./Options.js";
 import NotInitializedError from "./NotInitializedError.js";
 import DefaultBeanDefinition from "../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../revane-ioc-core/Loader.js";
-import { PostConstruct, PreDestroy } from "./decorators/Decorators.js";
+import {
+  PostConstruct,
+  PreDestroy,
+} from "../revane-lifecycle/LifeCycleDecorators.js";
 import { RevaneConfiguration } from "../revane-configuration/RevaneConfiguration.js";
 import { ContextPlugin } from "../revane-ioc-core/context/ContextPlugin.js";
 import { ApplicationContext } from "../revane-ioc-core/ApplicationContext.js";

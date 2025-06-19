@@ -1,4 +1,4 @@
-import Options from "../revane-ioc/decorators/Options.js";
+import Options from "./Options.js";
 import { Parser } from "acorn";
 import { dependenciesSym, idSym, typeSym } from "./Symbols.js";
 

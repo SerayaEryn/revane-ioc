@@ -8,3 +8,8 @@ export function createLifeCycleDecorator(type: string): Function {
     Reflect.defineMetadata(`life-cycle:${type}`, { propertyKey }, target);
   };
 }
+
+const PostConstruct = createLifeCycleDecorator("postConstruct");
+const PreDestroy = createLifeCycleDecorator("preDestroy");
+
+export { PostConstruct, PreDestroy };
