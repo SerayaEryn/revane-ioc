@@ -31,6 +31,24 @@ test("should read json configuration file and register beans", async (t) => {
   t.truthy(bean2.json1);
 });
 
+test("should register bean", async (t) => {
+  const options = new Options(join(import.meta.dirname, "../../testdata"), []);
+  options.loaderOptions = [
+    new JsonFileLoaderOptions(
+      join(import.meta.dirname, "../../../testdata/json/config.json"),
+    ),
+  ];
+  options.configuration = { disabled: true };
+  options.profile = "test";
+  options.noRedefinition = true;
+  const revane = new Revane(options);
+  revane.registerBean("test", { test: "Hallo Welt" });
+  await revane.initialize();
+  const bean1 = await revane.get("test");
+
+  t.is(bean1.test, "Hallo Welt");
+});
+
 test("should throw error on unknown id", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), []);
   options.loaderOptions = [
