@@ -7,9 +7,6 @@ import { beanDefinition, MockedExtension } from "../MockedLoader.js";
 import { Lifecycle1 } from "../../testdata/lifecycle1/Lifecycle1.js";
 import { Lifecycle2 } from "../../testdata/lifecycle2/Lifecycle2.js";
 import Test1 from "../../testdata/test1.js";
-import ConditionalOnMissingBean3 from "../../testdata/conditionalOnMissingBean2/ConditionalOnMissingBean3.js";
-import ConditionalOnMissingBean2 from "../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean2.js";
-import ConditionalOnMissingBean1 from "../../testdata/conditionalOnMissingBean1/ConditionalOnMissingBean1.js";
 
 test("should read json configuration file and register beans", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), []);
@@ -455,41 +452,6 @@ test("should not throw error if bean redefinition is allowed", async (t) => {
   const revane = new Revane(options);
   await revane.initialize();
   t.truthy(await revane.has("scan1"));
-});
-
-test("should not create conditional bean if not missing", async (t) => {
-  const options = new Options(
-    join(import.meta.dirname, "../../testdata/conditionalOnMissingBean1"),
-    [
-      new MockedExtension([
-        beanDefinition("conditionalOnMissingBean", ConditionalOnMissingBean1),
-        beanDefinition("conditionalOnMissingBean", ConditionalOnMissingBean2),
-      ]),
-    ],
-  );
-  options.loaderOptions = [];
-  options.configuration = { disabled: true };
-  options.profile = "test";
-  const revane = new Revane(options);
-  await revane.initialize();
-  t.truthy(await revane.has("conditionalOnMissingBean"));
-});
-
-test("should create conditional bean if missing", async (t) => {
-  const options = new Options(
-    join(import.meta.dirname, "../../testdata/conditionalOnMissingBean2"),
-    [
-      new MockedExtension([
-        beanDefinition("conditionalOnMissingBean", ConditionalOnMissingBean3),
-      ]),
-    ],
-  );
-  options.loaderOptions = [];
-  options.configuration = { disabled: true };
-  options.profile = "test";
-  const revane = new Revane(options);
-  await revane.initialize();
-  t.truthy(await revane.has("conditionalOnMissingBean"));
 });
 
 test("should return multiple beans", async (t) => {

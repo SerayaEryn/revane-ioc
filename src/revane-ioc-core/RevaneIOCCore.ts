@@ -12,7 +12,6 @@ import { PathBeanFactoryPreProcessor } from "./preProcessors/PathBeanFactoryPreP
 import { ScopeBeanFactoryPreProcessor } from "./preProcessors/ScopeBeanFactoryPreProcessor.js";
 import { BeanFactoryPostProcessor } from "./postProcessors/BeanFactoryPostProcessor.js";
 import { BeanFactoryPreProcessor } from "./preProcessors/BeanFactoryPreProcessor.js";
-import { ConditionalsBeanFactoryPreProcessor } from "./preProcessors/ConditionalsBeanFactoryPreProcessor.js";
 import { DependencyService } from "./dependencies/DependencyService.js";
 import { BeanDependencyResolver } from "./dependencies/BeanDependencyResolver.js";
 import { ValueDependencyResolver } from "./dependencies/ValueDependencyResolver.js";
@@ -65,7 +64,6 @@ export default class RevaneIOCCore {
         ...((this.plugins.get(
           "beanFactoryPreProcessor",
         ) as BeanFactoryPreProcessor[]) ?? []),
-        new ConditionalsBeanFactoryPreProcessor(),
       ],
       [
         ...((this.plugins.get(

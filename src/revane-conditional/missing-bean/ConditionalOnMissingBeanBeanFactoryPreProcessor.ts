@@ -1,8 +1,8 @@
-import { BeanFactoryPreProcessor } from "./BeanFactoryPreProcessor.js";
-import { BeanDefinition } from "../BeanDefinition.js";
-import { conditionalOnMissingBeanSym } from "../../revane-ioc/decorators/Symbols.js";
+import { BeanFactoryPreProcessor } from "../../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js";
+import { BeanDefinition } from "../../revane-ioc-core/BeanDefinition.js";
+import { conditionalOnMissingBeanSym } from "../Symbols.js";
 
-export class ConditionalsBeanFactoryPreProcessor
+export class ConditionalOnMissingBeanBeanFactoryPreProcessor
   implements BeanFactoryPreProcessor
 {
   public async preProcess(
