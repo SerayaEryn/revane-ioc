@@ -33,8 +33,19 @@ export class ConfigurationOptions {
 }
 
 const BASE_PACKAGE = "revane.basePackage";
+const PROFILE = "revane.profile";
+const ORIGINAL_PROFILE = "revane.original-profile";
+const FAVICON_ENABLED = "revane.favicon.enabled";
+const DEFAULT_PROFILE = "default";
 
-export { ConfigurationExtension, ConfigurationProperties, BASE_PACKAGE };
+export {
+  ConfigurationExtension,
+  ConfigurationProperties,
+  BASE_PACKAGE,
+  PROFILE,
+  ORIGINAL_PROFILE,
+  FAVICON_ENABLED,
+};
 
 export class RevaneConfiguration implements Configuration {
   private values: object = {};
@@ -45,14 +56,14 @@ export class RevaneConfiguration implements Configuration {
   }
 
   public async init(): Promise<void> {
-    this.put("revane.original-profile", this.options.profile);
-    this.put("revane.profile", this.options.profile ?? "default");
+    this.put(ORIGINAL_PROFILE, this.options.profile);
+    this.put(PROFILE, this.options.profile ?? DEFAULT_PROFILE);
     this.put(BASE_PACKAGE, this.options.basePackage);
     if (!this.options.disabled) {
       await this.loadConfigFiles();
     }
-    if (!this.has("revane.favicon.enabled")) {
-      this.put("revane.favicon.enabled", true);
+    if (!this.has(FAVICON_ENABLED)) {
+      this.put(FAVICON_ENABLED, true);
     }
   }
 
@@ -127,7 +138,7 @@ export class RevaneConfiguration implements Configuration {
   }
 
   private async loadConfigFiles() {
-    const profile = this.getString("revane.profile");
+    const profile = this.getString(PROFILE);
     for (const strategy of this.options.strategies) {
       let loadedValues: object = {};
       try {
