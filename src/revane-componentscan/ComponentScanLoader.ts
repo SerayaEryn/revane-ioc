@@ -70,7 +70,11 @@ export default class ComponentScanLoader implements Loader {
         }
         result = result.concat(this.#processModule(requiredFile, moduleToScan));
       } catch (error) {
-        throw new ModuleLoadError(moduleToScan, error);
+        if (error.code == "ERR_MODULE_NOT_FOUND") {
+          continue;
+        } else {
+          throw new ModuleLoadError(moduleToScan, error);
+        }
       }
     }
     return result;
