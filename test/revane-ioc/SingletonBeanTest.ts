@@ -7,7 +7,6 @@ test("should class postContruct on instance", async (t) => {
   const beanDefinition = new DefaultBeanDefinition("test");
   beanDefinition.classConstructor = Clazz.default as any;
   beanDefinition.postConstructKey = "postConstruct";
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new SingletonBean(beanDefinition, async () => {});
   await bean.init();
   await bean.postConstruct();
@@ -21,7 +20,6 @@ test("should return Promise on preDestroy()", async (t) => {
 
   const beanDefinition = new DefaultBeanDefinition("test");
   beanDefinition.classConstructor = Clazz.default as any;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new SingletonBean(beanDefinition, async () => {});
   await bean.init();
   await bean.preDestroy();

@@ -24,7 +24,6 @@ test("should handle missing postConstruct on instance", async (t) => {
   const beanDefinition = new DefaultBeanDefinition("test");
   beanDefinition.classConstructor = Clazz.default as any;
   beanDefinition.postConstructKey = null;
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new PrototypeBean(beanDefinition, async () => {});
 
   t.truthy(await bean.getInstance());
@@ -38,7 +37,6 @@ test("should return Promise on preDestroy()", async (t) => {
   const beanDefinition = new DefaultBeanDefinition("test");
   beanDefinition.classConstructor = Clazz.default as any;
   beanDefinition.preDestroyKey = "preDestroy";
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new PrototypeBean(beanDefinition, async () => {});
 
   await bean.preDestroy();
@@ -52,7 +50,6 @@ test("should return Promise on postConstruct()", async (t) => {
   const beanDefinition = new DefaultBeanDefinition("test");
   beanDefinition.classConstructor = Clazz as any;
   beanDefinition.postConstructKey = "postConstruct";
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const bean = new PrototypeBean(beanDefinition, async () => {});
 
   await bean.postConstruct();

@@ -1,7 +1,7 @@
-import { Component, ConditionalOnFile } from '../../src/revane-ioc/RevaneIOC.js'
+import { Component, ConditionalOnResource } from '../../src/revane-ioc/RevaneIOC.js'
 
 @Component
-@ConditionalOnFile("signal.json")
+@ConditionalOnResource("signal.json")
 export class ConditionalOnFile1 {
 
 }

@@ -32,7 +32,9 @@ export class ConfigurationOptions {
   }
 }
 
-export { ConfigurationExtension, ConfigurationProperties };
+const BASE_PACKAGE = "revane.basePackage";
+
+export { ConfigurationExtension, ConfigurationProperties, BASE_PACKAGE };
 
 export class RevaneConfiguration implements Configuration {
   private values: object = {};
@@ -45,7 +47,7 @@ export class RevaneConfiguration implements Configuration {
   public async init(): Promise<void> {
     this.put("revane.original-profile", this.options.profile);
     this.put("revane.profile", this.options.profile ?? "default");
-    this.put("revane.basePackage", this.options.basePackage);
+    this.put(BASE_PACKAGE, this.options.basePackage);
     if (!this.options.disabled) {
       await this.loadConfigFiles();
     }

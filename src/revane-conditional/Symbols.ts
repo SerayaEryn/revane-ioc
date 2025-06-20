@@ -1,9 +1,4 @@
 const conditionalOnMissingBeanSym = Symbol("revane.conditionalOnMissingBean");
-const conditionalOnFileSym = Symbol("revane.conditionalOnFile");
-const conditionalOnPropertySym = Symbol("revane.conditionalOnProperty");
+const conditionalSym = Symbol("revanne.conditional");
 
-export {
-  conditionalOnMissingBeanSym,
-  conditionalOnFileSym,
-  conditionalOnPropertySym,
-};
+export { conditionalOnMissingBeanSym, conditionalSym };

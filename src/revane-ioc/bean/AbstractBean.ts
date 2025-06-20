@@ -36,7 +36,6 @@ export default abstract class AbstractBean implements Bean {
       if (this.beanDefinition.classConstructor == null) {
         throw new Error("cannot create instance because constructor is null");
       }
-      // eslint-disable-next-line new-cap
       instance = new this.beanDefinition.classConstructor(...parameters);
     } else {
       instance =

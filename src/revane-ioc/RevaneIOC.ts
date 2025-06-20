@@ -42,8 +42,10 @@ import {
 } from "../revane-componentscan/RevaneConponentScan.js";
 import { DependencyResolver } from "../revane-ioc-core/dependencies/DependencyResolver.js";
 import {
+  Condition,
+  Conditional,
   ConditionalExtension,
-  ConditionalOnFile,
+  ConditionalOnResource,
   ConditionalOnMissingBean,
   ConditionalOnProperty,
 } from "../revane-conditional/RevaneConditional.js";
@@ -99,7 +101,13 @@ export { RevaneConfiguration, Configuration, ConfigurationProperties };
 
 export { LoggingExtension, Logger, LogFactory };
 
-export { ConditionalOnMissingBean, ConditionalOnFile, ConditionalOnProperty };
+export {
+  ConditionalOnMissingBean,
+  ConditionalOnResource,
+  ConditionalOnProperty,
+  Condition,
+  Conditional,
+};
 
 export default class RevaneIOC {
   #revaneCore: RevaneCore;

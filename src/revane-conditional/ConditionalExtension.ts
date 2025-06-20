@@ -1,9 +1,8 @@
 import { BeanFactoryPreProcessor } from "../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js";
 import { Extension } from "../revane-ioc/Extension.js";
 import { RevaneConfiguration } from "../revane-ioc/RevaneIOC.js";
-import { ConditionalOnFileBeanFactoryPreProcessor } from "./file/ConditionalOnFileBeanFactoryPreProcessor.js";
+import { ConditionalBeanFactoryPreProcessor } from "./conditional/ConditionalBeanFactoryPreProcessor.js";
 import { ConditionalOnMissingBeanBeanFactoryPreProcessor } from "./missing-bean/ConditionalOnMissingBeanBeanFactoryPreProcessor.js";
-import { ConditionalOnPropertyBeanFactoryPreProcessor } from "./property/ConditionalOnPropertyBeanFactoryPreProcessor.js";
 
 export class ConditionalExtension extends Extension {
   #configuration: RevaneConfiguration;
@@ -16,8 +15,7 @@ export class ConditionalExtension extends Extension {
   public beanFactoryPreProcessors(): BeanFactoryPreProcessor[] {
     return [
       new ConditionalOnMissingBeanBeanFactoryPreProcessor(),
-      new ConditionalOnFileBeanFactoryPreProcessor(this.#configuration),
-      new ConditionalOnPropertyBeanFactoryPreProcessor(this.#configuration),
+      new ConditionalBeanFactoryPreProcessor(this.#configuration),
     ];
   }
 }

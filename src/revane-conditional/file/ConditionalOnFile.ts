@@ -1,16 +1,8 @@
-import { conditionalOnFileSym } from "../Symbols.js";
+import { Conditional } from "../RevaneConditional.js";
+import { ResourceCondition } from "./ResourceCondition.js";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-function createConditionalOnFileDecorator(): Function {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  return function decorateWithOptions(path: string): Function {
-    return function decorate(target: any) {
-      Reflect.defineMetadata(conditionalOnFileSym, path, target);
-      return target;
-    };
-  };
+function ConditionalOnResource(file: string) {
+  return Conditional(ResourceCondition, { file });
 }
 
-const ConditionalOnFile = createConditionalOnFileDecorator();
-
-export { ConditionalOnFile };
+export { ConditionalOnResource };
