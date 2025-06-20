@@ -64,17 +64,13 @@ export default class ComponentScanLoader implements Loader {
     }
     for (const moduleToScan of modulesToScan) {
       try {
-        const requiredFile = await import(moduleToScan);
+        const requiredFile = moduleToScan;
         if (requiredFile == null) {
           throw new Error("null");
         }
         result = result.concat(this.#processModule(requiredFile, moduleToScan));
       } catch (error) {
-        if (error.code == "ERR_MODULE_NOT_FOUND") {
-          continue;
-        } else {
-          throw new ModuleLoadError(moduleToScan, error);
-        }
+        throw new ModuleLoadError(moduleToScan, error);
       }
     }
     return result;

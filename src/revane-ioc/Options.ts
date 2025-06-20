@@ -6,7 +6,7 @@ export default class Options {
   public profile: string | null;
   public noRedefinition: boolean | null;
   public loaderOptions?: LoaderOptions[];
-  public modulesToScan: string[] = [];
+  public modulesToScan: any[] = [];
 
   public configuration?: {
     directory?: string;

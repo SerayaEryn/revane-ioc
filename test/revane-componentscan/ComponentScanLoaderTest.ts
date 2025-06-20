@@ -50,7 +50,7 @@ test("should support .mjs files", async (t): Promise<void> => {
 test("should import module", async (t): Promise<void> => {
   const basePackage = join(import.meta.dirname, "../../testdata/mjs");
   const options = new ComponentScanLoaderOptions(basePackage, null, null, [
-    join(basePackage, "../autoConfig/Test.js"),
+    await import(join(basePackage, "../autoConfig/Test.js")),
   ]);
 
   const componentScanResolver = new ComponentScanLoader();
@@ -60,19 +60,6 @@ test("should import module", async (t): Promise<void> => {
   t.is(scan1.scope, "singleton");
   const test = findDefinition(beanDefinitions, "test");
   t.is(test.scope, "singleton");
-});
-
-test("should handle missing module", async (t): Promise<void> => {
-  const basePackage = join(import.meta.dirname, "../../testdata/mjs");
-  const options = new ComponentScanLoaderOptions(basePackage, null, null, [
-    join(basePackage, "../missing/Test.js"),
-  ]);
-
-  const componentScanResolver = new ComponentScanLoader();
-  const beanDefinitions = await componentScanResolver.load([options]);
-  t.is(beanDefinitions.length, 1);
-  const scan1 = findDefinition(beanDefinitions, "mjs");
-  t.is(scan1.scope, "singleton");
 });
 
 test("should do component scan and inject by type", async (t): Promise<void> => {
