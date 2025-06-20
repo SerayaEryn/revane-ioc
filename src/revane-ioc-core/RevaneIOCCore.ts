@@ -1,5 +1,5 @@
 import BeanLoader from "./BeanLoader.js";
-import Options from "./Options.js";
+import Options, { RegexFilter } from "./Options.js";
 import Loader from "./Loader.js";
 
 import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
@@ -16,6 +16,23 @@ import { DependencyService } from "./dependencies/DependencyService.js";
 import { BeanDependencyResolver } from "./dependencies/BeanDependencyResolver.js";
 import { ValueDependencyResolver } from "./dependencies/ValueDependencyResolver.js";
 import { DependencyResolver } from "./dependencies/DependencyResolver.js";
+import { BeanDefinition } from "./BeanDefinition.js";
+import { Scopes } from "./Scopes.js";
+import { LoaderOptions } from "./LoaderOptions.js";
+import DefaultBeanDefinition from "./DefaultBeanDefinition.js";
+import DefaultBeanTypeRegistry from "./context/bean/DefaultBeanTypeRegistry.js";
+
+export {
+  BeanDefinition,
+  Scopes,
+  LoaderOptions,
+  BeanTypeRegistry,
+  DefaultBeanDefinition,
+  ContextPlugin,
+  DefaultBeanTypeRegistry,
+  ApplicationContext,
+  RegexFilter,
+};
 
 export default class RevaneIOCCore {
   protected options: Options;
