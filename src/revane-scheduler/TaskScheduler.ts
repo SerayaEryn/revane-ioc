@@ -1,7 +1,7 @@
-import { CronJob } from "cron";
+import { Cron } from "croner";
 
 export class TaskScheduler {
-  readonly #jobs: CronJob[] = [];
+  readonly #jobs: Cron[] = [];
   #errorHandler: (error: Error) => void = (error) => {
     console.log(error);
   };
@@ -12,15 +12,9 @@ export class TaskScheduler {
     functionToSchedule: Function,
     isAsyncFunction: boolean,
   ): void {
-    const job = new CronJob(
-      cronPattern,
-      () => {
-        this.#executeTask(isAsyncFunction, functionToSchedule);
-      },
-      null,
-      true,
-      "UTC",
-    );
+    const job = new Cron(cronPattern, { timezone: "UTC" }, () => {
+      this.#executeTask(isAsyncFunction, functionToSchedule);
+    });
     this.#jobs.push(job);
   }
 
