@@ -1,6 +1,14 @@
-import { RegexFilter } from "../revane-ioc-core/Options.js";
-import RevaneCore from "../revane-ioc-core/RevaneIOCCore.js";
-import DefaultBeanTypeRegistry from "../revane-ioc-core/context/bean/DefaultBeanTypeRegistry.js";
+import RevaneCore, {
+  ApplicationContext,
+  BeanDefinition,
+  BeanTypeRegistry,
+  ContextPlugin,
+  DefaultBeanDefinition,
+  DefaultBeanTypeRegistry,
+  LoaderOptions,
+  RegexFilter,
+  Scopes,
+} from "../revane-ioc-core/RevaneIOCCore.js";
 
 import JsonFileLoader from "./loaders/JsonFileLoader.js";
 import XmlFileLoader from "./loaders/XmlFileLoader.js";
@@ -8,23 +16,16 @@ import PrototypeBean from "./bean/PrototypeBean.js";
 import SingletonBean from "./bean/SingletonBean.js";
 import Options from "./Options.js";
 import NotInitializedError from "./NotInitializedError.js";
-import DefaultBeanDefinition from "../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../revane-ioc-core/Loader.js";
 import {
   ConfigurationExtension,
   ConfigurationProperties,
   RevaneConfiguration,
 } from "../revane-configuration/RevaneConfiguration.js";
-import { ContextPlugin } from "../revane-ioc-core/context/ContextPlugin.js";
-import { ApplicationContext } from "../revane-ioc-core/ApplicationContext.js";
-import BeanTypeRegistry from "../revane-ioc-core/context/bean/BeanTypeRegistry.js";
 import { Bean } from "../revane-beanfactory/BeanDecorator.js";
-import { LoaderOptions } from "../revane-ioc-core/LoaderOptions.js";
 import { CoreOptionsBuilder } from "./CoreOptionsBuilder.js";
 import { Extension } from "./Extension.js";
 import { BeanFactoryExtension } from "../revane-beanfactory/BeanFactoryExtension.js";
-import { Scopes } from "../revane-ioc-core/Scopes.js";
-import { BeanDefinition } from "../revane-ioc-core/BeanDefinition.js";
 import { XmlFileLoaderOptions } from "./loaders/XmlFileLoaderOptions.js";
 import { JsonFileLoaderOptions } from "./loaders/JsonFileLoaderOptions.js";
 import "reflect-metadata";
@@ -65,14 +66,10 @@ import {
 } from "../revane-scheduler/RevaneScheduler.js";
 
 export {
-  BeanDefinition,
-  DefaultBeanDefinition,
   Loader,
   XmlFileLoader,
   JsonFileLoader,
-  RegexFilter,
   Options,
-  LoaderOptions,
   ComponentScanLoaderOptions,
   XmlFileLoaderOptions,
   JsonFileLoaderOptions,
@@ -84,13 +81,20 @@ export {
   Scheduler,
   Scope,
   Bean,
-  ContextPlugin,
-  ApplicationContext,
   Extension,
   BeanFactoryExtension,
-  Scopes,
   ComponentScanExtension,
   DependencyResolver,
+};
+
+export {
+  BeanDefinition,
+  LoaderOptions,
+  Scopes,
+  DefaultBeanDefinition,
+  ContextPlugin,
+  RegexFilter,
+  ApplicationContext,
 };
 
 export { Scheduled, SchedulingExtension };
