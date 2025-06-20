@@ -35,7 +35,7 @@ export default class ComponentScanLoader implements Loader {
   }
 
   async #scan(options: ComponentScanLoaderOptions): Promise<BeanDefinition[]> {
-    const { basePackage } = options;
+    const { basePackage, modulesToScan } = options;
     const includeFilters = convert(options.includeFilters ?? []);
     const excludeFilters = convert(options.excludeFilters ?? []);
     const files = await recursiveReaddir(basePackage);
@@ -51,16 +51,26 @@ export default class ComponentScanLoader implements Loader {
     );
     let result: BeanDefinition[] = [];
     for (const file of filteredFiles) {
-      let requiredFile: any;
       try {
         const fileEnding = await this.#fileEnding(file);
-        requiredFile = await import(pathWithEnding(file, fileEnding));
+        const requiredFile = await import(pathWithEnding(file, fileEnding));
         if (requiredFile == null) {
-          throw new ModuleLoadError(file, new Error());
+          throw new Error("null");
         }
         result = result.concat(this.#processModule(requiredFile, file));
       } catch (error) {
         throw new ModuleLoadError(file, error);
+      }
+    }
+    for (const moduleToScan of modulesToScan) {
+      try {
+        const requiredFile = await import(moduleToScan);
+        if (requiredFile == null) {
+          throw new Error("null");
+        }
+        result = result.concat(this.#processModule(requiredFile, moduleToScan));
+      } catch (error) {
+        throw new ModuleLoadError(moduleToScan, error);
       }
     }
     return result;

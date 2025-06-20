@@ -15,6 +15,7 @@ test("should get beans type component", async (t) => {
       join(import.meta.dirname, "../../testdata/injectByType"),
       [],
       [],
+      [],
     ),
   ];
   options.configuration = { disabled: true };
@@ -35,6 +36,7 @@ test("should not use object type for inejction", async (t) => {
   options.loaderOptions = [
     new ComponentScanLoaderOptions(
       join(import.meta.dirname, "../../testdata/scan3"),
+      [],
       [],
       [],
     ),

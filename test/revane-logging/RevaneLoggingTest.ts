@@ -21,6 +21,7 @@ test("should inject logger", async (t) => {
       join(import.meta.dirname, "../../testdata/logging6"),
       [],
       [],
+      [],
     ),
   ];
   options.configuration = { disabled: true };

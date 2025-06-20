@@ -14,7 +14,7 @@ test("should do component scan without filters", async (t): Promise<void> => {
   t.plan(8);
 
   const basePackage = join(import.meta.dirname, "../../testdata/scan");
-  const options = new ComponentScanLoaderOptions(basePackage, null, null);
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, []);
 
   const componentScanResolver = new ComponentScanLoader();
   const beanDefinitions = await componentScanResolver.load([options]);
@@ -37,10 +37,8 @@ test("should do component scan without filters", async (t): Promise<void> => {
 });
 
 test("should support .mjs files", async (t): Promise<void> => {
-  t.plan(2);
-
   const basePackage = join(import.meta.dirname, "../../testdata/mjs");
-  const options = new ComponentScanLoaderOptions(basePackage, null, null);
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, []);
 
   const componentScanResolver = new ComponentScanLoader();
   const beanDefinitions = await componentScanResolver.load([options]);
@@ -49,9 +47,24 @@ test("should support .mjs files", async (t): Promise<void> => {
   t.is(scan1.scope, "singleton");
 });
 
+test("should import module", async (t): Promise<void> => {
+  const basePackage = join(import.meta.dirname, "../../testdata/mjs");
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, [
+    join(basePackage, "../autoConfig/Test.js"),
+  ]);
+
+  const componentScanResolver = new ComponentScanLoader();
+  const beanDefinitions = await componentScanResolver.load([options]);
+  t.is(beanDefinitions.length, 2);
+  const scan1 = findDefinition(beanDefinitions, "mjs");
+  t.is(scan1.scope, "singleton");
+  const test = findDefinition(beanDefinitions, "test");
+  t.is(test.scope, "singleton");
+});
+
 test("should do component scan and inject by type", async (t): Promise<void> => {
   const basePackage = join(import.meta.dirname, "../../testdata/injectByType");
-  const options = new ComponentScanLoaderOptions(basePackage, null, null);
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, []);
 
   const componentScanResolver = new ComponentScanLoader();
   const beanDefinitions = await componentScanResolver.load([options]);
@@ -64,12 +77,17 @@ test("should do component scan and inject by type", async (t): Promise<void> => 
 
 test("should do component scan with exclude filter", async (t): Promise<void> => {
   const basePackage = join(import.meta.dirname, "../../testdata/scan");
-  const options = new ComponentScanLoaderOptions(basePackage, null, [
-    {
-      type: "regex",
-      regex: ".*",
-    },
-  ]);
+  const options = new ComponentScanLoaderOptions(
+    basePackage,
+    null,
+    [
+      {
+        type: "regex",
+        regex: ".*",
+      },
+    ],
+    [],
+  );
 
   const componentScanLoader = new ComponentScanLoader();
   const beanDefinitions = await componentScanLoader.load([options]);
@@ -87,7 +105,7 @@ test("should throw error on require error", async (t) => {
     import.meta.dirname,
     "../../../testdata/loadFailure",
   );
-  const options = new ComponentScanLoaderOptions(basePackage, null, null);
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, []);
 
   const componentScanResolver = new ComponentScanLoader();
   await t.throwsAsync(
@@ -103,7 +121,7 @@ test("should throw error on undefined module", async (t) => {
     import.meta.dirname,
     "../../../testdata/loadFailure2",
   );
-  const options = new ComponentScanLoaderOptions(basePackage, null, null);
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, []);
 
   const componentScanResolver = new ComponentScanLoader();
   await t.throwsAsync(
@@ -125,6 +143,7 @@ test("should do component scan with include filter", async (t): Promise<void> =>
       },
     ],
     null,
+    [],
   );
 
   const componentScanResolver = new ComponentScanLoader();
@@ -143,6 +162,7 @@ test("should throw error on invalid scope", async (t) => {
       join(import.meta.dirname, "../../../testdata/invalidScope"),
       null,
       null,
+      [],
     ),
   ];
   options.configuration = { disabled: true };
@@ -167,6 +187,7 @@ test("should throw error if dependency throws error", async (t) => {
       join(import.meta.dirname, "../../../testdata/dependencyError"),
       null,
       null,
+      [],
     ),
   ];
   options.configuration = { disabled: true };
@@ -191,6 +212,7 @@ test("should throw error if dependency has itself as dependency", async (t) => {
       join(import.meta.dirname, "../../../testdata/dependencyError2"),
       null,
       null,
+      [],
     ),
   ];
   options.configuration = { disabled: true };
@@ -211,6 +233,7 @@ test("component scan should handle file without bean", async (t) => {
       join(import.meta.dirname, "../../testdata/scan2"),
       null,
       null,
+      [],
     ),
   ];
   options.configuration = { disabled: true };

@@ -15,7 +15,12 @@ export class CoreOptionsBuilder {
     coreOptions.loaderOptions = options.loaderOptions ?? [];
     if (options.autoConfiguration === true) {
       coreOptions.loaderOptions.push(
-        new ComponentScanLoaderOptions(options.basePackage, null, null),
+        new ComponentScanLoaderOptions(
+          options.basePackage,
+          null,
+          null,
+          options.modulesToScan,
+        ),
       );
     }
     coreOptions.defaultScope = Scopes.SINGLETON;

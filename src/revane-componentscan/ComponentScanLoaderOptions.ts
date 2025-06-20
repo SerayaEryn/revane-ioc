@@ -5,6 +5,7 @@ export class ComponentScanLoaderOptions extends LoaderOptions {
     public basePackage: string,
     public includeFilters: any[] | null,
     public excludeFilters: any[] | null,
+    public modulesToScan: string[],
   ) {
     super();
     this.type = "scan";
