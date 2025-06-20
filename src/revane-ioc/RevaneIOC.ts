@@ -50,9 +50,12 @@ import {
 import { DependencyResolver } from "../revane-ioc-core/dependencies/DependencyResolver.js";
 import { ConfigurationExtension } from "../revane-configuration/ConfigurationExtension.js";
 import { LifeCycleExtension } from "../revane-lifecycle/LifeCycleExtension.js";
-import { ConditionalOnFile } from "../revane-conditional/file/ConditionalOnFile.js";
-import { ConditionalOnMissingBean } from "../revane-conditional/missing-bean/ConditionalOnMissingBean.js";
-import { ConditionalExtension } from "../revane-conditional/ConditionalExtension.js";
+import {
+  ConditionalExtension,
+  ConditionalOnFile,
+  ConditionalOnMissingBean,
+  ConditionalOnProperty,
+} from "../revane-conditional/RevaneConditional.js";
 
 export {
   BeanDefinition,
@@ -93,6 +96,7 @@ export {
   ComponentScanExtension,
   DependencyResolver,
   ConditionalOnFile,
+  ConditionalOnProperty,
 };
 
 export default class RevaneIOC {
@@ -117,7 +121,7 @@ export default class RevaneIOC {
     this.#options.extensions = [
       configurationExtension,
       new LifeCycleExtension(),
-      new ConditionalExtension(this.#options.basePackage),
+      new ConditionalExtension(this.#configuration),
       ...this.#options.extensions,
     ];
   }

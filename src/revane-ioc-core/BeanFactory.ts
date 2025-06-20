@@ -39,14 +39,17 @@ export class BeanFactory {
 
   async process(beanDefinitions: BeanDefinition[]): Promise<void> {
     let preprocessed = [...beanDefinitions];
-    for (const preProcessor of this.preProcessors) {
-      for (const beanDefinition of beanDefinitions) {
+    for (const beanDefinition of beanDefinitions) {
+      for (const preProcessor of this.preProcessors) {
         const preProcessedBeanDefinitions = await preProcessor.preProcess(
           beanDefinition,
           preprocessed,
         );
         const index = preprocessed.indexOf(beanDefinition);
         preprocessed.splice(index, 1);
+        if (preProcessedBeanDefinitions.length == 0) {
+          break;
+        }
         preprocessed = preprocessed.concat(preProcessedBeanDefinitions);
       }
     }

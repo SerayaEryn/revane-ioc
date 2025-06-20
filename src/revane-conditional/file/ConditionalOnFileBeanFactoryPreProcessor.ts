@@ -3,15 +3,17 @@ import { BeanDefinition } from "../../revane-ioc-core/BeanDefinition.js";
 import { BeanFactoryPreProcessor } from "../../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js";
 import { conditionalOnFileSym } from "../Symbols.js";
 import { access, constants } from "node:fs/promises";
+import { RevaneConfiguration } from "../../revane-ioc/RevaneIOC.js";
 
 export class ConditionalOnFileBeanFactoryPreProcessor
   implements BeanFactoryPreProcessor
 {
   #basePackage: string;
 
-  constructor(basePackage: string) {
-    this.#basePackage = basePackage;
+  constructor(configuration: RevaneConfiguration) {
+    this.#basePackage = configuration.getString("revane.basePackage");
   }
+
   async preProcess(
     beanDefinition: BeanDefinition,
     _: BeanDefinition[],
