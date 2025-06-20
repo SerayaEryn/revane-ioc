@@ -57,18 +57,17 @@ export default class ComponentScanLoader implements Loader {
         if (requiredFile == null) {
           throw new Error("null");
         }
-        result = result.concat(this.#processModule(requiredFile, file));
+        result = result.concat(this.#processFile(requiredFile, file));
       } catch (error) {
         throw new ModuleLoadError(file, error);
       }
     }
     for (const moduleToScan of modulesToScan) {
       try {
-        const requiredFile = moduleToScan;
-        if (requiredFile == null) {
+        if (moduleToScan == null) {
           throw new Error("null");
         }
-        result = result.concat(this.#processModule(requiredFile, moduleToScan));
+        result = result.concat(this.#processModule(moduleToScan));
       } catch (error) {
         throw new ModuleLoadError(moduleToScan, error);
       }
@@ -76,7 +75,7 @@ export default class ComponentScanLoader implements Loader {
     return result;
   }
 
-  #processModule(requiredFile, file: string): BeanDefinition[] {
+  #processFile(requiredFile, file: string): BeanDefinition[] {
     const moduleMap = getModuleMap(requiredFile);
     if (moduleMap.size === 0) {
       if (this.#isNoComponent(requiredFile)) {
@@ -91,6 +90,26 @@ export default class ComponentScanLoader implements Loader {
           return [];
         }
         result.push(getBeanDefinition(key, aModule, file));
+      }
+      return result;
+    }
+  }
+
+  #processModule(requiredFile): BeanDefinition[] {
+    const moduleMap = getModuleMap(requiredFile);
+    if (moduleMap.size === 0) {
+      if (this.#isNoComponent(requiredFile)) {
+        return [];
+      }
+      return [getBeanDefinition(null, requiredFile, requiredFile)];
+    } else {
+      const result: BeanDefinition[] = [];
+      for (const key of moduleMap.keys()) {
+        const aModule = moduleMap.get(key);
+        if (this.#isNoComponent(aModule)) {
+          return [];
+        }
+        result.push(getBeanDefinition(key, aModule, aModule));
       }
       return result;
     }
@@ -162,7 +181,11 @@ function getBeanDefinition(
       toReference(it, dependencyTypes, dependencyClassTypes[index]),
   );
   const beanDefinition = new DefaultBeanDefinition(id);
-  beanDefinition.class = clazz;
+  if (typeof clazz == "string") {
+    beanDefinition.class = clazz;
+  } else {
+    beanDefinition.classConstructor = clazz;
+  }
   beanDefinition.dependencyIds = dependencies;
   beanDefinition.scope = scope;
   beanDefinition.type = type;
