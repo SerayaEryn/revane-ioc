@@ -11,24 +11,17 @@ import NotInitializedError from "./NotInitializedError.js";
 import DefaultBeanDefinition from "../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../revane-ioc-core/Loader.js";
 import {
-  PostConstruct,
-  PreDestroy,
-} from "../revane-lifecycle/LifeCycleDecorators.js";
-import { RevaneConfiguration } from "../revane-configuration/RevaneConfiguration.js";
+  ConfigurationExtension,
+  ConfigurationProperties,
+  RevaneConfiguration,
+} from "../revane-configuration/RevaneConfiguration.js";
 import { ContextPlugin } from "../revane-ioc-core/context/ContextPlugin.js";
 import { ApplicationContext } from "../revane-ioc-core/ApplicationContext.js";
-import { ConfigurationProperties } from "../revane-configuration/ConfigurationProperties.js";
-import { Scheduled } from "../revane-scheduler/Scheduled.js";
 import BeanTypeRegistry from "../revane-ioc-core/context/bean/BeanTypeRegistry.js";
-import { LogFactory } from "../revane-logging/LogFactory.js";
-import { Logger } from "apheleia";
-
 import { Bean } from "../revane-beanfactory/BeanDecorator.js";
 import { LoaderOptions } from "../revane-ioc-core/LoaderOptions.js";
 import { CoreOptionsBuilder } from "./CoreOptionsBuilder.js";
 import { Extension } from "./Extension.js";
-import { SchedulingExtension } from "../revane-scheduler/SchedulingExtension.js";
-import { LoggingExtension } from "../revane-logging/LoggingExtension.js";
 import { BeanFactoryExtension } from "../revane-beanfactory/BeanFactoryExtension.js";
 import { Scopes } from "../revane-ioc-core/Scopes.js";
 import { BeanDefinition } from "../revane-ioc-core/BeanDefinition.js";
@@ -48,14 +41,26 @@ import {
   Service,
 } from "../revane-componentscan/RevaneConponentScan.js";
 import { DependencyResolver } from "../revane-ioc-core/dependencies/DependencyResolver.js";
-import { ConfigurationExtension } from "../revane-configuration/ConfigurationExtension.js";
-import { LifeCycleExtension } from "../revane-lifecycle/LifeCycleExtension.js";
 import {
   ConditionalExtension,
   ConditionalOnFile,
   ConditionalOnMissingBean,
   ConditionalOnProperty,
 } from "../revane-conditional/RevaneConditional.js";
+import {
+  LogFactory,
+  Logger,
+  LoggingExtension,
+} from "../revane-logging/RevaneLogging.js";
+import {
+  LifeCycleExtension,
+  PostConstruct,
+  PreDestroy,
+} from "../revane-lifecycle/RevaneLifeCycle.js";
+import {
+  Scheduled,
+  SchedulingExtension,
+} from "../revane-scheduler/RevaneScheduler.js";
 
 export {
   BeanDefinition,
@@ -77,27 +82,24 @@ export {
   Scheduler,
   Scope,
   Bean,
-  Configuration,
-  ConfigurationProperties,
   ContextPlugin,
   ApplicationContext,
-  Scheduled,
-  ConditionalOnMissingBean,
-  Logger,
-  LogFactory,
-  RevaneConfiguration,
-  PostConstruct,
-  PreDestroy,
   Extension,
-  SchedulingExtension,
-  LoggingExtension,
   BeanFactoryExtension,
   Scopes,
   ComponentScanExtension,
   DependencyResolver,
-  ConditionalOnFile,
-  ConditionalOnProperty,
 };
+
+export { Scheduled, SchedulingExtension };
+
+export { PostConstruct, PreDestroy };
+
+export { RevaneConfiguration, Configuration, ConfigurationProperties };
+
+export { LoggingExtension, Logger, LogFactory };
+
+export { ConditionalOnMissingBean, ConditionalOnFile, ConditionalOnProperty };
 
 export default class RevaneIOC {
   #revaneCore: RevaneCore;

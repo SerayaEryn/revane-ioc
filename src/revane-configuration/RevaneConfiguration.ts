@@ -4,6 +4,8 @@ import { NoConfigFilesFound } from "./NoConfigFilesFound.js";
 import { KeyNotPresentInConfig } from "./KeyNotPresentInConfig.js";
 import { TypeMismatch } from "./TypeMismatch.js";
 import { deepMerge } from "../revane-utils/Deepmerge.js";
+import { ConfigurationExtension } from "./ConfigurationExtension.js";
+import { ConfigurationProperties } from "./ConfigurationProperties.js";
 
 export class ConfigurationOptions {
   profile: string | null;
@@ -29,6 +31,8 @@ export class ConfigurationOptions {
     this.basePackage = basePackage;
   }
 }
+
+export { ConfigurationExtension, ConfigurationProperties };
 
 export class RevaneConfiguration implements Configuration {
   private values: object = {};
