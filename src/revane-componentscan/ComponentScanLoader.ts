@@ -49,39 +49,41 @@ export default class ComponentScanLoader implements Loader {
       includeFilters,
       excludeFilters,
     );
-    const result: BeanDefinition[] = [];
+    let result: BeanDefinition[] = [];
     for (const file of filteredFiles) {
       let requiredFile: any;
-      let moduleMap: Map<string, any>;
       try {
         const fileEnding = await this.#fileEnding(file);
         requiredFile = await import(pathWithEnding(file, fileEnding));
-        moduleMap = getModuleMap(requiredFile);
-      } catch (error) {
-        throw new ModuleLoadError(file, error);
-      }
-      if (moduleMap.size === 0) {
         if (requiredFile == null) {
           throw new ModuleLoadError(file, new Error());
         }
-        if (this.#isNoComponent(requiredFile)) {
-          continue;
-        }
-        result.push(getBeanDefinition(null, requiredFile, file));
-      } else {
-        for (const key of moduleMap.keys()) {
-          const aModule = moduleMap.get(key);
-          if (aModule == null) {
-            throw new ModuleLoadError(file, new Error());
-          }
-          if (this.#isNoComponent(aModule)) {
-            continue;
-          }
-          result.push(getBeanDefinition(key, aModule, file));
-        }
+        result = result.concat(this.#processModule(requiredFile, file));
+      } catch (error) {
+        throw new ModuleLoadError(file, error);
       }
     }
     return result;
+  }
+
+  #processModule(requiredFile, file: string): BeanDefinition[] {
+    const moduleMap = getModuleMap(requiredFile);
+    if (moduleMap.size === 0) {
+      if (this.#isNoComponent(requiredFile)) {
+        return [];
+      }
+      return [getBeanDefinition(null, requiredFile, file)];
+    } else {
+      const result: BeanDefinition[] = [];
+      for (const key of moduleMap.keys()) {
+        const aModule = moduleMap.get(key);
+        if (this.#isNoComponent(aModule)) {
+          return [];
+        }
+        result.push(getBeanDefinition(key, aModule, file));
+      }
+      return result;
+    }
   }
 
   async #fileEnding(file: string): Promise<string> {
