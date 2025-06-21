@@ -126,9 +126,7 @@ export default class ComponentScanLoader implements Loader {
       const fileMjs = pathWithEnding(file, ".mjs");
       await access(fileMjs, constants.R_OK);
       return ".mjs";
-    } catch (_) {
-      console.log(_);
-    } // eslint-disable-line no-empty
+    } catch (_) {} // eslint-disable-line no-empty
     return ".js";
   }
 
