@@ -5,7 +5,7 @@ import DependencyRegisterError from "./context/errors/DependencyRegisterError.js
 import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import DependencyNotFoundError from "./context/errors/DependencyNotFoundError.js";
 import Options from "./Options.js";
-import BeanDefinedTwiceError from "./context/errors/BeanDefinedTwiceError.js";
+import ConflictingBeanDefinitionError from "./context/errors/BeanDefinedTwiceError.js";
 import { BeanFactoryPreProcessor } from "./preProcessors/BeanFactoryPreProcessor.js";
 import { BeanDefinition } from "./BeanDefinition.js";
 import { RethrowableError } from "./RethrowableError.js";
@@ -62,7 +62,7 @@ export class BeanFactory {
         exitingBeanDefininaton != null &&
         this.options.noRedefinition !== false
       ) {
-        throw new BeanDefinedTwiceError(exitingBeanDefininaton.id);
+        throw new ConflictingBeanDefinitionError(exitingBeanDefininaton.id);
       }
       processedBeanDefinitions.set(
         preProcessedBeanDefinition.id,
