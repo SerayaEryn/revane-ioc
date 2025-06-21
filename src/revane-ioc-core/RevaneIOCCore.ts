@@ -21,6 +21,13 @@ import { Scopes } from "./Scopes.js";
 import { LoaderOptions } from "./LoaderOptions.js";
 import DefaultBeanDefinition from "./DefaultBeanDefinition.js";
 import DefaultBeanTypeRegistry from "./context/bean/DefaultBeanTypeRegistry.js";
+import { REV_ERR_DEFINED_TWICE } from "./context/errors/BeanDefinedTwiceError.js";
+import { REV_ERR_CIRCULAR_DEPENDENCY } from "./context/errors/CircularDependencyError.js";
+import { REV_ERR_DEPENDENCY_NOT_FOUND } from "./context/errors/DependencyNotFoundError.js";
+import { REV_ERR_DEPENDENCY_REGISTER } from "./context/errors/DependencyRegisterError.js";
+import { REV_ERR_INVALID_SCOPE } from "./context/errors/InvalidScopeError.js";
+import { REV_ERR_NOT_FOUND } from "./context/errors/NotFoundError.js";
+import { REV_ERR_UNKNOWN_DEPENDENCY_TYPE } from "./dependencies/UnknownDependencyType.js";
 
 export {
   BeanDefinition,
@@ -32,6 +39,13 @@ export {
   DefaultBeanTypeRegistry,
   ApplicationContext,
   RegexFilter,
+  REV_ERR_DEFINED_TWICE,
+  REV_ERR_CIRCULAR_DEPENDENCY,
+  REV_ERR_DEPENDENCY_NOT_FOUND,
+  REV_ERR_DEPENDENCY_REGISTER,
+  REV_ERR_INVALID_SCOPE,
+  REV_ERR_NOT_FOUND,
+  REV_ERR_UNKNOWN_DEPENDENCY_TYPE,
 };
 
 export default class RevaneIOCCore {

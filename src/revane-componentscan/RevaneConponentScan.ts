@@ -11,6 +11,7 @@ import {
   Service,
 } from "./Decorators.js";
 import Filter from "./Filter.js";
+import { REV_ERR_MODULE_LOAD_ERROR } from "./ModuleLoadError.js";
 import RegexFilter from "./RegexFilter.js";
 
 export {
@@ -26,4 +27,5 @@ export {
   ControllerAdvice,
   Scheduler,
   Scope,
+  REV_ERR_MODULE_LOAD_ERROR,
 };

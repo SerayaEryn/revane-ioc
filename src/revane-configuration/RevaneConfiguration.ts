@@ -1,11 +1,18 @@
 import { LoadingStrategy } from "./loading/LoadingStrategy.js";
 import { Configuration } from "./Configuration.js";
-import { NoConfigFilesFound } from "./NoConfigFilesFound.js";
-import { KeyNotPresentInConfig } from "./KeyNotPresentInConfig.js";
-import { TypeMismatch } from "./TypeMismatch.js";
+import {
+  NoConfigFilesFound,
+  REV_ERR_NO_CONFIG_FILES_FOUND,
+} from "./NoConfigFilesFound.js";
+import {
+  KeyNotPresentInConfig,
+  REV_ERR_KEY_NOT_PRESENT_IN_CONFIG,
+} from "./KeyNotPresentInConfig.js";
+import { REV_ERR_KEY_TYPE_MISMATCH, TypeMismatch } from "./TypeMismatch.js";
 import { deepMerge } from "../revane-utils/Deepmerge.js";
 import { ConfigurationExtension } from "./ConfigurationExtension.js";
 import { ConfigurationProperties } from "./ConfigurationProperties.js";
+import { REV_ERR_CONFIG_FILE_NOT_FOUND } from "./loading/ConfigFileNotFound.js";
 
 export class ConfigurationOptions {
   profile: string | null;
@@ -45,6 +52,10 @@ export {
   PROFILE,
   ORIGINAL_PROFILE,
   FAVICON_ENABLED,
+  REV_ERR_KEY_NOT_PRESENT_IN_CONFIG,
+  REV_ERR_NO_CONFIG_FILES_FOUND,
+  REV_ERR_CONFIG_FILE_NOT_FOUND,
+  REV_ERR_KEY_TYPE_MISMATCH,
 };
 
 export class RevaneConfiguration implements Configuration {

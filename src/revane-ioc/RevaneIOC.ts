@@ -7,6 +7,13 @@ import RevaneCore, {
   DefaultBeanTypeRegistry,
   LoaderOptions,
   RegexFilter,
+  REV_ERR_CIRCULAR_DEPENDENCY,
+  REV_ERR_DEFINED_TWICE,
+  REV_ERR_DEPENDENCY_NOT_FOUND,
+  REV_ERR_DEPENDENCY_REGISTER,
+  REV_ERR_INVALID_SCOPE,
+  REV_ERR_NOT_FOUND,
+  REV_ERR_UNKNOWN_DEPENDENCY_TYPE,
   Scopes,
 } from "../revane-ioc-core/RevaneIOCCore.js";
 
@@ -15,11 +22,17 @@ import XmlFileLoader from "./loaders/XmlFileLoader.js";
 import PrototypeBean from "./bean/PrototypeBean.js";
 import SingletonBean from "./bean/SingletonBean.js";
 import Options from "./Options.js";
-import NotInitializedError from "./NotInitializedError.js";
+import NotInitializedError, {
+  REV_ERR_NOT_INITIALIZED,
+} from "./NotInitializedError.js";
 import Loader from "../revane-ioc-core/Loader.js";
 import {
   ConfigurationExtension,
   ConfigurationProperties,
+  REV_ERR_CONFIG_FILE_NOT_FOUND,
+  REV_ERR_KEY_NOT_PRESENT_IN_CONFIG,
+  REV_ERR_KEY_TYPE_MISMATCH,
+  REV_ERR_NO_CONFIG_FILES_FOUND,
   RevaneConfiguration,
 } from "../revane-configuration/RevaneConfiguration.js";
 import { Bean } from "../revane-beanfactory/BeanDecorator.js";
@@ -37,6 +50,7 @@ import {
   Controller,
   ControllerAdvice,
   Repository,
+  REV_ERR_MODULE_LOAD_ERROR,
   Scheduler,
   Scope,
   Service,
@@ -61,9 +75,31 @@ import {
   PreDestroy,
 } from "../revane-lifecycle/RevaneLifeCycle.js";
 import {
+  REV_ERR_INVALID_CRON_PATTERN_PROVIDED,
+  REV_ERR_NO_CRON_PATTERN_PROVIDED,
   Scheduled,
   SchedulingExtension,
 } from "../revane-scheduler/RevaneScheduler.js";
+import { REV_ERR_UNKNOWN_ENDING } from "./UnknownEndingError.js";
+
+const errorCodes = {
+  REV_ERR_MODULE_LOAD_ERROR,
+  REV_ERR_KEY_NOT_PRESENT_IN_CONFIG,
+  REV_ERR_NO_CONFIG_FILES_FOUND,
+  REV_ERR_CONFIG_FILE_NOT_FOUND,
+  REV_ERR_KEY_TYPE_MISMATCH,
+  REV_ERR_NOT_INITIALIZED,
+  REV_ERR_UNKNOWN_ENDING,
+  REV_ERR_DEFINED_TWICE,
+  REV_ERR_CIRCULAR_DEPENDENCY,
+  REV_ERR_DEPENDENCY_NOT_FOUND,
+  REV_ERR_DEPENDENCY_REGISTER,
+  REV_ERR_INVALID_SCOPE,
+  REV_ERR_NOT_FOUND,
+  REV_ERR_UNKNOWN_DEPENDENCY_TYPE,
+  REV_ERR_INVALID_CRON_PATTERN_PROVIDED,
+  REV_ERR_NO_CRON_PATTERN_PROVIDED,
+};
 
 export {
   Loader,
@@ -85,6 +121,7 @@ export {
   BeanFactoryExtension,
   ComponentScanExtension,
   DependencyResolver,
+  errorCodes,
 };
 
 export {

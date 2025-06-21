@@ -1,9 +1,10 @@
+export const REV_ERR_NO_CONFIG_FILES_FOUND = "REV_ERR_NO_CONFIG_FILES_FOUND";
+
 export class NoConfigFilesFound extends Error {
-  public code: string;
+  public code = REV_ERR_NO_CONFIG_FILES_FOUND;
 
   constructor() {
     super("no configuration files found");
-    this.code = "REV_ERR_NO_CONFIG_FILES_FOUND";
     Error.captureStackTrace(this, NoConfigFilesFound);
   }
 }
