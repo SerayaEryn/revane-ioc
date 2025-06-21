@@ -4,7 +4,6 @@ import { dependenciesSym, idSym, typeSym } from "./Symbols.js";
 
 export function createComponentDecorator(type: string) {
   return function decorateComponent(options?: Options | string | any) {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (
       typeof options === "string" ||
       options === undefined ||

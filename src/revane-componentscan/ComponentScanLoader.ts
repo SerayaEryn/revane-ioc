@@ -170,6 +170,7 @@ function getBeanDefinition(
   const id = Reflect.getMetadata(idSym, module1);
   const type = Reflect.getMetadata(typeSym, module1);
   const scope = Reflect.getMetadata(scopeSym, module1) ?? Scopes.SINGLETON;
+  // New: const scope = module1[Symbol.metadata][scopeSym] ?? Scopes.SINGLETON;
   const dependencyTypes =
     Reflect.getMetadata("revane:dependency-types", module1) ?? [];
   const dependencyClassTypes =

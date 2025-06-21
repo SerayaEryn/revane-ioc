@@ -11,7 +11,7 @@ test("should add scope meta data", (t) => {
 });
 
 test("should add scope meta data #2", (t) => {
-  class TestClass {} // eslint-disable-line
+  class TestClass {}
   Scope("prototype")(TestClass);
 
   t.is(Reflect.getMetadata(scopeSym, TestClass), "prototype");

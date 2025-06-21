@@ -27,11 +27,7 @@ export class LoggerDependencyResolver implements DependencyResolver {
   ): Promise<Bean> {
     const beanDefinition = new DefaultBeanDefinition(dependency.value);
     beanDefinition.instance = this.logFactory.getInstance(parentId);
-    const bean = new SingletonBean(
-      beanDefinition,
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      async () => {},
-    );
+    const bean = new SingletonBean(beanDefinition, async () => {});
     await bean.init();
     return bean;
   }

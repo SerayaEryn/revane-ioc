@@ -7,12 +7,12 @@ import {
   ControllerAdvice,
   Repository,
   Scheduler,
-  Scope,
   Service,
 } from "./Decorators.js";
 import Filter from "./Filter.js";
 import { REV_ERR_MODULE_LOAD_ERROR } from "./ModuleLoadError.js";
 import RegexFilter from "./RegexFilter.js";
+import { Scope } from "./Scope.js";
 
 export {
   ComponentScanExtension,
