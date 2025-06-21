@@ -23,6 +23,7 @@ export class ConditionalBeanFactoryPreProcessor
       conditionalSym,
       classConstructor,
     );
+    // New: const conditions: ConditionDefinition[] | null = classConstructor[Symbol.metadata!][conditionalSym]
     if (conditions == null || conditions.length === 0) {
       return [beanDefinition];
     }

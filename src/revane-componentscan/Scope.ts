@@ -2,8 +2,8 @@ import { scopeSym } from "./Symbols.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function ScopeNew(scope: string) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   return function ScopeDecorator(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     target: Function,
     context: ClassDecoratorContext,
   ): void {

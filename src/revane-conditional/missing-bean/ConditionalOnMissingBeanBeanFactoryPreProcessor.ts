@@ -15,6 +15,7 @@ export class ConditionalOnMissingBeanBeanFactoryPreProcessor
       conditionalOnMissingBeanSym,
       classConstructor,
     );
+    //New const conditionalOnMissingBean = classConstructor[Symbol.metadata][conditionalOnMissingBeanSym]
     if (conditionalOnMissingBean === true) {
       const beanIsMissing =
         beanDefinitions

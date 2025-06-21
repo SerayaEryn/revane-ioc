@@ -7,15 +7,25 @@ export interface ConditionDefinition {
   data: any;
 }
 
+function ConditionalNew(
+  conditionClass: any,
+  data: any,
+): (target: any, context: ClassDecoratorContext) => void {
+  return function decorate(target: any, context: ClassDecoratorContext) {
+    const meta =
+      (context.metadata![conditionalSym] as ConditionDefinition[]) ?? [];
+    meta.push({
+      conditionClass,
+      data,
+    });
+    context.metadata![conditionalSym] = meta;
+  };
+}
+
 function Conditional(conditionClass: any, data: any): (target: any) => any {
   return function decorate(target: any) {
-    let meta: ConditionDefinition[] = Reflect.getMetadata(
-      conditionalSym,
-      target,
-    );
-    if (meta == null) {
-      meta = [];
-    }
+    const meta: ConditionDefinition[] =
+      Reflect.getMetadata(conditionalSym, target) ?? [];
     meta.push({
       conditionClass,
       data,
@@ -25,4 +35,4 @@ function Conditional(conditionClass: any, data: any): (target: any) => any {
   };
 }
 
-export { Conditional };
+export { Conditional, ConditionalNew };
