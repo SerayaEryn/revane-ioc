@@ -1,48 +1,66 @@
 import Options from "./Options.js";
 import { Parser } from "acorn";
 import { dependenciesSym, idSym, typeSym } from "./Symbols.js";
+import { Constructor } from "../revane-ioc-core/Constructor.js";
+import { setMetadata } from "../revane-utils/Metadata.js";
 
 export function createComponentDecorator(type: string) {
-  return function decorateComponent(options?: Options | string | any) {
+  return function Component(
+    options?: Options | string | any,
+    context1?: ClassDecoratorContext,
+  ) {
     if (
       typeof options === "string" ||
       options === undefined ||
       options.id ||
       options.dependencies
     ) {
-      return function define(Class) {
-        let opts: Options;
-        let id: string | null;
-        if (typeof options === "string") {
-          id = options;
-          opts = new Options();
-        } else {
-          opts = (options as Options) ?? new Options();
-          id = opts.id === undefined ? null : opts.id;
-        }
-
-        const tree = getSyntaxTree(Class);
-
-        if (id == null) {
-          id = getId(tree);
-        }
-        const dependencies = getDependencies(tree, opts);
-        Reflect.defineMetadata(dependenciesSym, dependencies, Class);
-        Reflect.defineMetadata(idSym, id, Class);
-        Reflect.defineMetadata(typeSym, type, Class);
-        return Class;
+      return function define(
+        target: Constructor,
+        context2?: ClassDecoratorContext,
+      ) {
+        return decoratorWithParameters(target, options, type, context2);
       };
     } else {
-      const tree = getSyntaxTree(options);
-      const opts = new Options();
-      const id = getId(tree);
-      const dependencies = getDependencies(tree, opts);
-      Reflect.defineMetadata(dependenciesSym, dependencies, options);
-      Reflect.defineMetadata(idSym, id, options);
-      Reflect.defineMetadata(typeSym, type, options);
-      return options;
+      return decoratorNoParameters(options, type, context1);
     }
   };
+}
+
+function decoratorNoParameters(
+  target: any,
+  type: string,
+  context?: ClassDecoratorContext,
+) {
+  const tree = getSyntaxTree(target);
+  const opts = new Options();
+  setMetadata(dependenciesSym, getDependencies(tree, opts), target, context);
+  setMetadata(idSym, getId(tree), target, context);
+  setMetadata(typeSym, type, target, context);
+  return context == null ? target : undefined;
+}
+
+function decoratorWithParameters(
+  target: any,
+  options: any,
+  type: string,
+  context?: ClassDecoratorContext,
+) {
+  let opts: Options;
+  let id: string | null;
+  if (typeof options === "string") {
+    id = options;
+    opts = new Options();
+  } else {
+    opts = (options as Options) ?? new Options();
+    id = opts.id === undefined ? null : opts.id;
+  }
+
+  const tree = getSyntaxTree(target);
+  setMetadata(dependenciesSym, getDependencies(tree, opts), target, context);
+  setMetadata(idSym, id ?? getId(tree), target, context);
+  setMetadata(typeSym, type, target, context);
+  return context == null ? target : undefined;
 }
 
 function getSyntaxTree(Class): any {

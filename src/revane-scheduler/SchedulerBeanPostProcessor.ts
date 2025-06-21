@@ -5,6 +5,7 @@ import { TaskScheduler } from "./TaskScheduler.js";
 import { NoCronPatternProvided } from "./NoCronPatternProvided.js";
 import { InvalidCronPatternProvided } from "./InvalidCronPatternProvided.js";
 import { isAsyncFunction } from "node:util/types";
+import { getMetadata } from "../revane-utils/Metadata.js";
 
 export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
   readonly #schedulingService: TaskScheduler;
@@ -23,10 +24,7 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
     if (!this.#enabled) {
       return;
     }
-    const scheduled = Reflect.getMetadata(
-      "scheduled",
-      instance.constructor.prototype,
-    );
+    const scheduled = getMetadata("scheduled", instance.constructor.prototype);
     if (scheduled == null) {
       return;
     }

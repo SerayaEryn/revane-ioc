@@ -1,3 +1,4 @@
+import { setMetadata } from "../revane-utils/Metadata.js";
 import { configurationPropertiesSym } from "./Symbols.js";
 import { Parser } from "acorn";
 
@@ -5,25 +6,22 @@ export interface ConfigurationPropertiesOptions {
   prefix: string;
 }
 
-function createConfigurationPropertiesDecorator() {
-  return function decoratoteConfigurationProperties(
-    options: ConfigurationPropertiesOptions,
-  ) {
-    return function define(Class) {
-      const tree = getSyntaxTree(Class);
-      const properties: string[] = tree.body[0].body.body
-        .filter((node) => node.type === "PropertyDefinition")
-        .map((node) => node.key.name);
-      const setters: string[] = tree.body[0].body.body
-        .filter((node) => node.type === "MethodDefinition")
-        .map((node) => node.key.name);
-      Reflect.defineMetadata(
-        configurationPropertiesSym,
-        new ConfigurationPropertiesData(options.prefix, properties, setters),
-        Class,
-      );
-      return Class;
-    };
+function ConfigurationProperties(options: ConfigurationPropertiesOptions) {
+  return function define(target, context?: ClassDecoratorContext) {
+    const tree = getSyntaxTree(target);
+    const properties: string[] = tree.body[0].body.body
+      .filter((node) => node.type === "PropertyDefinition")
+      .map((node) => node.key.name);
+    const setters: string[] = tree.body[0].body.body
+      .filter((node) => node.type === "MethodDefinition")
+      .map((node) => node.key.name);
+    setMetadata(
+      configurationPropertiesSym,
+      new ConfigurationPropertiesData(options.prefix, properties, setters),
+      target,
+      context,
+    );
+    return target;
   };
 }
 
@@ -45,7 +43,5 @@ function getSyntaxTree(Class): any {
   const functionAsString = Class.toString();
   return Parser.parse(functionAsString, { ecmaVersion: 2023 });
 }
-
-const ConfigurationProperties = createConfigurationPropertiesDecorator();
 
 export { ConfigurationProperties };

@@ -1,6 +1,7 @@
 import { RevaneConfiguration } from "../../revane-configuration/RevaneConfiguration.js";
 import { BeanDefinition } from "../../revane-ioc-core/BeanDefinition.js";
 import { BeanFactoryPreProcessor } from "../../revane-ioc-core/preProcessors/BeanFactoryPreProcessor.js";
+import { getMetadata } from "../../revane-utils/Metadata.js";
 import { conditionalSym } from "../Symbols.js";
 import { ConditionDefinition } from "./Conditional.js";
 
@@ -19,11 +20,10 @@ export class ConditionalBeanFactoryPreProcessor
   ): Promise<BeanDefinition[]> {
     const classConstructor = beanDefinition.classConstructor;
     if (classConstructor == null) return [beanDefinition];
-    const conditions: ConditionDefinition[] | null = Reflect.getMetadata(
+    const conditions: ConditionDefinition[] | null = getMetadata(
       conditionalSym,
       classConstructor,
     );
-    // New: const conditions: ConditionDefinition[] | null = classConstructor[Symbol.metadata!][conditionalSym]
     if (conditions == null || conditions.length === 0) {
       return [beanDefinition];
     }

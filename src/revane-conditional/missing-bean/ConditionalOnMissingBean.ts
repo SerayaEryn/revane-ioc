@@ -1,34 +1,21 @@
+import { setMetadata } from "../../revane-utils/Metadata.js";
 import { conditionalOnMissingBeanSym } from "../Symbols.js";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ConditionalOnMissingBeanNew(
+function ConditionalOnMissingBean(
   maybeTarget?,
   context?: ClassDecoratorContext,
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 ): Function | any {
   if (maybeTarget != null) {
-    return decorateNew(maybeTarget, context!);
-  } else {
-    return decorateNew;
-  }
-}
-
-function decorateNew(_: any, context: ClassDecoratorContext) {
-  context.metadata![conditionalOnMissingBeanSym] = true;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-function ConditionalOnMissingBean(maybeTarget?): Function | any {
-  if (maybeTarget != null) {
-    return decorate(maybeTarget);
+    return decorate(maybeTarget, context);
   } else {
     return decorate;
   }
 }
 
-function decorate(target: any): any {
-  Reflect.defineMetadata(conditionalOnMissingBeanSym, true, target);
-  return target;
+function decorate(target: any, context?: ClassDecoratorContext): any {
+  setMetadata(conditionalOnMissingBeanSym, true, target, context);
+  return context == null ? target : undefined;
 }
 
 export { ConditionalOnMissingBean };

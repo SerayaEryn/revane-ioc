@@ -1,6 +1,7 @@
 import { BeanDefinition } from "../revane-ioc-core/BeanDefinition.js";
 import { BeanFactoryPostProcessor } from "../revane-ioc-core/postProcessors/BeanFactoryPostProcessor.js";
 import Bean from "../revane-ioc-core/context/bean/Bean.js";
+import { getMetadata } from "../revane-utils/Metadata.js";
 
 export class LifeCycleBeanFactoryPostProcessor
   implements BeanFactoryPostProcessor
@@ -15,16 +16,14 @@ export class LifeCycleBeanFactoryPostProcessor
   }
 
   private postConstructKey(instance: any): string | null {
-    return Reflect.getMetadata(
+    return getMetadata(
       "life-cycle:postConstruct",
       instance.constructor.prototype,
     )?.propertyKey;
   }
 
   private preDestroyKey(instance: any): string | null {
-    return Reflect.getMetadata(
-      "life-cycle:preDestroy",
-      instance.constructor.prototype,
-    )?.propertyKey;
+    return getMetadata("life-cycle:preDestroy", instance.constructor.prototype)
+      ?.propertyKey;
   }
 }

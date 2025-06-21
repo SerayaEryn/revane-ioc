@@ -3,17 +3,26 @@ function createScheduledDecorator(): Function {
   return function decoratoteScheduledFactory(cronPattern: string) {
     return function define(
       target,
-      propertyKey: string,
+      propertyKey: string | ClassMethodDecoratorContext,
       _: PropertyDescriptor,
     ): void {
-      Reflect.defineMetadata(
-        "scheduled",
-        {
+      if (typeof propertyKey == "string") {
+        Reflect.defineMetadata(
+          "scheduled",
+          {
+            cronPattern,
+            propertyKey,
+          },
+          target,
+        );
+      } else {
+        const context = propertyKey as ClassMethodDecoratorContext;
+        context.metadata!["scheduled"] = {
           cronPattern,
-          propertyKey,
-        },
-        target,
-      );
+          propertyKey: context.name,
+        };
+        return target;
+      }
     };
   };
 }
