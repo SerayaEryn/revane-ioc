@@ -20,7 +20,8 @@ export class DefaultApplicationContext implements ApplicationContext {
     return Array.from(this.beansById.values()).filter((bean) => {
       return (
         Reflect.getMetadata(metadata, bean) != null ||
-        bean[Symbol["metadata"]][metadata] != null
+        (bean[Symbol["metadata"]] != null &&
+          bean[Symbol["metadata"]][metadata] != null)
       );
     });
   }
