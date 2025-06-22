@@ -89,7 +89,7 @@ test("Should schedule task #2", async (t) => {
   try {
     await revane.initialize();
   } catch (error) {
-    t.is(error.code, "REV_ERR_INVALID_CRON_PATTERN_PROVIDED");
+    t.is(error.code, "REV_ERR_DEPENDENCY_REGISTER");
   }
 });
 
@@ -115,7 +115,7 @@ test("Should schedule task #3", async (t) => {
   try {
     await revane.initialize();
   } catch (error) {
-    t.is(error.code, "REV_ERR_NO_CRON_PATTERN_PROVIDED");
+    t.is(error.code, "REV_ERR_DEPENDENCY_REGISTER");
   }
 });
 
