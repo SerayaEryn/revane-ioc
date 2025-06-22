@@ -3,7 +3,7 @@ import * as fileSystem from "node:fs";
 import DefaultBeanDefinition from "../../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../../revane-ioc-core/Loader.js";
 import { BeanDefinition } from "../RevaneIOC.js";
-import { Scopes } from "../../revane-ioc-core/Scopes.js";
+import { PROTOTYPE_VALUE, SINGLETON_VALUE } from "../../revane-ioc-core/Scopes.js";
 import { XmlFileLoaderOptions } from "./XmlFileLoaderOptions.js";
 import UnknownEndingError from "../UnknownEndingError.js";
 import { DependencyDefinition } from "../../revane-ioc-core/dependencies/DependencyDefinition.js";
@@ -29,7 +29,7 @@ interface XmlReference {
 
 interface XmlAttribute {
   class?: string;
-  scope?: string;
+  scope?: typeof SINGLETON_VALUE | typeof PROTOTYPE_VALUE;
   type?: string;
   id?: string;
   "base-package"?: string;
@@ -120,7 +120,7 @@ export default class XmlFileLoader implements Loader {
     const clazz = bean.attr.class;
     if (clazz == null) throw new Error("missing class");
     beanDefinition.class = clazz;
-    beanDefinition.scope = bean.attr.scope ?? Scopes.SINGLETON;
+    beanDefinition.scope = bean.attr.scope ?? SINGLETON_VALUE;
     if (bean.attr.type != null) {
       beanDefinition.type = bean.attr.type;
     }

@@ -5,6 +5,7 @@ import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import { Constructor } from "./Constructor.js";
 import { uid } from "../revane-utils/Random.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
+import { PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string;
@@ -13,7 +14,7 @@ export default class DefaultBeanDefinition implements BeanDefinition {
   public type: string;
   public dependencyIds: DependencyDefinition[];
   public path: string;
-  public scope: string;
+  public scope: typeof SINGLETON_VALUE | typeof PROTOTYPE_VALUE;
   public instance?: any;
   public classConstructor?: Constructor;
   public dependencies: Bean[] = [];
@@ -41,7 +42,7 @@ export default class DefaultBeanDefinition implements BeanDefinition {
       const bean = new BeanForScope(this, postProcess);
       return bean;
     }
-    throw new InvalidScopeError(this.scope);
+    throw new InvalidScopeError(this.id, this.scope);
   }
 
   public isClass(): boolean {

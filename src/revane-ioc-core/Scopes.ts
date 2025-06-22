@@ -1,4 +1,7 @@
+export const SINGLETON_VALUE = "singleton"
+export const PROTOTYPE_VALUE = "prototype"
+
 export enum Scopes {
-  SINGLETON = "singleton",
-  PROTOTYPE = "prototype",
+  SINGLETON = SINGLETON_VALUE,
+  PROTOTYPE = PROTOTYPE_VALUE,
 }

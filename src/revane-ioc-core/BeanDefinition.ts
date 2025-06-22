@@ -2,6 +2,7 @@ import Bean from "./context/bean/Bean.js";
 import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import { Constructor } from "./Constructor.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
+import { PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
 
 export interface BeanDefinition {
   class: string;
@@ -10,7 +11,7 @@ export interface BeanDefinition {
   type: string;
   dependencyIds: DependencyDefinition[];
   path: string;
-  scope: string;
+  scope: typeof SINGLETON_VALUE | typeof PROTOTYPE_VALUE;
   instance?: any;
   classConstructor?: Constructor;
   dependencies: Bean[];
