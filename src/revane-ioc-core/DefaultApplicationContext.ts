@@ -16,6 +16,15 @@ export class DefaultApplicationContext implements ApplicationContext {
     }
   }
 
+  async getByMetadata(metadata: string | symbol): Promise<any[]> {
+    return Array.from(this.beansById.values()).filter((bean) => {
+      return (
+        Reflect.getMetadata(metadata, bean) != null ||
+        bean[Symbol["metadata"]][metadata] != null
+      );
+    });
+  }
+
   async getById(id: string): Promise<any> {
     const bean = await this.getBeanById(id);
     return await bean.getInstance();

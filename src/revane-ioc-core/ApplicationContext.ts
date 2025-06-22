@@ -10,4 +10,5 @@ export interface ApplicationContext {
   getByType: (type: string) => Promise<any[]>;
   setParent: (context: ApplicationContext) => void;
   close: () => Promise<void>;
+  getByMetadata(metadata: string | symbol): Promise<any[]>;
 }
