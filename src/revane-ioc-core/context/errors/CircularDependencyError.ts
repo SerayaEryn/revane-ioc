@@ -2,9 +2,11 @@ export const REV_ERR_CIRCULAR_DEPENDENCY = "REV_ERR_CIRCULAR_DEPENDENCY";
 
 export default class CircularDependencyError extends Error {
   public code = REV_ERR_CIRCULAR_DEPENDENCY;
+  public ids: string[]
 
-  constructor(id: string) {
-    super(`bean id=${id} has circular dependency on itself.`);
+  constructor(ids: string[]) {
+    super(`bean id=${ids[0]} has circular dependency on itself.`);
     Error.captureStackTrace(this, CircularDependencyError);
+    this.ids = ids
   }
 }

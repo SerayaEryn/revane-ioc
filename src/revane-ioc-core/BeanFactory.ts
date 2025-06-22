@@ -119,7 +119,7 @@ export class BeanFactory {
     const dependencies: Bean[] = [];
     for (const dependency of beanDefinition.dependencyIds) {
       if (beanDefinition.id == dependency.value) {
-        throw new CircularDependencyError(beanDefinition.id);
+        throw new CircularDependencyError([beanDefinition.id, beanDefinition.id]);
       }
       const dependencyForBean = await this.dependencyService.getDependency(
         dependency,
