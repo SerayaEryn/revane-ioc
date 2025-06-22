@@ -33,7 +33,10 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
       throw new NoCronPatternProvided();
     }
     if (typeof scheduled.cronPattern !== "string") {
-      throw new InvalidCronPatternProvided(scheduled.cronPattern);
+      throw new InvalidCronPatternProvided(
+        beanDefinition.id,
+        scheduled.cronPattern,
+      );
     }
     const { propertyKey, cronPattern } = scheduled;
     const functionToSchedule = instance[propertyKey].bind(instance);

@@ -3,7 +3,10 @@ import * as fileSystem from "node:fs";
 import DefaultBeanDefinition from "../../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../../revane-ioc-core/Loader.js";
 import { BeanDefinition } from "../RevaneIOC.js";
-import { PROTOTYPE_VALUE, SINGLETON_VALUE } from "../../revane-ioc-core/Scopes.js";
+import {
+  PROTOTYPE_VALUE,
+  SINGLETON_VALUE,
+} from "../../revane-ioc-core/Scopes.js";
 import { XmlFileLoaderOptions } from "./XmlFileLoaderOptions.js";
 import UnknownEndingError from "../UnknownEndingError.js";
 import { DependencyDefinition } from "../../revane-ioc-core/dependencies/DependencyDefinition.js";
