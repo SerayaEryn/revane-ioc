@@ -4,28 +4,45 @@ import Bean from "./context/bean/Bean.js";
 import NotFoundError from "./context/errors/NotFoundError.js";
 
 export class DefaultApplicationContext implements ApplicationContext {
-  private parent: ApplicationContext | null;
-  private readonly beansById = new Map<string, Bean>();
-  private readonly beansByType = new Map<any, Bean>();
+  #parent: ApplicationContext | null;
+  #beans: Bean[] = [];
+  readonly #indices = new Map<string, Map<any, Bean | Bean[]>>();
+
+  #indexPut(indexName: string, key: any, bean: Bean | Bean[]) {
+    if (!this.#indices.has(indexName)) {
+      this.#indices.set(indexName, new Map<any, Bean>());
+    }
+    this.#indices.get(indexName)!.set(key, bean);
+  }
+
+  #indexGet(indexName: string, key: any): any | any[] | null {
+    return this.#indices.get(indexName)?.get(key) ?? null;
+  }
 
   put(beans: Bean[]): void {
+    this.#beans = [...this.#beans, ...beans];
     for (const bean of beans) {
-      this.beansById.set(bean.id(), bean);
+      this.#indexPut("id", bean.id(), bean);
       if (bean.classType() != null) {
-        this.beansByType.set(bean.classType(), bean);
+        this.#indexPut("type", bean.classType(), bean);
       }
     }
   }
 
   async getByMetadata(metadata: string | symbol): Promise<any[]> {
-    const result: any[] = [];
-    for (const bean of this.beansById.values()) {
+    let beans: Bean[] | null = this.#indexGet("metadata", metadata);
+    if (beans != null) {
+      return this.#toInstances(beans as Bean[]);
+    }
+    beans = [];
+    for (const bean of this.#beans) {
       const instance = await bean.getInstance();
       if (getMetadata(metadata, instance.constructor) != null) {
-        result.push(instance);
+        beans.push(bean);
       }
     }
-    return result;
+    this.#indexPut("metadata", metadata, beans);
+    return this.#toInstances(beans);
   }
 
   async getById(id: string): Promise<any> {
@@ -39,10 +56,11 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async getBeanById(id: string): Promise<Bean> {
-    let bean = this.beansById.get(id);
-    if (bean == null && this.parent != null) {
-      bean = await this.parent.getBeanById(id);
+    let bean: Bean | null = this.#indexGet("id", id);
+    if (bean != null) {
+      return bean;
     }
+    bean = (await this.#parent?.getBeanById(id)) ?? null;
     if (bean == null) {
       throw new NotFoundError(id);
     }
@@ -50,9 +68,9 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async getBeanByClassType(classType: any): Promise<Bean> {
-    let bean = this.beansByType.get(classType);
-    if (bean == null && this.parent != null) {
-      bean = await this.parent.getBeanByClassType(classType);
+    let bean = this.#indexGet("type", classType);
+    if (bean == null && this.#parent != null) {
+      bean = await this.#parent.getBeanByClassType(classType);
     }
     if (bean == null) {
       throw new NotFoundError(classType);
@@ -62,7 +80,7 @@ export class DefaultApplicationContext implements ApplicationContext {
 
   async getByType(type: string): Promise<any[]> {
     const beansByType: any[] = [];
-    for (const bean of this.beansById.values()) {
+    for (const bean of this.#beans) {
       if (bean.type() === type) {
         const instance: any = await bean.getInstance();
         beansByType.push(instance);
@@ -72,20 +90,31 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async hasById(id: string): Promise<boolean> {
-    return this.beansById.has(id);
+    return this.#indexGet("id", id) != null;
   }
 
   async hasByClassType(classType: any): Promise<boolean> {
-    return this.beansByType.has(classType);
+    return this.#indexGet("type", classType) != null;
   }
 
-  setParent(context: ApplicationContext): void {
-    this.parent = context;
+  setParent(parent: ApplicationContext): void {
+    this.#parent = parent;
   }
 
   async close(): Promise<void> {
-    for (const bean of this.beansById.values()) {
+    if (this.#parent != null) {
+      await this.#parent.close();
+    }
+    for (const bean of this.#beans) {
       await bean.preDestroy();
     }
+  }
+
+  async #toInstances(beans: Bean[]): Promise<any[]> {
+    const result: any[] = [];
+    for (const bean of beans) {
+      result.push(await bean.getInstance());
+    }
+    return result;
   }
 }
