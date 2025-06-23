@@ -171,12 +171,10 @@ function getBeanDefinition(
   const id = getMetadata(idSym, module1);
   const type = getMetadata(typeSym, module1);
   const scope = getMetadata(scopeSym, module1) ?? Scopes.SINGLETON;
-  // New: const scope = module1[Symbol.metadata][scopeSym] ?? Scopes.SINGLETON;
-  const dependencyTypes = getMetadata("revane:dependency-types", module1) ?? [];
   const dependencyClassTypes =
     Reflect.getMetadata("design:paramtypes", module1) ?? [];
   const dependencies = getMetadata(dependenciesSym, module1).map((it, index) =>
-    toReference(it, dependencyTypes, dependencyClassTypes[index]),
+    toReference(it, dependencyClassTypes[index]),
   );
   const beanDefinition = new DefaultBeanDefinition(id);
   if (typeof clazz == "string") {
@@ -193,7 +191,6 @@ function getBeanDefinition(
 
 function toReference(
   id: string,
-  dependencyTypes: any,
   classType: any,
 ): DependencyDefinition {
   return new DependencyDefinition("bean", id, classType);
