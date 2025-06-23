@@ -1,5 +1,5 @@
+import { getMetadata, setMetadata } from "../revane-utils/Metadata.js";
 import { beansSym } from "./Symbols.js";
-import "reflect-metadata";
 
 export function Bean(
   maybeId?: string | null | undefined | any,
@@ -32,13 +32,13 @@ function addBean(
   propertyKey: string | ClassMethodDecoratorContext,
 ): void {
   if (typeof propertyKey == "string") {
-    const beans = Reflect.getMetadata(beansSym, target) ?? [];
+    const beans = getMetadata(beansSym, target.constructor) ?? [];
     beans.push({
       id,
       type: "component",
       propertyKey,
     });
-    Reflect.defineMetadata(beansSym, beans, target);
+    setMetadata(beansSym, beans, target.constructor);
   } else {
     const context = propertyKey as ClassMethodDecoratorContext;
     const beans = (context.metadata![beansSym] as any[]) ?? [];

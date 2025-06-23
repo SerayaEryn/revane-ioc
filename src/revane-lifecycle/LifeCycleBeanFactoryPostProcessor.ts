@@ -16,14 +16,10 @@ export class LifeCycleBeanFactoryPostProcessor
   }
 
   private postConstructKey(instance: any): string | null {
-    return getMetadata(
-      "life-cycle:postConstruct",
-      instance.constructor.prototype,
-    )?.propertyKey;
+    return getMetadata("life-cycle:postConstruct", instance)?.propertyKey;
   }
 
   private preDestroyKey(instance: any): string | null {
-    return getMetadata("life-cycle:preDestroy", instance.constructor.prototype)
-      ?.propertyKey;
+    return getMetadata("life-cycle:preDestroy", instance)?.propertyKey;
   }
 }

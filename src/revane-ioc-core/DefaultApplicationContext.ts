@@ -1,3 +1,4 @@
+import { getMetadata } from "../revane-utils/Metadata.js";
 import { ApplicationContext } from "./ApplicationContext.js";
 import Bean from "./context/bean/Bean.js";
 import NotFoundError from "./context/errors/NotFoundError.js";
@@ -19,7 +20,7 @@ export class DefaultApplicationContext implements ApplicationContext {
   async getByMetadata(metadata: string | symbol): Promise<any[]> {
     return Array.from(this.beansById.values()).filter((bean) => {
       return (
-        Reflect.getMetadata(metadata, bean) != null ||
+        getMetadata(metadata, bean.getInstance() as any) != null ||
         (bean[Symbol["metadata"]] != null &&
           bean[Symbol["metadata"]][metadata] != null)
       );

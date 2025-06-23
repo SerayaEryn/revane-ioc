@@ -3,7 +3,6 @@ import { BeanDefinition } from "../revane-ioc-core/BeanDefinition.js";
 import { BeanAnnotationBeanDefinition } from "./BeanAnnotationBeanDefinition.js";
 import { beansSym } from "./Symbols.js";
 import { DependencyDefinition } from "../revane-ioc-core/dependencies/DependencyDefinition.js";
-import "reflect-metadata/lite";
 import { getMetadata } from "../revane-utils/Metadata.js";
 
 export class BeanAnnotationBeanFactoryPreProcessor
@@ -13,15 +12,14 @@ export class BeanAnnotationBeanFactoryPreProcessor
     beanDefinition: BeanDefinition,
     _: BeanDefinition[],
   ): Promise<BeanDefinition[]> {
-    const classConstructor = beanDefinition.classConstructor;
+    const { classConstructor } = beanDefinition;
     let beans =
-      classConstructor?.prototype != null
-        ? (getMetadata(beansSym, classConstructor.prototype) ?? [])
+      classConstructor != null
+        ? (getMetadata(beansSym, classConstructor) ?? [])
         : [];
-    if (beanDefinition.instance?.constructor?.prototype != null) {
+    if (beanDefinition.instance?.constructor != null) {
       beans = beans.concat(
-        getMetadata(beansSym, beanDefinition.instance.constructor.prototype) ??
-          [],
+        getMetadata(beansSym, beanDefinition.instance.constructor) ?? [],
       );
     }
     const createdBeans: BeanDefinition[] = [beanDefinition];

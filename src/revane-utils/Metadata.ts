@@ -1,18 +1,20 @@
-import { Constructor } from "../revane-ioc-core/Constructor";
+import "polyfill-symbol-metadata";
 
 export function setMetadata(
   sym: any,
   value: any,
-  target: Constructor,
+  target: object,
   context?: ClassDecoratorContext,
 ) {
   if (typeof context !== "object") {
-    Reflect.defineMetadata(sym, value, target);
+    target[Symbol.metadata] ??= {};
+    target[Symbol.metadata]![sym] = value;
   } else {
-    context.metadata![sym] = value;
+    context.metadata[sym] = value;
   }
 }
 
-export function getMetadata(sym: any, target: Constructor): any {
-  return Reflect.getMetadata(sym, target) ?? target[Symbol["metadata"]] ?? null;
+export function getMetadata(sym: any, target: object): any | null {
+  target[Symbol.metadata] ??= {};
+  return target[Symbol.metadata]![sym] ?? null;
 }

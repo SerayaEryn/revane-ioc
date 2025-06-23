@@ -1,3 +1,4 @@
+import { setMetadata } from "../revane-utils/Metadata.js";
 import { scheduledSym } from "./Symbols.js";
 
 function Scheduled(cronPattern: string) {
@@ -7,7 +8,7 @@ function Scheduled(cronPattern: string) {
     _: PropertyDescriptor,
   ): void {
     if (typeof propertyKey == "string") {
-      Reflect.defineMetadata(
+      setMetadata(
         scheduledSym,
         {
           cronPattern,
