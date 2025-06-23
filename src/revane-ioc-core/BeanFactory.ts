@@ -179,8 +179,8 @@ export class BeanFactory {
   ): BeanDefinition {
     for (const entry of beanDefinitions) {
       if (
-        entry.id === dependency.value ||
-        entry.classConstructor === dependency.classType
+        entry.classConstructor === dependency.classType ||
+        entry.id === dependency.value
       ) {
         return entry;
       }

@@ -30,6 +30,29 @@ test("should get beans type component", async (t) => {
   t.is(bean1.a, bean2);
 });
 
+test("should get beans by @Type decorator", async (t) => {
+  const options = new Options(join(import.meta.dirname, "../../testdata"), [
+    new ComponentScanExtension(),
+  ]);
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(
+      join(import.meta.dirname, "../../testdata/types"),
+      [],
+      [],
+      [],
+    ),
+  ];
+  options.configuration = { disabled: true };
+  options.profile = "test";
+  const revane = new RevaneIOC(options);
+  await revane.initialize();
+
+  const bean = await revane.get("test");
+  t.is(bean.a.type, 1);
+  t.is(bean.other.type, -1);
+  t.is(bean.b.type, 2);
+});
+
 test("should get beans by symbol", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), [
     new ComponentScanExtension(),

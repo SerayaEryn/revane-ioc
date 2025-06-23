@@ -13,6 +13,7 @@ import Filter from "./Filter.js";
 import { REV_ERR_MODULE_LOAD_ERROR } from "./ModuleLoadError.js";
 import RegexFilter from "./RegexFilter.js";
 import { Scope } from "./Scope.js";
+import { Type } from "./Type.js";
 
 export {
   ComponentScanExtension,
@@ -27,5 +28,6 @@ export {
   ControllerAdvice,
   Scheduler,
   Scope,
+  Type,
   REV_ERR_MODULE_LOAD_ERROR,
 };

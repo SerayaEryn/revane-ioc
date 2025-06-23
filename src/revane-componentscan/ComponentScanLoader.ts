@@ -1,9 +1,14 @@
-import { idSym, typeSym, scopeSym, dependenciesSym } from "./Symbols.js";
+import {
+  idSym,
+  typeSym,
+  scopeSym,
+  dependenciesSym,
+  dependencyTypesSym,
+} from "./Symbols.js";
 import {
   BeanDefinition,
   DefaultBeanDefinition,
   Loader,
-  Scopes,
 } from "../revane-ioc/RevaneIOC.js";
 import Filter from "./Filter.js";
 import RegexFilter from "./RegexFilter.js";
@@ -14,6 +19,8 @@ import { DependencyDefinition } from "../revane-ioc-core/dependencies/Dependency
 import { pathWithEnding } from "../revane-utils/FileUtil.js";
 import { access, constants } from "node:fs/promises";
 import { getMetadata } from "../revane-utils/Metadata.js";
+import { SINGLETON_VALUE } from "../revane-ioc-core/Scopes.js";
+import { Constructor } from "../revane-ioc-core/Constructor.js";
 
 const filterByType = {
   regex: RegexFilter,
@@ -165,16 +172,18 @@ function getModuleMap(requiredFile: any): Map<string, any> {
 
 function getBeanDefinition(
   key: string | null,
-  module1: any,
+  module: any,
   clazz: any,
 ): DefaultBeanDefinition {
-  const id = getMetadata(idSym, module1);
-  const type = getMetadata(typeSym, module1);
-  const scope = getMetadata(scopeSym, module1) ?? Scopes.SINGLETON;
+  const id: string = getMetadata(idSym, module);
+  const type = getMetadata(typeSym, module);
+  const scope = getMetadata(scopeSym, module) ?? SINGLETON_VALUE;
+  const dependencyTypes: Record<number, Constructor> =
+    getMetadata(dependencyTypesSym, module) ?? {};
   const dependencyClassTypes =
-    Reflect.getMetadata("design:paramtypes", module1) ?? [];
-  const dependencies = getMetadata(dependenciesSym, module1).map((it, index) =>
-    toReference(it, dependencyClassTypes[index]),
+    Reflect.getMetadata("design:paramtypes", module) ?? [];
+  const dependencies = getMetadata(dependenciesSym, module).map((it, index) =>
+    toReference(it, dependencyTypes[index] ?? dependencyClassTypes[index]),
   );
   const beanDefinition = new DefaultBeanDefinition(id);
   if (typeof clazz == "string") {
@@ -189,10 +198,7 @@ function getBeanDefinition(
   return beanDefinition;
 }
 
-function toReference(
-  id: string,
-  classType: any,
-): DependencyDefinition {
+function toReference(id: string, classType: any): DependencyDefinition {
   return new DependencyDefinition("bean", id, classType);
 }
 

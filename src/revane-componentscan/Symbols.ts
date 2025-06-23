@@ -4,6 +4,7 @@ const typeSym = Symbol("revane.type");
 const scopeSym = Symbol("revane.scope");
 const configurationPropertiesSym = Symbol("revane.configurationProperties");
 const conditionalOnMissingBeanSym = Symbol("revane.conditionalOnMissingBean");
+const dependencyTypesSym = Symbol("revane.dependencyTypesSym");
 
 export {
   idSym,
@@ -12,4 +13,5 @@ export {
   scopeSym,
   configurationPropertiesSym,
   conditionalOnMissingBeanSym,
+  dependencyTypesSym,
 };

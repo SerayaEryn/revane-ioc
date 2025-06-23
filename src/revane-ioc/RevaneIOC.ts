@@ -54,6 +54,7 @@ import {
   Scheduler,
   Scope,
   Service,
+  Type,
 } from "../revane-componentscan/RevaneConponentScan.js";
 import { DependencyResolver } from "../revane-ioc-core/dependencies/DependencyResolver.js";
 import {
@@ -109,19 +110,23 @@ export {
   ComponentScanLoaderOptions,
   XmlFileLoaderOptions,
   JsonFileLoaderOptions,
-  Repository,
-  Service,
-  Component,
-  Controller,
-  ControllerAdvice,
-  Scheduler,
-  Scope,
   Bean,
   Extension,
   BeanFactoryExtension,
   ComponentScanExtension,
   DependencyResolver,
   errorCodes,
+};
+
+export {
+  Repository,
+  Service,
+  Component,
+  Controller,
+  ControllerAdvice,
+  Scope,
+  Scheduler,
+  Type,
 };
 
 export {
