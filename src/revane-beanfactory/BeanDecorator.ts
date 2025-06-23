@@ -27,26 +27,17 @@ export function Bean(
 }
 
 function addBean(
-  target,
+  target: any,
   id: string,
   propertyKey: string | ClassMethodDecoratorContext,
 ): void {
-  if (typeof propertyKey == "string") {
-    const beans = getMetadata(beansSym, target.constructor) ?? [];
-    beans.push({
-      id,
-      type: "component",
-      propertyKey,
-    });
-    setMetadata(beansSym, beans, target.constructor);
-  } else {
-    const context = propertyKey as ClassMethodDecoratorContext;
-    const beans = (context.metadata![beansSym] as any[]) ?? [];
-    beans.push({
-      id,
-      type: "component",
-      propertyKey,
-    });
-    context.metadata![beansSym] = beans;
-  }
+  const context =
+    typeof propertyKey !== "object" ? target.constructor : (propertyKey as any);
+  const beans = getMetadata(beansSym, context) ?? [];
+  beans.push({
+    id,
+    type: "component",
+    propertyKey,
+  });
+  setMetadata(beansSym, beans, target.constructor, context);
 }

@@ -26,17 +26,11 @@ function ConfigurationProperties(options: ConfigurationPropertiesOptions) {
 }
 
 export class ConfigurationPropertiesData {
-  public prefix: string;
-  public properties: string[];
-
   constructor(
-    prefix: string,
-    properties: string[],
+    public prefix: string,
+    public properties: string[],
     public setters: string[],
-  ) {
-    this.prefix = prefix;
-    this.properties = properties;
-  }
+  ) {}
 }
 
 function getSyntaxTree(Class): any {

@@ -4,7 +4,7 @@ export function setMetadata(
   sym: any,
   value: any,
   target: object,
-  context?: ClassDecoratorContext,
+  context?: ClassDecoratorContext | ClassMethodDecoratorContext,
 ) {
   if (typeof context !== "object") {
     target[Symbol.metadata] ??= {};
@@ -16,5 +16,7 @@ export function setMetadata(
 
 export function getMetadata(sym: any, target: object): any | null {
   target[Symbol.metadata] ??= {};
-  return target[Symbol.metadata]![sym] ?? null;
+  return (
+    target[Symbol.metadata]![sym] ?? (target["metadata"] ?? {})[sym] ?? null
+  );
 }
