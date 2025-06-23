@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import RevaneIOC, {
+  BeanFactoryExtension,
   ComponentScanExtension,
   ComponentScanLoaderOptions,
   Options,
@@ -28,6 +29,29 @@ test("should get beans type component", async (t) => {
   const bean2 = await revane.get("test2");
 
   t.is(bean1.a, bean2);
+});
+
+test("should get bean with alias", async (t) => {
+  const options = new Options(join(import.meta.dirname, "../../testdata"), [
+    new ComponentScanExtension(),
+    new BeanFactoryExtension(),
+  ]);
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(
+      join(import.meta.dirname, "../../testdata/alias1"),
+      [],
+      [],
+      [],
+    ),
+  ];
+  options.configuration = { disabled: true };
+  options.profile = "test";
+  const revane = new RevaneIOC(options);
+  await revane.initialize();
+
+  t.true(await revane.has("test"));
+  t.true(await revane.has("alias"));
+  t.true(await revane.has("outer"));
 });
 
 test("should get beans by @Type decorator", async (t) => {

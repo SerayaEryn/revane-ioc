@@ -5,7 +5,7 @@ import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import { Constructor } from "./Constructor.js";
 import { uid } from "../revane-utils/Random.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
-import { PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
+import { ALIAS_VALUE, PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string;
@@ -14,7 +14,10 @@ export default class DefaultBeanDefinition implements BeanDefinition {
   public type: string;
   public dependencyIds: DependencyDefinition[];
   public path: string;
-  public scope: typeof SINGLETON_VALUE | typeof PROTOTYPE_VALUE;
+  public scope:
+    | typeof SINGLETON_VALUE
+    | typeof PROTOTYPE_VALUE
+    | typeof ALIAS_VALUE;
   public instance?: any;
   public classConstructor?: Constructor;
   public dependencies: Bean[] = [];
@@ -22,6 +25,7 @@ export default class DefaultBeanDefinition implements BeanDefinition {
   public key: string | null;
   public postConstructKey: string | null;
   public preDestroyKey: string | null;
+  public isAlias: boolean = false;
 
   constructor(id: string) {
     this.id = id;

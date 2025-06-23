@@ -43,8 +43,7 @@ export class BeanDependencyResolver implements DependencyResolver {
     try {
       Object.defineProperty(classType, "prototype", { writable: true });
       return false;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch (_) {
       return typeof classType === "function";
     }
   }

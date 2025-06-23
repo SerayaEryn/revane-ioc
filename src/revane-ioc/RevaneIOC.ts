@@ -82,6 +82,8 @@ import {
   SchedulingExtension,
 } from "../revane-scheduler/RevaneScheduler.js";
 import { REV_ERR_UNKNOWN_ENDING } from "./UnknownEndingError.js";
+import { BeanOptions } from "../revane-beanfactory/RevaneBeanFactory.js";
+import AliasBean from "./bean/AliasBean.js";
 
 const errorCodes = {
   REV_ERR_MODULE_LOAD_ERROR,
@@ -101,6 +103,8 @@ const errorCodes = {
   REV_ERR_INVALID_CRON_PATTERN_PROVIDED,
   REV_ERR_NO_CRON_PATTERN_PROVIDED,
 };
+
+export { BeanOptions };
 
 export {
   Loader,
@@ -262,6 +266,7 @@ export default class RevaneIOC {
     const beanTypeRegistry = new DefaultBeanTypeRegistry();
     beanTypeRegistry.register(SingletonBean);
     beanTypeRegistry.register(PrototypeBean);
+    beanTypeRegistry.register(AliasBean);
     return beanTypeRegistry;
   }
 

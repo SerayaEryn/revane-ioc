@@ -4,6 +4,7 @@ import DefaultBeanDefinition from "../../revane-ioc-core/DefaultBeanDefinition.j
 import Loader from "../../revane-ioc-core/Loader.js";
 import { BeanDefinition } from "../RevaneIOC.js";
 import {
+  ALIAS_VALUE,
   PROTOTYPE_VALUE,
   SINGLETON_VALUE,
 } from "../../revane-ioc-core/Scopes.js";
@@ -32,7 +33,7 @@ interface XmlReference {
 
 interface XmlAttribute {
   class?: string;
-  scope?: typeof SINGLETON_VALUE | typeof PROTOTYPE_VALUE;
+  scope?: typeof SINGLETON_VALUE | typeof PROTOTYPE_VALUE | typeof ALIAS_VALUE;
   type?: string;
   id?: string;
   "base-package"?: string;

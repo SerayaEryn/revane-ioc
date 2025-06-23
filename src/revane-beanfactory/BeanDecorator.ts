@@ -1,23 +1,46 @@
 import { getMetadata, setMetadata } from "../revane-utils/Metadata.js";
 import { beansSym } from "./Symbols.js";
 
+export interface BeanOptions {
+  id?: string;
+  aliasIds?: string[];
+}
+
 export function Bean(
-  maybeId?: string | null | undefined | any,
+  maybeId?: string | BeanOptions | null | undefined | any,
   maybePropertyKey?: string | undefined | ClassMethodDecoratorContext,
   _?: PropertyDescriptor,
 ) {
-  if (typeof maybeId === "string" || maybeId == null) {
+  if (
+    typeof maybeId === "string" ||
+    (typeof maybeId === "object" &&
+      (maybeId["id"] != null || maybeId["aliasIds"] != null)) ||
+    maybeId == null
+  ) {
     return function define(
       target: any,
       propertyKey: string | ClassMethodDecoratorContext,
     ): void | any {
-      addBean(
-        target,
+      const id =
         (maybeId ?? typeof propertyKey == "string")
           ? (propertyKey as string)
-          : ((propertyKey as ClassMethodDecoratorContext).name as string),
-        propertyKey,
-      );
+          : ((propertyKey as ClassMethodDecoratorContext).name as string);
+
+      if (
+        maybeId != null &&
+        (maybeId["id"] != null || maybeId["aliasIds"] != null)
+      ) {
+        addBean(
+          target,
+          {
+            id: maybeId["id"] ?? id,
+            aliasIds: maybeId["aliasIds"] ?? [],
+          },
+          propertyKey,
+        );
+      } else {
+        addBean(target, id, propertyKey);
+      }
       return typeof propertyKey == "string" ? undefined : target;
     };
   } else {
@@ -28,14 +51,16 @@ export function Bean(
 
 function addBean(
   target: any,
-  id: string,
+  id: string | BeanOptions,
   propertyKey: string | ClassMethodDecoratorContext,
 ): void {
   const context =
     typeof propertyKey !== "object" ? target.constructor : (propertyKey as any);
   const beans = getMetadata(beansSym, context) ?? [];
   beans.push({
-    id,
+    id: typeof id === "object" ? (id as BeanOptions).id : id,
+    aliasIds:
+      typeof id === "object" ? ((id as BeanOptions).aliasIds ?? []) : [],
     type: "component",
     propertyKey,
   });

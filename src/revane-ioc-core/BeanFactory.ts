@@ -113,7 +113,7 @@ export class BeanFactory {
     beanDefinition: BeanDefinition,
     beanDefinitions: BeanDefinition[],
   ): Promise<Bean[]> {
-    if (!beanDefinition.isClass()) {
+    if (!beanDefinition.isClass() && !beanDefinition.isAlias) {
       return [];
     }
     const dependencies: Bean[] = [];

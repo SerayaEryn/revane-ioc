@@ -4,6 +4,14 @@ import { BeanAnnotationBeanDefinition } from "./BeanAnnotationBeanDefinition.js"
 import { beansSym } from "./Symbols.js";
 import { DependencyDefinition } from "../revane-ioc-core/dependencies/DependencyDefinition.js";
 import { getMetadata } from "../revane-utils/Metadata.js";
+import { AliasBeanDefinition } from "./AliasBeanDefinition.js";
+
+interface BeanFactory {
+  id: string;
+  aliasIds: string[];
+  type: string;
+  propertyKey: string;
+}
 
 export class BeanAnnotationBeanFactoryPreProcessor
   implements BeanFactoryPreProcessor
@@ -13,7 +21,7 @@ export class BeanAnnotationBeanFactoryPreProcessor
     _: BeanDefinition[],
   ): Promise<BeanDefinition[]> {
     const { classConstructor } = beanDefinition;
-    let beans =
+    let beans: BeanFactory[] =
       classConstructor != null
         ? (getMetadata(beansSym, classConstructor) ?? [])
         : [];
@@ -24,8 +32,9 @@ export class BeanAnnotationBeanFactoryPreProcessor
     }
     const createdBeans: BeanDefinition[] = [beanDefinition];
     for (const beanFactory of beans) {
+      const id = beanFactory.id;
       const beanDefinition2: BeanDefinition = new BeanAnnotationBeanDefinition(
-        beanFactory.id,
+        id,
         beanFactory.propertyKey,
       );
       beanDefinition2.type = beanFactory.type;
@@ -34,6 +43,9 @@ export class BeanAnnotationBeanFactoryPreProcessor
         new DependencyDefinition("bean", beanDefinition.id, null),
       ];
       createdBeans.push(beanDefinition2);
+      for (const aliasId of beanFactory.aliasIds) {
+        createdBeans.push(new AliasBeanDefinition(aliasId, id));
+      }
     }
     return createdBeans;
   }
