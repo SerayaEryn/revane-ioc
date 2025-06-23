@@ -1,17 +1,23 @@
 import { setMetadata } from "../revane-utils/Metadata.js";
+import { postConstructSym, preDestroySym } from "./Symbols.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-export function createLifeCycleDecorator(type: string): Function {
+export function createLifeCycleDecorator(symbol: symbol): Function {
   return function decorateLifeCycleFunction(
     target: any,
-    propertyKey: string,
+    propertyKey: string | ClassMethodDecoratorContext,
     _: PropertyDescriptor,
   ) {
-    setMetadata(`life-cycle:${type}`, { propertyKey }, target);
+    setMetadata(
+      symbol,
+      { propertyKey },
+      target,
+      propertyKey as ClassMethodDecoratorContext,
+    );
   };
 }
 
-const PostConstruct = createLifeCycleDecorator("postConstruct");
-const PreDestroy = createLifeCycleDecorator("preDestroy");
+const PostConstruct = createLifeCycleDecorator(postConstructSym);
+const PreDestroy = createLifeCycleDecorator(preDestroySym);
 
 export { PostConstruct, PreDestroy };
