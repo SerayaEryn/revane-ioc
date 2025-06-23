@@ -18,13 +18,14 @@ export class DefaultApplicationContext implements ApplicationContext {
   }
 
   async getByMetadata(metadata: string | symbol): Promise<any[]> {
-    return Array.from(this.beansById.values()).filter((bean) => {
-      return (
-        getMetadata(metadata, bean.getInstance() as any) != null ||
-        (bean[Symbol["metadata"]] != null &&
-          bean[Symbol["metadata"]][metadata] != null)
-      );
-    });
+    const result: any[] = [];
+    for (const bean of this.beansById.values()) {
+      const instance = await bean.getInstance();
+      if (getMetadata(metadata, instance.constructor) != null) {
+        result.push(instance);
+      }
+    }
+    return result;
   }
 
   async getById(id: string): Promise<any> {
