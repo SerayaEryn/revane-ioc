@@ -5,13 +5,13 @@ import DependencyRegisterError from "./context/errors/DependencyRegisterError.js
 import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import DependencyNotFoundError from "./context/errors/DependencyNotFoundError.js";
 import Options from "./Options.js";
-import ConflictingBeanDefinitionError from "./context/errors/BeanDefinedTwiceError.js";
 import { BeanFactoryPreProcessor } from "./preProcessors/BeanFactoryPreProcessor.js";
 import { BeanDefinition } from "./BeanDefinition.js";
 import { RethrowableError } from "./RethrowableError.js";
 import { DependencyService } from "./dependencies/DependencyService.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
 import CircularDependencyError from "./context/errors/CircularDependencyError.js";
+import { BeanConflictChecker } from "./BeanConflictChecker.js";
 
 export class BeanFactory {
   private readonly preProcessors: BeanFactoryPreProcessor[];
@@ -53,21 +53,11 @@ export class BeanFactory {
         preprocessed = preprocessed.concat(preProcessedBeanDefinitions);
       }
     }
-    const processedBeanDefinitions = new Map<string, BeanDefinition>();
+    const beanConflictChecker = new BeanConflictChecker();
     for (const preProcessedBeanDefinition of preprocessed) {
-      const exitingBeanDefininaton = processedBeanDefinitions.get(
-        preProcessedBeanDefinition.id,
-      );
-      if (
-        exitingBeanDefininaton != null &&
-        this.options.noRedefinition !== false
-      ) {
-        throw new ConflictingBeanDefinitionError(exitingBeanDefininaton.id);
+      if (this.options.noRedefinition !== false) {
+        beanConflictChecker.check(preProcessedBeanDefinition.id);
       }
-      processedBeanDefinitions.set(
-        preProcessedBeanDefinition.id,
-        preProcessedBeanDefinition,
-      );
       if (!(await this.context.hasById(preProcessedBeanDefinition.id))) {
         const bean = await this.registerBean(
           preProcessedBeanDefinition,
