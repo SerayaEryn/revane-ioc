@@ -7,7 +7,6 @@ import { ALIAS_VALUE, PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
 export interface BeanDefinition {
   class: string;
   id: string;
-  uid: string;
   type: string;
   dependencyIds: DependencyDefinition[];
   path: string;

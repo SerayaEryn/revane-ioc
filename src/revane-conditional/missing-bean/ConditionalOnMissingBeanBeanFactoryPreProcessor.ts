@@ -19,7 +19,7 @@ export class ConditionalOnMissingBeanBeanFactoryPreProcessor
     if (conditionalOnMissingBean === true) {
       const beanIsMissing =
         beanDefinitions
-          .filter((it) => it.uid !== beanDefinition.uid)
+          .filter((it) => it !== beanDefinition)
           .filter((it) => it.id === beanDefinition.id).length === 0;
       if (beanIsMissing) {
         return [beanDefinition];

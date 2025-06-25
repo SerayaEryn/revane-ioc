@@ -3,14 +3,12 @@ import { BeanDefinition } from "./BeanDefinition.js";
 import InvalidScopeError from "./context/errors/InvalidScopeError.js";
 import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import { Constructor } from "./Constructor.js";
-import { uid } from "../revane-utils/Random.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
 import { ALIAS_VALUE, PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string;
   public id: string;
-  public uid: string = uid();
   public type: string;
   public dependencyIds: DependencyDefinition[];
   public path: string;
