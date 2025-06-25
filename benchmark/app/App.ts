@@ -1,7 +1,7 @@
 import { Component, Type } from '../../src/revane-ioc/RevaneIOC.js'
 import Dependency1 from './Dependency1.js'
-import Dependency3 from './Dependency3.js'
-import Dependency4 from './Dependency4.js'
+import Dependency3 from './folder/Dependency3.js'
+import Dependency4 from './folder/Dependency4.js'
 
 @Component
 export default class App {
