@@ -17,7 +17,7 @@ export class DefaultLogFactory implements LogFactory {
 
   constructor(private readonly options: LoggingOptions) {
     this.#rootLogger = createLogger({
-      transports: this.transports(),
+      transports: this.#transports(),
       level: options.rootLevel,
     });
   }
@@ -33,22 +33,22 @@ export class DefaultLogFactory implements LogFactory {
     return this.#rootLogger;
   }
 
-  private transports(): Transport[] {
+  #transports(): Transport[] {
     const { file, path, basePackage } = this.options;
     const format =
       this.options.format === "JSON" ? new JsonFormat() : new SimpleFormat();
     const transports = [new ConsoleTransport({ format } as any)];
     if (file != null) {
-      transports.push(this.transportFromFile(file, basePackage));
+      transports.push(this.#transportFromFile(file, basePackage));
     }
     if (path != null) {
-      transports.push(this.transportFromPath(path, basePackage));
+      transports.push(this.#transportFromPath(path, basePackage));
     }
     return transports;
   }
 
-  private transportFromFile(file: string, basePackage: string): Transport {
-    const path = this.isRelative(file) ? join(basePackage, file) : file;
+  #transportFromFile(file: string, basePackage: string): Transport {
+    const path = this.#isRelative(file) ? join(basePackage, file) : file;
     const format =
       this.options.format === "JSON" ? new JsonFormat() : new SimpleFormat();
     return new Transport({
@@ -57,22 +57,25 @@ export class DefaultLogFactory implements LogFactory {
     });
   }
 
-  private transportFromPath(path: string, basePackage: string): Transport {
-    let absolutePath: string;
+  #transportFromPath(path: string, basePackage: string): Transport {
+    const absolutePath = this.#absolutePath(path, basePackage);
     const format =
       this.options.format === "JSON" ? new JsonFormat() : new SimpleFormat();
-    if (this.isRelative(path)) {
-      absolutePath = join(basePackage, path, "revane.log");
-    } else {
-      absolutePath = join(path, "revane.log");
-    }
     return new Transport({
       stream: createWriteStream(absolutePath),
       format,
     });
   }
 
-  private isRelative(file: string): boolean {
+  #absolutePath(path: string, basePackage: string): string {
+    if (this.#isRelative(path)) {
+      return join(basePackage, path, "revane.log");
+    } else {
+      return join(path, "revane.log");
+    }
+  }
+
+  #isRelative(file: string): boolean {
     return !file.startsWith("/");
   }
 }
