@@ -148,7 +148,7 @@ export class BeanFactory {
       beanDefinitions,
     );
     const bean = await this.registerBean(beanDefinition, beanDefinitions);
-    this.context.put([bean]);
+    this.context.putSingle(bean);
   }
 
   private async postProcess(

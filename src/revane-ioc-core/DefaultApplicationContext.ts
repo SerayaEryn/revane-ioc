@@ -19,6 +19,14 @@ export class DefaultApplicationContext implements ApplicationContext {
     return this.#indices.get(indexName)?.get(key) ?? null;
   }
 
+  putSingle(bean: Bean): void {
+    this.#beans.push(bean);
+    this.#indexPut("id", bean.id(), bean);
+    if (bean.classType() != null) {
+      this.#indexPut("type", bean.classType(), bean);
+    }
+  }
+
   put(beans: Bean[]): void {
     this.#beans = [...this.#beans, ...beans];
     for (const bean of beans) {
