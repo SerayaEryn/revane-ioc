@@ -7,3 +7,4 @@ testdata/logging3/revane.log
 testdata/logging4/revane.log
 testdata/logging5/revane.log
 testdata/logging6/revane.log
+benchmark/node_modules/*
