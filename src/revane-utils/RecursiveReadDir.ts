@@ -15,7 +15,7 @@ export async function recursiveReaddir(path: string): Promise<string[]> {
       } else {
         return [filePath];
       }
-    })
-  )
+    }),
+  );
   return list;
 }
