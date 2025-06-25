@@ -26,7 +26,6 @@ export class BeanFactory {
     context: DefaultApplicationContext,
     beanTypeRegistry: BeanTypeRegistry,
     options: Options,
-    plugins: Map<string, any>,
     private readonly dependencyService: DependencyService,
   ) {
     this.preProcessors = preProcessors;

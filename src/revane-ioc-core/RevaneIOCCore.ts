@@ -104,7 +104,6 @@ export default class RevaneIOCCore {
       this.context as DefaultApplicationContext,
       this.beanTypeRegistry,
       this.options,
-      this.plugins,
       new DependencyService(
         (
           [
