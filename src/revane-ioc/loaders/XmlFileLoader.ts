@@ -11,6 +11,7 @@ import {
 import { XmlFileLoaderOptions } from "./XmlFileLoaderOptions.js";
 import UnknownEndingError from "../UnknownEndingError.js";
 import { DependencyDefinition } from "../../revane-ioc-core/dependencies/DependencyDefinition.js";
+import { isArray } from "../../revane-utils/TypeUtil.js";
 
 const xmlParserOptions = {
   allowBooleanAttributes: false,
@@ -91,7 +92,7 @@ export default class XmlFileLoader implements Loader {
     if (beans.bean == null) {
       return beanDefinitions;
     }
-    if (Array.isArray(beans.bean)) {
+    if (isArray(beans.bean)) {
       beanDefinitions = beanDefinitions
         .filter((it) => (it as any) !== "")
         .concat(beans.bean.map(this.toBeanDefinition));
@@ -140,7 +141,7 @@ export default class XmlFileLoader implements Loader {
   private getProperties(ref: XmlReference): DependencyDefinition[] {
     let properties: DependencyDefinition[] = [];
     if (ref != null) {
-      if (Array.isArray(ref)) {
+      if (isArray(ref)) {
         properties = ref.map(toReference);
       } else {
         properties = [toReference(ref)];

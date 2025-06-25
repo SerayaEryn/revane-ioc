@@ -5,6 +5,7 @@ import BeanTypeRegistry from "./context/bean/BeanTypeRegistry.js";
 import { Constructor } from "./Constructor.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
 import { ALIAS_VALUE, PROTOTYPE_VALUE, SINGLETON_VALUE } from "./Scopes.js";
+import { isClass } from "../revane-utils/TypeUtil.js";
 
 export default class DefaultBeanDefinition implements BeanDefinition {
   public class: string;
@@ -41,21 +42,12 @@ export default class DefaultBeanDefinition implements BeanDefinition {
     this.dependencies = dependencies;
     const BeanForScope = beanTypeRegistry.get(this.scope);
     if (BeanForScope != null) {
-      const bean = new BeanForScope(this, postProcess);
-      return bean;
+      return new BeanForScope(this, postProcess);
     }
     throw new InvalidScopeError(this.id, this.scope);
   }
 
   public isClass(): boolean {
-    try {
-      Object.defineProperty(this.classConstructor, "prototype", {
-        writable: true,
-      });
-      return false;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      return typeof this.classConstructor === "function";
-    }
+    return isClass(this.classConstructor);
   }
 }
