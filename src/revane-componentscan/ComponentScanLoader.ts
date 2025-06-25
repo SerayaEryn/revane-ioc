@@ -12,7 +12,7 @@ import {
 } from "../revane-ioc/RevaneIOC.js";
 import Filter from "./Filter.js";
 import RegexFilter from "./RegexFilter.js";
-import { recursiveReaddir } from "./RecursiveReadDir.js";
+import { recursiveReaddir } from "../revane-utils/RecursiveReadDir.js";
 import { ComponentScanLoaderOptions } from "./ComponentScanLoaderOptions.js";
 import { ModuleLoadError } from "./ModuleLoadError.js";
 import { DependencyDefinition } from "../revane-ioc-core/dependencies/DependencyDefinition.js";
