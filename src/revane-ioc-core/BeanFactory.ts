@@ -12,6 +12,7 @@ import { DependencyService } from "./dependencies/DependencyService.js";
 import { DependencyDefinition } from "./dependencies/DependencyDefinition.js";
 import CircularDependencyError from "./context/errors/CircularDependencyError.js";
 import { BeanConflictChecker } from "./BeanConflictChecker.js";
+import { Constructor } from "./Constructor.js";
 
 export class BeanFactory {
   private readonly preProcessors: BeanFactoryPreProcessor[];
@@ -19,6 +20,9 @@ export class BeanFactory {
   private readonly context: DefaultApplicationContext;
   private readonly beanTypeRegistry: BeanTypeRegistry;
   private readonly options: Options;
+  private depencencyIndexConstructor: Map<Constructor, BeanDefinition> | null =
+    null;
+  private depencencyIndexId: Map<string, BeanDefinition> | null = null;
 
   constructor(
     preProcessors: BeanFactoryPreProcessor[],
@@ -166,13 +170,28 @@ export class BeanFactory {
     parentId: string,
     beanDefinitions: BeanDefinition[],
   ): BeanDefinition {
-    for (const entry of beanDefinitions) {
-      if (
-        entry.classConstructor === dependency.classType ||
-        entry.id === dependency.value
-      ) {
-        return entry;
+    if (
+      this.depencencyIndexConstructor == null ||
+      this.depencencyIndexId == null
+    ) {
+      this.depencencyIndexConstructor = new Map();
+      this.depencencyIndexId = new Map();
+
+      for (const beanDefinition of beanDefinitions) {
+        if (beanDefinition.classConstructor != null) {
+          this.depencencyIndexConstructor.set(
+            beanDefinition.classConstructor,
+            beanDefinition,
+          );
+        }
+        this.depencencyIndexId.set(beanDefinition.id, beanDefinition);
       }
+    }
+    const entry =
+      this.depencencyIndexConstructor.get(dependency.classType) ??
+      this.depencencyIndexId.get(dependency.value);
+    if (entry != null) {
+      return entry;
     }
     throw new DependencyNotFoundError(dependency.value, parentId);
   }
