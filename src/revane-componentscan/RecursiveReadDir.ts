@@ -11,9 +11,9 @@ export async function recursiveReaddir(path: string): Promise<string[]> {
       const stats = await stat(filePath);
 
       if (stats.isDirectory()) {
-        return list.concat(await recursiveReaddir(filePath));
+        list = list.concat(await recursiveReaddir(filePath));
       } else {
-        return [filePath];
+        list.push(filePath);
       }
     }),
   );
