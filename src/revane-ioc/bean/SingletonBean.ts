@@ -3,7 +3,7 @@ import { Scopes } from "../../revane-ioc-core/Scopes.js";
 
 export default class SingletonBean extends AbstractBean {
   public static scope: string = Scopes.SINGLETON;
-  private instance: any;
+  protected instance: any;
 
   public id(): string {
     return this.beanDefinition.id;

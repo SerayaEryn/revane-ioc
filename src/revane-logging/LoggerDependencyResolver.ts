@@ -2,7 +2,7 @@ import { BeanDefinition } from "../revane-ioc-core/BeanDefinition.js";
 import Bean from "../revane-ioc-core/context/bean/Bean.js";
 import { DependencyDefinition } from "../revane-ioc-core/dependencies/DependencyDefinition.js";
 import { DependencyResolver } from "../revane-ioc-core/dependencies/DependencyResolver.js";
-import SingletonBean from "../revane-ioc/bean/SingletonBean.js";
+import InstanceSingletonBean from "../revane-ioc/bean/InstanceSingletonBean.js";
 import { DefaultBeanDefinition, Logger } from "../revane-ioc/RevaneIOC.js";
 import { LogFactory } from "./LogFactory.js";
 
@@ -27,8 +27,6 @@ export class LoggerDependencyResolver implements DependencyResolver {
   ): Promise<Bean> {
     const beanDefinition = new DefaultBeanDefinition(dependency.value);
     beanDefinition.instance = this.logFactory.getInstance(parentId);
-    const bean = new SingletonBean(beanDefinition, async () => {});
-    await bean.init();
-    return bean;
+    return new InstanceSingletonBean(beanDefinition);
   }
 }
