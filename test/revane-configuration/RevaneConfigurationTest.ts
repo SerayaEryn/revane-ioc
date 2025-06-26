@@ -19,6 +19,7 @@ test("Should load values", async (t) => {
   );
   await config.init();
   t.true(config.getBoolean("test.bool"));
+  t.false(config.getBooleanOrElse("test.bool2", false));
   t.is(config.getString("test.str"), "test");
   t.is(config.getNumber("test.int"), 42);
   t.false(config.has("blub.bla"));
