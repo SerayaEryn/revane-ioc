@@ -1,0 +1,4 @@
+revane:
+  logging:
+    path: /home/seraya/workspace/revane-ioc/testdata/logging7/
+    format: JSON

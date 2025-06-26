@@ -17,7 +17,6 @@ import { ComponentScanLoaderOptions } from "./ComponentScanLoaderOptions.js";
 import { ModuleLoadError } from "./ModuleLoadError.js";
 import { DependencyDefinition } from "../revane-ioc-core/dependencies/DependencyDefinition.js";
 import { pathWithEnding } from "../revane-utils/FileUtil.js";
-import { access, constants } from "node:fs/promises";
 import { getMetadata } from "../revane-utils/Metadata.js";
 import { SINGLETON_VALUE } from "../revane-ioc-core/Scopes.js";
 import { Constructor } from "../revane-ioc-core/Constructor.js";
@@ -72,12 +71,9 @@ export default class ComponentScanLoader implements Loader {
     }
     for (const moduleToScan of modulesToScan) {
       try {
-        if (moduleToScan == null) {
-          throw new Error("null");
-        }
         result = result.concat(this.#processModule(moduleToScan));
       } catch (error) {
-        throw new ModuleLoadError(moduleToScan, error);
+        throw new ModuleLoadError(moduleToScan.name, error);
       }
     }
     return result;
@@ -94,20 +90,17 @@ export default class ComponentScanLoader implements Loader {
       const result: BeanDefinition[] = [];
       for (const key of moduleMap.keys()) {
         const aModule = moduleMap.get(key);
-        if (this.#isNoComponent(aModule)) {
-          return [];
-        }
         result.push(getBeanDefinition(key, aModule, file));
       }
       return result;
     }
   }
 
-  #processModule(requiredFile): BeanDefinition[] {
+  #processModule(requiredFile: Constructor): BeanDefinition[] {
     const moduleMap = getModuleMap(requiredFile);
     if (moduleMap.size === 0) {
       if (this.#isNoComponent(requiredFile)) {
-        return [];
+        throw new ModuleLoadError(requiredFile.name);
       }
       return [getBeanDefinition(null, requiredFile, requiredFile)];
     } else {
@@ -115,7 +108,7 @@ export default class ComponentScanLoader implements Loader {
       for (const key of moduleMap.keys()) {
         const aModule = moduleMap.get(key);
         if (this.#isNoComponent(aModule)) {
-          return [];
+          throw new Error("Not a component.");
         }
         result.push(getBeanDefinition(key, aModule, aModule));
       }
@@ -130,11 +123,6 @@ export default class ComponentScanLoader implements Loader {
     if (file.endsWith(".mjs")) {
       return ".mjs";
     }
-    try {
-      const fileMjs = pathWithEnding(file, ".mjs");
-      await access(fileMjs, constants.R_OK);
-      return ".mjs";
-    } catch (_) {} // eslint-disable-line no-empty
     return ".js";
   }
 

@@ -1,3 +1,4 @@
 revane:
   logging:
     file: test.log
+    format: JSON

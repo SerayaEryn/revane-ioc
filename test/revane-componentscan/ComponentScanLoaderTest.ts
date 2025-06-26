@@ -9,6 +9,7 @@ import { ComponentScanLoaderOptions } from "../../src/revane-componentscan/Compo
 import ComponentScanLoader from "../../src/revane-componentscan/ComponentScanLoader.js";
 import { DependencyDefinition } from "../../src/revane-ioc-core/dependencies/DependencyDefinition.js";
 import { Configuration } from "../../src/revane-configuration/Configuration.js";
+import { REV_ERR_MODULE_LOAD_ERROR } from "../../src/revane-componentscan/RevaneConponentScan.js";
 
 test("should do component scan without filters", async (t): Promise<void> => {
   t.plan(8);
@@ -60,6 +61,52 @@ test("should import module", async (t): Promise<void> => {
   t.is(scan1.scope, "singleton");
   const test = findDefinition(beanDefinitions, "test");
   t.is(test.scope, "singleton");
+});
+
+test("should throw error on invalid module", async (t): Promise<void> => {
+  const basePackage = join(import.meta.dirname, "../../testdata/mjs");
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, [
+    42 as any,
+  ]);
+
+  const componentScanResolver = new ComponentScanLoader();
+  await t.throwsAsync(
+    async () => {
+      await componentScanResolver.load([options]);
+    },
+    { code: REV_ERR_MODULE_LOAD_ERROR },
+  );
+});
+
+test("should throw error on invalid module #2", async (t): Promise<void> => {
+  const basePackage = join(import.meta.dirname, "../../testdata/mjs");
+  class Test2 {}
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, [
+    Test2,
+  ]);
+
+  const componentScanResolver = new ComponentScanLoader();
+  await t.throwsAsync(
+    async () => {
+      await componentScanResolver.load([options]);
+    },
+    { code: REV_ERR_MODULE_LOAD_ERROR },
+  );
+});
+
+test("should throw error on invalid module #3", async (t): Promise<void> => {
+  const basePackage = join(import.meta.dirname, "../../testdata/mjs");
+  const options = new ComponentScanLoaderOptions(basePackage, null, null, [
+    await import(join(basePackage, "../module/mjs.mjs")),
+  ]);
+
+  const componentScanResolver = new ComponentScanLoader();
+  await t.throwsAsync(
+    async () => {
+      await componentScanResolver.load([options]);
+    },
+    { code: REV_ERR_MODULE_LOAD_ERROR },
+  );
 });
 
 test("should do component scan and inject by type", async (t): Promise<void> => {

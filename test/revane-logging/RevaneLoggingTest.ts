@@ -10,6 +10,7 @@ import RevaneIoc, {
 } from "../../src/revane-ioc/RevaneIOC.js";
 import { LoggingLoader } from "../../src/revane-logging/LoggingLoader.js";
 import { join } from "node:path";
+import { writeFile } from "node:fs/promises";
 
 test("should inject logger", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), [
@@ -87,6 +88,50 @@ test("should create logger bean", async (t) => {
   options.loaderOptions = [];
   options.configuration = { disabled: false };
   options.profile = "test";
+  const revane = new RevaneIoc(options);
+  await revane.initialize();
+
+  t.true(await revane.has("rootLogger"));
+});
+
+test("should use path #1", async (t) => {
+  const options = new Options(
+    path.join(import.meta.dirname, "../../../testdata/logging7"),
+    [new BeanFactoryExtension(), new LoggingExtension()],
+  );
+  options.loaderOptions = [];
+  options.configuration = { disabled: false };
+  options.profile = "test";
+
+  await writeFile(
+    join(
+      import.meta.dirname,
+      "../../../testdata/logging7/config/application.yml",
+    ),
+    `revane:\n  logging:\n    path: ${join(import.meta.dirname, "../../../testdata/logging7/")}`,
+  );
+  const revane = new RevaneIoc(options);
+  await revane.initialize();
+
+  t.true(await revane.has("rootLogger"));
+});
+
+test("should use path #2", async (t) => {
+  const options = new Options(
+    path.join(import.meta.dirname, "../../../testdata/logging7"),
+    [new BeanFactoryExtension(), new LoggingExtension()],
+  );
+  options.loaderOptions = [];
+  options.configuration = { disabled: false };
+  options.profile = "test";
+
+  await writeFile(
+    join(
+      import.meta.dirname,
+      "../../../testdata/logging7/config/application.yml",
+    ),
+    `revane:\n  logging:\n    path: ${join(import.meta.dirname, "../../../testdata/logging7/")}\n    format: JSON`,
+  );
   const revane = new RevaneIoc(options);
   await revane.initialize();
 
