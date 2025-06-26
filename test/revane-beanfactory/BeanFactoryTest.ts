@@ -39,4 +39,9 @@ test("should create bean using beanFactory", async (t) => {
   t.is(testBean2.test, "43");
   const dependsOnBeanFactory = await revane.get("dependsOnBeanFactory");
   t.deepEqual(dependsOnBeanFactory.testBean, testBean);
+  t.true(await revane.has("hallo0"));
+  t.true(await revane.has("hallo1"));
+  t.true(await revane.has("hallo2"));
+  t.true(await revane.has("testBean4"));
+  t.true(await revane.has("blubb"));
 });

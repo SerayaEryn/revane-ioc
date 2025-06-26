@@ -10,6 +10,21 @@ export default class BeanFactory {
   testBean2 (): any {
     return { test: '43' }
   }
+
+  @Bean({id: 'hallo0'})
+  testBean3 (): any {
+    return { test: '43' }
+  }
+
+  @Bean({aliasIds: ['hallo1']})
+  testBean4 (): any {
+    return { test: '43' }
+  }
+
+  @Bean({id: 'blubb', aliasIds: ['hallo2']})
+  testBean5 (): any {
+    return { test: '43' }
+  }
 }
 
 class Test {
