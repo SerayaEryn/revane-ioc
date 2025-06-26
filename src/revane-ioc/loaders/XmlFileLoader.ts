@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
-import * as fileSystem from "node:fs";
+import { readFile } from "node:fs/promises";
 import DefaultBeanDefinition from "../../revane-ioc-core/DefaultBeanDefinition.js";
 import Loader from "../../revane-ioc-core/Loader.js";
 import { BeanDefinition } from "../RevaneIOC.js";
@@ -77,7 +77,7 @@ export default class XmlFileLoader implements Loader {
   ): Promise<DefaultBeanDefinition[]> {
     const { file } = options;
     if (!file.endsWith(".xml")) throw new UnknownEndingError();
-    const data = await this.loadFile(file);
+    const data = await readFile(file);
     const parserOptions = {
       ignoreAttributes: false,
       attributeNamePrefix: "",
@@ -104,18 +104,6 @@ export default class XmlFileLoader implements Loader {
 
   public type(): string {
     return "xml";
-  }
-
-  private async loadFile(file: string): Promise<Buffer> {
-    return await new Promise((resolve, reject) => {
-      fileSystem.readFile(file, (error, data: Buffer) => {
-        if (error != null) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      });
-    });
   }
 
   private toBeanDefinition(bean: XmlBean): DefaultBeanDefinition {
