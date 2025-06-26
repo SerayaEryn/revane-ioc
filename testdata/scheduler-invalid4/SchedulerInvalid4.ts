@@ -1,10 +1,10 @@
 import { Scheduled, Scheduler } from '../../src/revane-ioc/RevaneIOC.js'
 
 @Scheduler
-export default class SchedulerInvalid3 {
+export default class SchedulerInvalid4 {
   public executed = false
 
-  @Scheduled('hpasf')
+  @Scheduled(null!)
   public test () {
     this.executed = true
   }

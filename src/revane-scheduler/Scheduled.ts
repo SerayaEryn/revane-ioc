@@ -7,23 +7,17 @@ function Scheduled(cronPattern: string) {
     propertyKey: string | ClassMethodDecoratorContext,
     _: PropertyDescriptor,
   ): void {
-    if (typeof propertyKey == "string") {
-      setMetadata(
-        scheduledSym,
-        {
-          cronPattern,
-          propertyKey,
-        },
-        target,
-      );
-    } else {
-      const context = propertyKey as ClassMethodDecoratorContext;
-      context.metadata![scheduledSym] = {
+    const context = propertyKey as ClassMethodDecoratorContext;
+    setMetadata(
+      scheduledSym,
+      {
         cronPattern,
-        propertyKey: context.name,
-      };
-      return target;
-    }
+        propertyKey,
+      },
+      target,
+      context,
+    );
+    console.log(cronPattern);
   };
 }
 

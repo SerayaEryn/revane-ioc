@@ -17,6 +17,12 @@ import SchedulingErrorhandler3 from "../../testdata/scheduler-throws3/Scheduling
 import Scheduler1 from "../../testdata/scheduler/Scheduler1.js";
 import Scheduler2 from "../../testdata/scheduler2/Scheduler2.js";
 import { beanDefinition, MockedExtension } from "../MockedLoader.js";
+import SchedulerInvalid4 from "../../testdata/scheduler-invalid4/SchedulerInvalid4.js";
+import SchedulerInvalid5 from "../../testdata/scheduler-invalid5/SchedulerInvalid5.js";
+import {
+  REV_ERR_INVALID_CRON_PATTERN_PROVIDED,
+  REV_ERR_NO_CRON_PATTERN_PROVIDED,
+} from "../../src/revane-scheduler/RevaneScheduler.js";
 
 test("Should schedule task", async (t) => {
   const options = new Options(
@@ -117,6 +123,60 @@ test("Should schedule task #3", async (t) => {
   } catch (error) {
     t.is(error.code, "REV_ERR_DEPENDENCY_REGISTER");
   }
+});
+
+test("Should throw error on missing cronpattern", async (t) => {
+  const options = new Options(
+    join(import.meta.dirname, "../../testdata/scheduler-invalid4"),
+    [
+      new MockedExtension([beanDefinition("scan56", SchedulerInvalid4)]),
+      new SchedulingExtension(null),
+    ],
+  );
+  options.loaderOptions = [];
+  options.configuration = {
+    disabled: false,
+    directory: join(
+      import.meta.dirname,
+      "../../../testdata/scheduler-invalid4/testconfig",
+    ),
+  };
+  options.profile = "test";
+  const revane = new RevaneIOC(options);
+
+  await t.throwsAsync(
+    async () => {
+      await revane.initialize();
+    },
+    { code: REV_ERR_NO_CRON_PATTERN_PROVIDED },
+  );
+});
+
+test("Should throw error on invalid cron pattern", async (t) => {
+  const options = new Options(
+    join(import.meta.dirname, "../../testdata/scheduler-invalid5"),
+    [
+      new MockedExtension([beanDefinition("scan56", SchedulerInvalid5)]),
+      new SchedulingExtension(null),
+    ],
+  );
+  options.loaderOptions = [];
+  options.configuration = {
+    disabled: false,
+    directory: join(
+      import.meta.dirname,
+      "../../../testdata/scheduler-invalid5/testconfig",
+    ),
+  };
+  options.profile = "test";
+  const revane = new RevaneIOC(options);
+
+  await t.throwsAsync(
+    async () => {
+      await revane.initialize();
+    },
+    { code: REV_ERR_INVALID_CRON_PATTERN_PROVIDED },
+  );
 });
 
 test("Should not schedule tasks", async (t) => {

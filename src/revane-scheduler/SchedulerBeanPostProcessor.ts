@@ -29,6 +29,8 @@ export class SchedulerBeanPostProcessor implements BeanFactoryPostProcessor {
     if (scheduled == null) {
       return;
     }
+    console.log(instance.constructor.prototype);
+    console.log(scheduled);
     if (scheduled.cronPattern == null) {
       throw new NoCronPatternProvided();
     }
