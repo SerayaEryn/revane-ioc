@@ -17,7 +17,6 @@ function Scheduled(cronPattern: string) {
       target,
       context,
     );
-    console.log(cronPattern);
   };
 }
 
