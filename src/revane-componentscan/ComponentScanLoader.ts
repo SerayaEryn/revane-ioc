@@ -170,8 +170,9 @@ function getBeanDefinition(
     getMetadata(dependencyTypesSym, module) ?? {};
   const dependencyClassTypes =
     Reflect.getMetadata("design:paramtypes", module) ?? [];
-  const dependencies = getMetadata(dependenciesSym, module).map((it, index) =>
-    toReference(it, dependencyTypes[index] ?? dependencyClassTypes[index]),
+  const dependencies = (getMetadata(dependenciesSym, module) ?? []).map(
+    (it, index) =>
+      toReference(it, dependencyTypes[index] ?? dependencyClassTypes[index]),
   );
   const beanDefinition = new DefaultBeanDefinition(id);
   if (typeof clazz == "string") {
