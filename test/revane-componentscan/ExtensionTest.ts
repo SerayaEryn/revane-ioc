@@ -77,6 +77,27 @@ test("should get beans by @Type decorator", async (t) => {
   t.is(bean.b.type, 2);
 });
 
+test("should inject config by @Type decorator", async (t) => {
+  const options = new Options(join(import.meta.dirname, "../../testdata"), [
+    new ComponentScanExtension(),
+  ]);
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(
+      join(import.meta.dirname, "../../testdata/injectByType2"),
+      [],
+      [],
+      [],
+    ),
+  ];
+  options.configuration = { disabled: false };
+  options.profile = "test";
+  const revane = new RevaneIOC(options);
+  await revane.initialize();
+
+  const bean = await revane.get("test1");
+  t.truthy(bean.config);
+});
+
 test("should get beans by symbol", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), [
     new ComponentScanExtension(),

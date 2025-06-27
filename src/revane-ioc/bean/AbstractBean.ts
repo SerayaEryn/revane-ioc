@@ -32,14 +32,15 @@ export default abstract class AbstractBean implements Bean {
       parameters.push(await dependency.getInstance());
     }
     let instance: any = null;
-    if (this.beanDefinition.isClass()) {
+    if (this.beanDefinition.instance != null) {
+      instance = this.beanDefinition.instance;
+    } else if (this.beanDefinition.isClass()) {
       if (this.beanDefinition.classConstructor == null) {
         throw new Error("cannot create instance because constructor is null");
       }
       instance = new this.beanDefinition.classConstructor(...parameters);
     } else {
-      instance =
-        this.beanDefinition.classConstructor ?? this.beanDefinition.instance;
+      instance = this.beanDefinition.classConstructor;
     }
     await this.postProcess(this, this.beanDefinition, instance);
     return instance;

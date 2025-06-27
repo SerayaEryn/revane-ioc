@@ -16,6 +16,7 @@ export class ConfigurationLoader implements Loader {
   public async load(_: LoaderOptions[]): Promise<BeanDefinition[]> {
     const configuration = new DefaultBeanDefinition("configuration");
     configuration.instance = this.#configuration;
+    configuration.classConstructor = RevaneConfiguration;
     configuration.scope = "singleton";
     return [configuration];
   }
