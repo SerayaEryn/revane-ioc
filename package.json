@@ -1,6 +1,6 @@
 {
   "name": "revane-ioc",
-  "version": "2.2.0-rc.4",
+  "version": "2.2.0",
   "description": "inversion of control framework",
   "keywords": [
     "inversion of control",
