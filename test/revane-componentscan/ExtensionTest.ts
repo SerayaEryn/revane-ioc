@@ -54,6 +54,29 @@ test("should get bean with alias", async (t) => {
   t.true(await revane.has("outer"));
 });
 
+test("should inject bean from factory by type", async (t) => {
+  const options = new Options(join(import.meta.dirname, "../../testdata"), [
+    new ComponentScanExtension(),
+    new BeanFactoryExtension(),
+  ]);
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(
+      join(import.meta.dirname, "../../testdata/beanFactory"),
+      [],
+      [],
+      [],
+    ),
+  ];
+  options.configuration = { disabled: true };
+  options.profile = "test";
+  const revane = new RevaneIOC(options);
+  await revane.initialize();
+
+  t.true(await revane.has("testBean"));
+  const bean = await revane.get("dependsOnBeanFactory");
+  t.truthy(bean.testBean);
+});
+
 test("should get beans by @Type decorator", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), [
     new ComponentScanExtension(),
