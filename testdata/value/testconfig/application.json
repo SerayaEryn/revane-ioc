@@ -1,0 +1,7 @@
+{
+  "test": {
+    "property1": "hello world",
+    "property2": 43,
+    "property3": true
+  }
+}
