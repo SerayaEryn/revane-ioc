@@ -7,7 +7,7 @@ export class TypeMismatch extends Error {
     public key: string,
     public type: string,
   ) {
-    super(`the value for the  key ${key} is not a ${type}`);
+    super(`the value for the key ${key} is not a ${type}`);
     Error.captureStackTrace(this, TypeMismatch);
   }
 }

@@ -8,6 +8,7 @@ import { ConfigurationLoader } from "./ConfigurationLoader.js";
 import { ConfigurationPropertiesPostProcessor } from "./ConfigurationPropertiesPostProcessor.js";
 import { ConfigurationPropertiesPreProcessor } from "./ConfigurationPropertiesPreProcessor.js";
 import { RevaneConfiguration } from "./RevaneConfiguration.js";
+import { ValuePreProcessor } from "./value/ValuePropertiesPreProcessor.js";
 
 export class ConfigurationExtension extends Extension {
   #configuration: RevaneConfiguration;
@@ -25,7 +26,10 @@ export class ConfigurationExtension extends Extension {
 
   public beanFactoryPreProcessors(): BeanFactoryPreProcessor[] {
     if (this.#enabled) {
-      return [new ConfigurationPropertiesPreProcessor()];
+      return [
+        new ConfigurationPropertiesPreProcessor(),
+        new ValuePreProcessor(this.#configuration),
+      ];
     }
     return [];
   }

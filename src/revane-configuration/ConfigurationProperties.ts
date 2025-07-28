@@ -6,7 +6,9 @@ export interface ConfigurationPropertiesOptions {
   prefix: string;
 }
 
-function ConfigurationProperties(options: ConfigurationPropertiesOptions) {
+export function ConfigurationProperties(
+  options: ConfigurationPropertiesOptions,
+) {
   return function define(target, context?: ClassDecoratorContext) {
     const tree = getSyntaxTree(target);
     const properties: string[] = tree.body[0].body.body
@@ -37,5 +39,3 @@ function getSyntaxTree(Class): any {
   const functionAsString = Class.toString();
   return Parser.parse(functionAsString, { ecmaVersion: 2023 });
 }
-
-export { ConfigurationProperties };

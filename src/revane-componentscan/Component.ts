@@ -1,8 +1,11 @@
 import Options from "./Options.js";
-import { Parser } from "acorn";
 import { dependenciesSym, idSym, typeSym } from "./Symbols.js";
 import { Constructor } from "../revane-ioc-core/Constructor.js";
 import { setMetadata } from "../revane-utils/Metadata.js";
+import {
+  constructorParameterNames,
+  getSyntaxTree,
+} from "../revane-utils/AcornUtil.js";
 
 export function createComponentDecorator(type: string) {
   return function Component(
@@ -63,11 +66,6 @@ function decoratorWithParameters(
   return context == null ? target : undefined;
 }
 
-function getSyntaxTree(Class): any {
-  const functionAsString = Class.toString();
-  return Parser.parse(functionAsString, { ecmaVersion: 2023 });
-}
-
 function getId(tree): string {
   const className: string = tree.body[0].id.name;
   return className.substring(0, 1).toLowerCase() + className.substring(1);
@@ -77,16 +75,5 @@ function getDependencies(tree, options: Options): string[] {
   if (options.dependencies != null) {
     return options.dependencies;
   }
-
-  const functions = tree.body[0].body.body;
-  for (const funktion of functions) {
-    if (isConstructor(funktion)) {
-      return funktion.value.params.map((param) => param.name);
-    }
-  }
-  return [];
-}
-
-function isConstructor(funktion): boolean {
-  return funktion.key?.name === "constructor";
+  return constructorParameterNames(tree);
 }

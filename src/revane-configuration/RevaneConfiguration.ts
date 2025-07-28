@@ -13,6 +13,8 @@ import { deepMerge } from "../revane-utils/Deepmerge.js";
 import { ConfigurationExtension } from "./ConfigurationExtension.js";
 import { ConfigurationProperties } from "./ConfigurationProperties.js";
 import { REV_ERR_CONFIG_FILE_NOT_FOUND } from "./loading/ConfigFileNotFound.js";
+import { REV_ERR_KEY_MISSING } from "./MissingKey.js";
+import { MissingKey } from "./MissingKey.js";
 
 export class ConfigurationOptions {
   profile: string | null;
@@ -56,6 +58,7 @@ export {
   REV_ERR_NO_CONFIG_FILES_FOUND,
   REV_ERR_CONFIG_FILE_NOT_FOUND,
   REV_ERR_KEY_TYPE_MISMATCH,
+  REV_ERR_KEY_MISSING,
 };
 
 export class RevaneConfiguration implements Configuration {
@@ -115,6 +118,9 @@ export class RevaneConfiguration implements Configuration {
 
   public getBoolean(key: string): boolean {
     const value = this.get(key);
+    if (value == null) {
+      throw new MissingKey(key);
+    }
     if (typeof value !== "boolean") {
       throw new TypeMismatch(key, "boolean");
     }
@@ -158,7 +164,7 @@ export class RevaneConfiguration implements Configuration {
         this.values = deepMerge(this.values, loadedValues);
         loadedValues = {};
       } catch (error) {
-        if (error.code !== "REV_ERR_CONFIG_FILE_NOT_FOUND") {
+        if (error.code !== REV_ERR_CONFIG_FILE_NOT_FOUND) {
           throw error;
         }
       }
