@@ -85,6 +85,12 @@ import {
 import { REV_ERR_UNKNOWN_ENDING } from "./UnknownEndingError.js";
 import { BeanOptions } from "../revane-beanfactory/RevaneBeanFactory.js";
 import AliasBean from "./bean/AliasBean.js";
+import {
+  CachingExtension,
+  CacheManager,
+  Cache,
+  ValueWrapper,
+} from "../revane-caching/RevaneCaching.js";
 
 const errorCodes = {
   REV_ERR_MODULE_LOAD_ERROR,
@@ -161,6 +167,8 @@ export {
   Conditional,
 };
 
+export { CacheManager, Cache, ValueWrapper };
+
 export default class RevaneIOC {
   #revaneCore: RevaneCore;
   #options: Options;
@@ -184,6 +192,7 @@ export default class RevaneIOC {
       configurationExtension,
       new LifeCycleExtension(),
       new ConditionalExtension(this.#configuration),
+      new CachingExtension(),
       ...this.#options.extensions,
     ];
   }
