@@ -3,4 +3,4 @@ revane:
     path: '.'
     rootLevel: TRACE
     level:
-      test: DEBUG
+      test1: DEBUG

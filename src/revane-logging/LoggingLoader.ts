@@ -5,18 +5,14 @@ import {
   DefaultBeanDefinition,
 } from "../revane-ioc/RevaneIOC.js";
 import { DefaultLogFactory } from "./DefaultLogFactory.js";
+import { SINGLETON_VALUE } from "../revane-ioc-core/Scopes.js";
 
 export class LoggingLoader implements Loader {
-  private readonly logFactory: DefaultLogFactory;
-
-  constructor(logFactory: DefaultLogFactory) {
-    this.logFactory = logFactory;
-  }
-
   async load(_options: LoaderOptions[]): Promise<BeanDefinition[]> {
     const beanDefinition = new DefaultBeanDefinition("logFactory");
-    beanDefinition.scope = "singleton";
-    beanDefinition.instance = this.logFactory;
+    beanDefinition.scope = SINGLETON_VALUE;
+    beanDefinition.classConstructor = DefaultLogFactory;
+    beanDefinition.dependencyIds = [];
     return [beanDefinition];
   }
 

@@ -15,6 +15,7 @@ import { ConfigurationProperties } from "./ConfigurationProperties.js";
 import { REV_ERR_CONFIG_FILE_NOT_FOUND } from "./loading/ConfigFileNotFound.js";
 import { REV_ERR_KEY_MISSING } from "./MissingKey.js";
 import { MissingKey } from "./MissingKey.js";
+import { Value } from "./value/Value.js";
 
 export class ConfigurationOptions {
   profile: string | null;
@@ -59,6 +60,7 @@ export {
   REV_ERR_CONFIG_FILE_NOT_FOUND,
   REV_ERR_KEY_TYPE_MISMATCH,
   REV_ERR_KEY_MISSING,
+  Value,
 };
 
 export class RevaneConfiguration implements Configuration {
@@ -114,6 +116,27 @@ export class RevaneConfiguration implements Configuration {
       throw new TypeMismatch(key, "string");
     }
     return value;
+  }
+
+  public getOrElse(key: string, fallback: any): any {
+    if (!this.has(key)) {
+      return fallback;
+    }
+    return this.get(key);
+  }
+
+  public getStringOrElse(key: string, fallback: string): string {
+    if (!this.has(key)) {
+      return fallback;
+    }
+    return this.getString(key);
+  }
+
+  public getNumberOrElse(key: string, fallback: number): number {
+    if (!this.has(key)) {
+      return fallback;
+    }
+    return this.getNumber(key);
   }
 
   public getBoolean(key: string): boolean {

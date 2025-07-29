@@ -22,19 +22,14 @@ export class ValuePreProcessor implements BeanFactoryPreProcessor {
       if (values == null) {
         return [beanDefinition];
       }
-      beanDefinition.dependencyIds = beanDefinition.dependencyIds.map(
-        (value, index) => {
-          if (values[index] != null) {
-            const value = values[index];
-            return new DependencyDefinition(
-              "value",
-              this.#getConfigValue(value.key, value.type),
-              null,
-            );
-          }
-          return value;
-        },
-      );
+      Object.keys(values).forEach((index) => {
+        const value = values[index];
+        beanDefinition.dependencyIds[index] = new DependencyDefinition(
+          "value",
+          this.#getConfigValue(value.key, value.type, value.default),
+          null,
+        );
+      });
       return [beanDefinition];
     }
     return [beanDefinition];
@@ -43,16 +38,31 @@ export class ValuePreProcessor implements BeanFactoryPreProcessor {
   #getConfigValue(
     key: string,
     type: "number" | "string" | "boolean" | null | undefined,
+    fallback?: any,
   ): number | string | boolean {
+    if (fallback !== undefined) {
+      switch (type) {
+        case "number":
+          return this.#configuration.getNumberOrElse(key, fallback);
+        case "string":
+          return this.#configuration.getStringOrElse(key, fallback);
+        case null:
+          return this.#configuration.getOrElse(key, fallback);
+        case undefined:
+          return this.#configuration.getOrElse(key, fallback);
+        case "boolean":
+          return this.#configuration.getBooleanOrElse(key, fallback);
+      }
+    }
     switch (type) {
       case "number":
         return this.#configuration.getNumber(key);
       case "string":
         return this.#configuration.getString(key);
       case null:
-        return this.#configuration.getString(key);
+        return this.#configuration.get(key);
       case undefined:
-        return this.#configuration.getString(key);
+        return this.#configuration.get(key);
       case "boolean":
         return this.#configuration.getBoolean(key);
     }

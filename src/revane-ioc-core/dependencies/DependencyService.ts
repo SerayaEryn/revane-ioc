@@ -15,7 +15,7 @@ export class DependencyService {
       dependency: DependencyDefinition,
       parentId: string,
       beanDefinitions: BeanDefinition[],
-    ) => Promise<void>,
+    ) => Promise<Bean>,
   ): Promise<Bean> {
     let error: Error | null = null;
     for (const dependencyResolver of this.dependencyResolvers) {

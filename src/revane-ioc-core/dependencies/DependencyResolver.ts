@@ -12,6 +12,6 @@ export interface DependencyResolver {
       dependency: DependencyDefinition,
       parentId: string,
       beanDefinitions: BeanDefinition[],
-    ) => Promise<void>,
+    ) => Promise<Bean>,
   ) => Promise<Bean>;
 }

@@ -15,6 +15,7 @@ import RevaneCore, {
   REV_ERR_NOT_FOUND,
   REV_ERR_UNKNOWN_DEPENDENCY_TYPE,
   Scopes,
+  SINGLETON_VALUE,
 } from "../revane-ioc-core/RevaneIOCCore.js";
 
 import JsonFileLoader from "./loaders/JsonFileLoader.js";
@@ -35,6 +36,7 @@ import {
   REV_ERR_KEY_TYPE_MISMATCH,
   REV_ERR_NO_CONFIG_FILES_FOUND,
   RevaneConfiguration,
+  Value,
 } from "../revane-configuration/RevaneConfiguration.js";
 import { Bean } from "../revane-beanfactory/BeanDecorator.js";
 import { CoreOptionsBuilder } from "./CoreOptionsBuilder.js";
@@ -149,13 +151,14 @@ export {
   ContextPlugin,
   RegexFilter,
   ApplicationContext,
+  SINGLETON_VALUE,
 };
 
 export { Scheduled, SchedulingExtension };
 
 export { PostConstruct, PreDestroy };
 
-export { RevaneConfiguration, Configuration, ConfigurationProperties };
+export { RevaneConfiguration, Configuration, ConfigurationProperties, Value };
 
 export { LoggingExtension, Logger, LogFactory };
 

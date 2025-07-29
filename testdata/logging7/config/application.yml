@@ -1,4 +1,4 @@
 revane:
   logging:
-    path: /home/seraya/workspace/revane-ioc/testdata/logging7/
+    path: /Users/denisfaecke/Documents/neuland/revane-ioc/testdata/logging7/
     format: JSON

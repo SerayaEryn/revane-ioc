@@ -132,11 +132,15 @@ export class BeanFactory {
     dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[],
-  ): Promise<void> {
+  ): Promise<Bean> {
     try {
-      await this.findAndRegisterBean(dependency, parentId, beanDefinitions);
+      return await this.findAndRegisterBean(
+        dependency,
+        parentId,
+        beanDefinitions,
+      );
     } catch (err) {
-      this.throwDependencyError(err, dependency.value);
+      return await this.throwDependencyError(err, dependency.value);
     }
   }
 
@@ -144,7 +148,7 @@ export class BeanFactory {
     dependency: DependencyDefinition,
     parentId: string,
     beanDefinitions: BeanDefinition[],
-  ): Promise<void> {
+  ): Promise<Bean> {
     const beanDefinition = this.findEntry(
       dependency,
       parentId,
@@ -152,6 +156,7 @@ export class BeanFactory {
     );
     const bean = await this.registerBean(beanDefinition, beanDefinitions);
     this.context.putSingle(bean);
+    return bean;
   }
 
   private async postProcess(
@@ -199,7 +204,7 @@ export class BeanFactory {
   private throwDependencyError(
     err: Error | RethrowableError,
     id: string,
-  ): void {
+  ): Promise<Bean> {
     if (err instanceof RethrowableError && err.isRethrowable) {
       throw err;
     }

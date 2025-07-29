@@ -7,8 +7,6 @@ import { DefaultBeanDefinition, Logger } from "../revane-ioc/RevaneIOC.js";
 import { LogFactory } from "./LogFactory.js";
 
 export class LoggerDependencyResolver implements DependencyResolver {
-  constructor(private readonly logFactory: LogFactory) {}
-
   isRelevant(dependency: DependencyDefinition): boolean {
     return dependency.value === "logger" || dependency.classType === Logger;
   }
@@ -16,17 +14,21 @@ export class LoggerDependencyResolver implements DependencyResolver {
   async resolve(
     dependency: DependencyDefinition,
     parentId: string,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     beanDefinitions: BeanDefinition[],
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ensureDependencyIsPresent: (
       dependency: DependencyDefinition,
       parentId: string,
       beanDefinitions: BeanDefinition[],
-    ) => Promise<void>,
+    ) => Promise<Bean>,
   ): Promise<Bean> {
+    const logFactoryBean = await ensureDependencyIsPresent(
+      new DependencyDefinition("bean", "logFactory", null),
+      parentId,
+      beanDefinitions,
+    );
+    const logFactory: LogFactory = await logFactoryBean.getInstance();
     const beanDefinition = new DefaultBeanDefinition(dependency.value);
-    beanDefinition.instance = this.logFactory.getInstance(parentId);
+    beanDefinition.instance = logFactory.getInstance(parentId);
     return new InstanceSingletonBean(beanDefinition);
   }
 }

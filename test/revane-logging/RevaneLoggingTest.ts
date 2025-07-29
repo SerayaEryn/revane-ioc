@@ -25,7 +25,7 @@ test("should inject logger", async (t) => {
       [],
     ),
   ];
-  options.configuration = { disabled: true };
+  options.configuration = { disabled: false };
   options.profile = "test";
   const revane = new RevaneIoc(options);
   await revane.initialize();
@@ -175,6 +175,6 @@ test("should use level for class", async (t) => {
 });
 
 test("loader should return correct type", (t) => {
-  const loader = new LoggingLoader({} as any);
+  const loader = new LoggingLoader();
   t.is(loader.type(), "logging");
 });

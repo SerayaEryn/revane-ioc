@@ -28,6 +28,7 @@ import { REV_ERR_DEPENDENCY_REGISTER } from "./context/errors/DependencyRegister
 import { REV_ERR_INVALID_SCOPE } from "./context/errors/InvalidScopeError.js";
 import { REV_ERR_NOT_FOUND } from "./context/errors/NotFoundError.js";
 import { REV_ERR_UNKNOWN_DEPENDENCY_TYPE } from "./dependencies/UnknownDependencyType.js";
+import { SINGLETON_VALUE } from "./Scopes.js";
 
 export {
   BeanDefinition,
@@ -46,6 +47,7 @@ export {
   REV_ERR_INVALID_SCOPE,
   REV_ERR_NOT_FOUND,
   REV_ERR_UNKNOWN_DEPENDENCY_TYPE,
+  SINGLETON_VALUE,
 };
 
 export default class RevaneIOCCore {

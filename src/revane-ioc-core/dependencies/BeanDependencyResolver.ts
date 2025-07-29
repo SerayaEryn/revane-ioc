@@ -20,7 +20,7 @@ export class BeanDependencyResolver implements DependencyResolver {
       dependency: DependencyDefinition,
       parentId: string,
       beanDefinitions: BeanDefinition[],
-    ) => Promise<void>,
+    ) => Promise<Bean>,
   ): Promise<Bean> {
     const id = dependency.value as string;
     const classType = dependency.classType;

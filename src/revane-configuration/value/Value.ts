@@ -4,6 +4,7 @@ import { valueSym } from "../Symbols.js";
 export interface ValueOptions {
   key: string;
   type?: "number" | "string" | "boolean" | null;
+  default?: any;
 }
 
 export function Value(options: ValueOptions): ParameterDecorator {
