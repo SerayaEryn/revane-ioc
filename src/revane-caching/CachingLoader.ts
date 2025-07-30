@@ -7,16 +7,17 @@ import {
 import { CacheManager } from "./CacheManager.js";
 
 export class CachingLoader implements Loader {
-  private readonly cacheManager: CacheManager;
+  #cacheManager: CacheManager;
 
-  constructor() {
-    this.cacheManager = new CacheManager();
+  constructor(cacheManager: CacheManager) {
+    this.#cacheManager = cacheManager;
   }
 
   async load(_options: LoaderOptions[]): Promise<BeanDefinition[]> {
     const beanDefinition = new DefaultBeanDefinition("cacheManager");
     beanDefinition.scope = "singleton";
-    beanDefinition.instance = this.cacheManager;
+    beanDefinition.instance = this.#cacheManager;
+    beanDefinition.classConstructor = CacheManager;
     return [beanDefinition];
   }
 

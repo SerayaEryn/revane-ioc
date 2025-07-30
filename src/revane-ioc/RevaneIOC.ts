@@ -16,6 +16,7 @@ import RevaneCore, {
   REV_ERR_UNKNOWN_DEPENDENCY_TYPE,
   Scopes,
   SINGLETON_VALUE,
+  BeanFactoryPostProcessor,
 } from "../revane-ioc-core/RevaneIOCCore.js";
 
 import JsonFileLoader from "./loaders/JsonFileLoader.js";
@@ -92,6 +93,8 @@ import {
   CacheManager,
   Cache,
   ValueWrapper,
+  Cacheable,
+  SimpleCache,
 } from "../revane-caching/RevaneCaching.js";
 
 const errorCodes = {
@@ -152,6 +155,7 @@ export {
   RegexFilter,
   ApplicationContext,
   SINGLETON_VALUE,
+  BeanFactoryPostProcessor,
 };
 
 export { Scheduled, SchedulingExtension };
@@ -170,7 +174,7 @@ export {
   Conditional,
 };
 
-export { CacheManager, Cache, ValueWrapper };
+export { CacheManager, Cache, ValueWrapper, Cacheable, SimpleCache };
 
 export default class RevaneIOC {
   #revaneCore: RevaneCore;

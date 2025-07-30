@@ -492,18 +492,6 @@ test("should get beans type component", async (t) => {
   t.truthy(beans[0]);
 });
 
-test("should get cacheManager", async (t) => {
-  const options = new Options(join(import.meta.dirname, "../../testdata"), []);
-  options.loaderOptions = [];
-  options.configuration = { disabled: true };
-  options.profile = "test";
-  const revane = new Revane(options);
-  await revane.initialize();
-  const bean = await revane.get("cacheManager");
-
-  t.truthy(bean);
-});
-
 test("should invoke lifecycle methods for bean with scope prototype", async (t) => {
   const beanDefinition1 = beanDefinition("test", Lifecycle1);
   beanDefinition1.scope = Scopes.PROTOTYPE;

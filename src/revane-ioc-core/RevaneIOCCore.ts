@@ -40,6 +40,7 @@ export {
   DefaultBeanTypeRegistry,
   ApplicationContext,
   RegexFilter,
+  BeanFactoryPostProcessor,
   REV_ERR_DEFINED_TWICE,
   REV_ERR_CIRCULAR_DEPENDENCY,
   REV_ERR_DEPENDENCY_NOT_FOUND,
