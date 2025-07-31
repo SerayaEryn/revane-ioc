@@ -5,6 +5,7 @@ import { ValueWrapper } from "./ValueWrapper.js";
 import { Cacheable } from "./decorators/Cacheable.js";
 import { SimpleCache } from "./SimpleCache.js";
 import { CacheEvict } from "./decorators/CacheEvict.js";
+import { CacheEvictAll } from "./decorators/CacheEvictAll.js";
 
 export {
   CacheManager,
@@ -13,5 +14,6 @@ export {
   ValueWrapper,
   Cacheable,
   CacheEvict,
+  CacheEvictAll,
   SimpleCache,
 };

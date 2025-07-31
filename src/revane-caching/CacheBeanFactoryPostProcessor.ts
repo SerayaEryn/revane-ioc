@@ -5,7 +5,7 @@ import {
 import Bean from "../revane-ioc-core/context/bean/Bean.js";
 import { getMetadata } from "../revane-utils/Metadata.js";
 import { cacheSym } from "./Symbols.js";
-import { CachableData, CacheData } from "./decorators/Cacheable.js";
+import { CachableData, CacheData } from "./decorators/CacheDecoratorData.js";
 import { isAsyncFunction } from "node:util/types";
 import { CacheManager } from "./CacheManager.js";
 
@@ -47,6 +47,9 @@ export class CacheBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private syncWrapper(meta, args: any[], originalFunction: Function): any {
+    if (meta.cacheEvictAll != null && meta.cacheEvictAll.length > 0) {
+      this.handleCacheEvictAll(meta);
+    }
     if (meta.cacheEvict != null && meta.cacheEvict.length > 0) {
       this.handleCacheEvict(meta, args);
     }
@@ -62,6 +65,9 @@ export class CacheBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     originalFunction: Function,
   ): Promise<any> {
+    if (meta.cacheEvictAll != null && meta.cacheEvictAll.length > 0) {
+      this.handleCacheEvictAll(meta);
+    }
     if (meta.cacheEvict != null && meta.cacheEvict.length > 0) {
       this.handleCacheEvict(meta, args);
     }
@@ -69,6 +75,16 @@ export class CacheBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
       return await this.handleAsyncCachable(meta, args, originalFunction);
     }
     return;
+  }
+
+  private handleCacheEvictAll(meta: CacheData) {
+    if (meta.cacheEvictAll == null) {
+      return;
+    }
+    for (const cacheName of meta.cacheEvictAll) {
+      const cache = this.#cacheManager.getCache(cacheName);
+      cache?.clear();
+    }
   }
 
   private handleCacheEvict(meta: CacheData, args: any[]) {

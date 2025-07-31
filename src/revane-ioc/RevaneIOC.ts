@@ -95,6 +95,7 @@ import {
   ValueWrapper,
   Cacheable,
   CacheEvict,
+  CacheEvictAll,
   SimpleCache,
 } from "../revane-caching/RevaneCaching.js";
 
@@ -181,6 +182,7 @@ export {
   ValueWrapper,
   Cacheable,
   CacheEvict,
+  CacheEvictAll,
   SimpleCache,
 };
 

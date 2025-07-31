@@ -1,10 +1,10 @@
 import { getMetadata, setMetadata } from "../../revane-utils/Metadata.js";
 import { cacheSym } from "../Symbols.js";
-import { CachableData, CacheData } from "./CacheDecoratorData.js";
+import { CacheData } from "./CacheDecoratorData.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-export function CacheEvict(cacheName: string, keyGen: Function): Function {
-  return function CacheEvictDecorator(
+export function CacheEvictAll(cacheName: string): Function {
+  return function CacheEvictAllDecorator(
     target: any,
     propertyKey: string | ClassMethodDecoratorContext,
     _: PropertyDescriptor,
@@ -13,16 +13,16 @@ export function CacheEvict(cacheName: string, keyGen: Function): Function {
       typeof propertyKey === "string"
         ? propertyKey
         : (propertyKey as ClassMethodDecoratorContext).name;
-    const metas: Map<string | symbol, CachableData> =
+    const metas: Map<string | symbol, CacheData> =
       getMetadata(cacheSym, target) ?? {};
     if (metas[methodName] == null) {
       metas[methodName] = {};
     }
     const meta: CacheData = metas[methodName];
-    if (meta.cacheEvict == null) {
-      meta.cacheEvict = [];
+    if (meta.cacheEvictAll == null) {
+      meta.cacheEvictAll = [];
     }
-    meta.cacheEvict.push({ cacheName, keyGen });
+    meta.cacheEvictAll.push(cacheName);
     setMetadata(
       cacheSym,
       metas,
