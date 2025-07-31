@@ -1,5 +1,5 @@
-import { getMetadata, setMetadata } from "../revane-utils/Metadata.js";
-import { cacheSym } from "./Symbols.js";
+import { getMetadata, setMetadata } from "../../revane-utils/Metadata.js";
+import { cacheSym } from "../Symbols.js";
 import { CachableData, CacheData } from "./Cacheable.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type

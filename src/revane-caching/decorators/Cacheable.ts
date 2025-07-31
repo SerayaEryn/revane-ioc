@@ -1,5 +1,5 @@
-import { getMetadata, setMetadata } from "../revane-utils/Metadata.js";
-import { cacheSym } from "./Symbols.js";
+import { getMetadata, setMetadata } from "../../revane-utils/Metadata.js";
+import { cacheSym } from "../Symbols.js";
 
 export interface CacheData {
   cacheables?: CachableData[];

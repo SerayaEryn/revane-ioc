@@ -2,9 +2,9 @@ import { CacheManager } from "./CacheManager.js";
 import { CachingExtension } from "./CachingExtension.js";
 import { Cache } from "./Cache.js";
 import { ValueWrapper } from "./ValueWrapper.js";
-import { Cacheable } from "./Cacheable.js";
+import { Cacheable } from "./decorators/Cacheable.js";
 import { SimpleCache } from "./SimpleCache.js";
-import { CacheEvict } from "./CacheEvict.js";
+import { CacheEvict } from "./decorators/CacheEvict.js";
 
 export {
   CacheManager,

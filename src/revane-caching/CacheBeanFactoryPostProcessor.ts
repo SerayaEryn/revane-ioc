@@ -5,7 +5,7 @@ import {
 import Bean from "../revane-ioc-core/context/bean/Bean.js";
 import { getMetadata } from "../revane-utils/Metadata.js";
 import { cacheSym } from "./Symbols.js";
-import { CachableData, CacheData } from "./Cacheable.js";
+import { CachableData, CacheData } from "./decorators/Cacheable.js";
 import { isAsyncFunction } from "node:util/types";
 import { CacheManager } from "./CacheManager.js";
 
