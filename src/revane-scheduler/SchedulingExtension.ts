@@ -36,8 +36,4 @@ export class SchedulingExtension extends Extension {
   public beanLoaders(): Loader[] {
     return [new SchedulerLoader(this.#taskScheduler)];
   }
-
-  public async close(): Promise<void> {
-    return this.#taskScheduler.close();
-  }
 }

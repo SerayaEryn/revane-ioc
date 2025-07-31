@@ -1,4 +1,5 @@
 import { Cron } from "croner";
+import { PreDestroy } from "../revane-ioc/RevaneIOC.js";
 
 export class TaskScheduler {
   readonly #jobs: Cron[] = [];
@@ -8,8 +9,7 @@ export class TaskScheduler {
 
   public schedule(
     cronPattern: string,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    functionToSchedule: Function,
+    functionToSchedule: () => Promise<void>,
     isAsyncFunction: boolean,
   ): void {
     const job = new Cron(cronPattern, { timezone: "UTC" }, () => {
@@ -18,6 +18,7 @@ export class TaskScheduler {
     this.#jobs.push(job);
   }
 
+  @PreDestroy
   public close(): void {
     for (const job of this.#jobs) {
       job.stop();
@@ -30,8 +31,7 @@ export class TaskScheduler {
 
   #executeTask(
     asyncFunction: boolean,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    functionToSchedule: Function,
+    functionToSchedule: () => Promise<void>,
   ): void {
     if (asyncFunction) {
       try {

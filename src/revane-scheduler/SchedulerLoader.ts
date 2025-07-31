@@ -17,6 +17,8 @@ export class SchedulerLoader implements Loader {
     const configuration = new DefaultBeanDefinition("taskScheduler");
     configuration.instance = this.#taskScheduler;
     configuration.scope = "singleton";
+    configuration.classConstructor = TaskScheduler;
+    configuration.dependencyIds = [];
     return [configuration];
   }
 
