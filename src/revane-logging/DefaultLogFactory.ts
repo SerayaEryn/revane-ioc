@@ -9,8 +9,9 @@ import {
 } from "apheleia";
 import { createWriteStream } from "node:fs";
 import { join } from "node:path";
-import { Bean, Value } from "../revane-ioc/RevaneIOC.js";
+import { Bean, ConditionalOnProperty, Value } from "../revane-ioc/RevaneIOC.js";
 
+@ConditionalOnProperty("revane.logging.enabled", true, true)
 export class DefaultLogFactory implements LogFactory {
   readonly #rootLogger: Logger;
 
