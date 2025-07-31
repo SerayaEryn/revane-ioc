@@ -1,3 +1,3 @@
-const cachableSym = Symbol.for("revane.cachable");
+const cacheSym = Symbol.for("revane.cachable");
 
-export { cachableSym };
+export { cacheSym };

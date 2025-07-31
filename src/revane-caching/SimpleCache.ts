@@ -9,6 +9,10 @@ export class SimpleCache implements Cache {
     this.#name = name;
   }
 
+  has(key: any): boolean {
+    return this.#cache.has(key);
+  }
+
   clear(): void {
     this.#cache.clear();
   }

@@ -1,0 +1,7 @@
+{
+  "revane": {
+    "main": {
+      "allow-bean-definition-overriding": false
+    }
+  }
+}

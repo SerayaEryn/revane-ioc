@@ -94,6 +94,7 @@ import {
   Cache,
   ValueWrapper,
   Cacheable,
+  CacheEvict,
   SimpleCache,
 } from "../revane-caching/RevaneCaching.js";
 
@@ -174,7 +175,14 @@ export {
   Conditional,
 };
 
-export { CacheManager, Cache, ValueWrapper, Cacheable, SimpleCache };
+export {
+  CacheManager,
+  Cache,
+  ValueWrapper,
+  Cacheable,
+  CacheEvict,
+  SimpleCache,
+};
 
 export default class RevaneIOC {
   #revaneCore: RevaneCore;
