@@ -11,11 +11,12 @@ export class PropertyCondition implements Condition {
   async matches(data: {
     value: string | number | boolean;
     property: string;
-    fallback?: string | number | boolean;
+    matchIfMissing?: boolean;
   }): Promise<boolean> {
-    return (
-      this.#configuration.getOrElse(data.property, data.fallback ?? null) ==
-      data.value
-    );
+    if (this.#configuration.has(data.property)) {
+      return this.#configuration.get(data.property) == data.value;
+    } else {
+      return data.matchIfMissing ?? false;
+    }
   }
 }
