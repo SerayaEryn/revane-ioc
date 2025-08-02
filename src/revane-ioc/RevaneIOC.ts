@@ -31,6 +31,7 @@ import Loader from "../revane-ioc-core/Loader.js";
 import {
   ConfigurationExtension,
   ConfigurationProperties,
+  ConstructorBinding,
   REV_ERR_CONFIG_FILE_NOT_FOUND,
   REV_ERR_KEY_MISSING,
   REV_ERR_KEY_NOT_PRESENT_IN_CONFIG,
@@ -164,7 +165,13 @@ export { Scheduled, SchedulingExtension };
 
 export { PostConstruct, PreDestroy };
 
-export { RevaneConfiguration, Configuration, ConfigurationProperties, Value };
+export {
+  RevaneConfiguration,
+  Configuration,
+  ConfigurationProperties,
+  ConstructorBinding,
+  Value,
+};
 
 export { LoggingExtension, Logger, LogFactory };
 

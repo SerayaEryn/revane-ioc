@@ -27,7 +27,7 @@ export class ConfigurationExtension extends Extension {
   public beanFactoryPreProcessors(): BeanFactoryPreProcessor[] {
     if (this.#enabled) {
       return [
-        new ConfigurationPropertiesPreProcessor(),
+        new ConfigurationPropertiesPreProcessor(this.#configuration),
         new ValuePreProcessor(this.#configuration),
       ];
     }

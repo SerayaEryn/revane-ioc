@@ -16,6 +16,7 @@ import { REV_ERR_CONFIG_FILE_NOT_FOUND } from "./loading/ConfigFileNotFound.js";
 import { REV_ERR_KEY_MISSING } from "./MissingKey.js";
 import { MissingKey } from "./MissingKey.js";
 import { Value } from "./value/Value.js";
+import { ConstructorBinding } from "./ConstructorBinding.js";
 
 export class ConfigurationOptions {
   profile: string | null;
@@ -51,6 +52,7 @@ const DEFAULT_PROFILE = "default";
 export {
   ConfigurationExtension,
   ConfigurationProperties,
+  ConstructorBinding,
   BASE_PACKAGE,
   PROFILE,
   ORIGINAL_PROFILE,

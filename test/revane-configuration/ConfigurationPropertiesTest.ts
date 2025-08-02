@@ -12,6 +12,7 @@ import { ConfigurationProperties6 } from "../../testdata/configurationProperties
 import { ConfigurationProperties7 } from "../../testdata/configurationPropertiesYml1/ConfigurationProperties7.js";
 import { ConfigurationProperties8 } from "../../testdata/configurationPropertiesYml2/ConfigurationProperties8.js";
 import { ConfigurationProperties9 } from "../../testdata/configurationPropertiesYml3/ConfigurationProperties9.js";
+import { ConfigurationProperties10 } from "../../testdata/configurationPropertiesConstructorBinding/ConfigurationProperties10.js";
 
 test("should add configuration properties", async (t) => {
   t.plan(4);
@@ -293,4 +294,40 @@ test("should add configuration properties from properties and replace env vars",
   const configurationProperties = await revane.get("scan56");
   t.is(configurationProperties.property1, "hello world");
   t.is(configurationProperties.property2, "a env var");
+});
+
+test("should provide properties to constructor", async (t) => {
+  t.plan(5);
+
+  process.env.A_ENV_VAR = "a env var";
+  const options = new Options(
+    join(
+      import.meta.dirname,
+      "../../../testdata/configurationPropertiesConstructorBinding",
+    ),
+    [
+      new MockedExtension([
+        beanDefinition("configurationProperties10", ConfigurationProperties10),
+      ]),
+    ],
+  );
+  options.loaderOptions = [];
+  options.configuration = {
+    disabled: false,
+    directory: join(
+      import.meta.dirname,
+      "../../../testdata/configurationPropertiesConstructorBinding/testconfig",
+    ),
+  };
+  options.profile = "test";
+  const revane = new Revane(options);
+  await revane.initialize();
+
+  const configuration: RevaneConfiguration = await revane.get("configuration");
+  t.is(configuration.getString("test.property1"), "hello world");
+  t.is(configuration.getNumber("test.property2"), 44);
+  const configurationProperties = await revane.get("configurationProperties10");
+  t.is(configurationProperties.property1, "hello world");
+  t.is(configurationProperties.property2, 44);
+  t.deepEqual(configurationProperties.properties, ["hello world", 44]);
 });
