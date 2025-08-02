@@ -1,6 +1,7 @@
 import {
   BeanDefinition,
   BeanFactoryPostProcessor,
+  ValueWrapper,
 } from "../revane-ioc/RevaneIOC.js";
 import Bean from "../revane-ioc-core/context/bean/Bean.js";
 import { getMetadata } from "../revane-utils/Metadata.js";
@@ -47,14 +48,27 @@ export class CacheBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private syncWrapper(meta, args: any[], originalFunction: Function): any {
-    if (meta.cacheEvictAll != null && meta.cacheEvictAll.length > 0) {
-      this.handleCacheEvictAll(meta);
-    }
-    if (meta.cacheEvict != null && meta.cacheEvict.length > 0) {
-      this.handleCacheEvict(meta, args);
+    this.handleCacheEvictAll(meta);
+    this.handleCacheEvict(meta, args);
+    let value: ValueWrapper | undefined;
+    if (meta.cachePut != null && meta.cachePut.length > 0) {
+      value = new ValueWrapper(originalFunction(...args));
+      this.handleCachePut(meta, args, value);
     }
     if (meta.cacheables != null && meta.cacheables.length > 0) {
-      return this.handleSyncCachable(meta, args, originalFunction);
+      const key1 = meta.cacheables[0].keyGen(args);
+      const cache1 = this.getCache(meta.cacheables[0]);
+
+      const valueWrapper = cache1?.get(key1);
+      if (valueWrapper == null) {
+        value = new ValueWrapper(originalFunction(...args));
+      } else {
+        value = valueWrapper;
+      }
+    }
+    this.handleSyncCachable(meta, args, value);
+    if (value != null) {
+      return value.value;
     }
     return;
   }
@@ -65,14 +79,27 @@ export class CacheBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     originalFunction: Function,
   ): Promise<any> {
-    if (meta.cacheEvictAll != null && meta.cacheEvictAll.length > 0) {
-      this.handleCacheEvictAll(meta);
-    }
-    if (meta.cacheEvict != null && meta.cacheEvict.length > 0) {
-      this.handleCacheEvict(meta, args);
+    this.handleCacheEvictAll(meta);
+    this.handleCacheEvict(meta, args);
+    let value: ValueWrapper | undefined;
+    if (meta.cachePut != null && meta.cachePut.length > 0) {
+      value = new ValueWrapper(await originalFunction(...args));
+      this.handleCachePut(meta, args, value);
     }
     if (meta.cacheables != null && meta.cacheables.length > 0) {
-      return await this.handleAsyncCachable(meta, args, originalFunction);
+      const key1 = meta.cacheables[0].keyGen(args);
+      const cache1 = this.getCache(meta.cacheables[0]);
+
+      const valueWrapper = cache1?.get(key1);
+      if (valueWrapper == null) {
+        value = new ValueWrapper(originalFunction(...args));
+      } else {
+        value = valueWrapper;
+      }
+    }
+    await this.handleAsyncCachable(meta, args, value);
+    if (value != null) {
+      return value.value;
     }
     return;
   }
@@ -101,51 +128,46 @@ export class CacheBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
   private handleSyncCachable(
     meta: CacheData,
     args: any[],
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-    originalFunction: Function,
+    value: ValueWrapper | undefined,
   ): any {
     if (meta.cacheables == null || meta.cacheables.length === 0) {
       return;
     }
-    const key1 = meta.cacheables[0].keyGen(args);
-    const cache1 = this.getCache(meta.cacheables[0]);
+    for (const cacheable of meta.cacheables) {
+      const key = cacheable.keyGen(args);
+      const cache = this.getCache(cacheable);
+      cache?.put(key, value?.value);
+    }
+  }
 
-    const valueWrapper = cache1?.get(key1);
-    if (valueWrapper == null) {
-      const result = originalFunction(...args);
-      for (const cacheable of meta.cacheables) {
-        const key = cacheable.keyGen(args);
-        const cache = this.getCache(cacheable);
-        cache?.put(key, result);
-      }
-      return result;
-    } else {
-      return valueWrapper.value;
+  private handleCachePut(
+    meta: CacheData,
+    args: any[],
+    value: ValueWrapper | null,
+  ) {
+    if (meta.cachePut == null || meta.cachePut.length === 0) {
+      return;
+    }
+
+    for (const cacheable of meta.cachePut) {
+      const key = cacheable.keyGen(args);
+      const cache = this.getCache(cacheable);
+      cache?.put(key, value?.value);
     }
   }
 
   private async handleAsyncCachable(
     meta: CacheData,
     args: any[],
-    originalFunction,
+    value: ValueWrapper | undefined,
   ): Promise<any> {
     if (meta.cacheables == null || meta.cacheables.length === 0) {
       return;
     }
-    const key1 = meta.cacheables[0].keyGen(args);
-    const cache1 = this.getCache(meta.cacheables[0]);
-
-    const valueWrapper = cache1?.get(key1);
-    if (valueWrapper == null) {
-      const result = await originalFunction(...args);
-      for (const cacheable of meta.cacheables) {
-        const key = cacheable.keyGen(args);
-        const cache = this.getCache(cacheable);
-        cache?.put(key, result);
-      }
-      return result;
-    } else {
-      return valueWrapper.value;
+    for (const cacheable of meta.cacheables) {
+      const key = cacheable.keyGen(args);
+      const cache = this.getCache(cacheable);
+      cache?.put(key, value?.value);
     }
   }
 

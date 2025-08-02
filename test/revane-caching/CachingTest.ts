@@ -10,6 +10,7 @@ import { CacheMe } from "../../testdata/caching1/CacheMe.js";
 import { CacheMe2 } from "../../testdata/caching2/CacheMe2.js";
 import { CacheMe3 } from "../../testdata/caching3/CacheMe3.js";
 import { CacheMe4 } from "../../testdata/caching4/CacheMe4.js";
+import { CacheMe5 } from "../../testdata/caching5/CacheMe5.js";
 
 test("should get cacheManager", async (t) => {
   const options = new Options(join(import.meta.dirname, "../../testdata"), []);
@@ -70,6 +71,30 @@ test("should evict all entries from cache", async (t) => {
   bean.evictAll();
   t.false(cacheManager.getCache("TEST")?.has("test1"));
   t.false(cacheManager.getCache("TEST")?.has("test2"));
+});
+
+test("should put into cache", async (t) => {
+  const options = new Options(join(import.meta.dirname, "../../testdata"), [
+    new ComponentScanExtension(),
+  ]);
+  options.loaderOptions = [
+    new ComponentScanLoaderOptions(
+      join(import.meta.dirname, "../../testdata/caching5"),
+      [],
+      [],
+      [],
+    ),
+  ];
+  options.configuration = { disabled: false };
+  options.profile = "test";
+  const revane = new Revane(options);
+  await revane.initialize();
+  const bean: CacheMe5 = await revane.get("cacheMe5");
+  t.is(bean.cacheMePls("test1"), 1);
+  t.is(bean.cacheMePls("test2"), 2);
+  const cacheManager: CacheManager = await revane.get("cacheManager");
+  t.is(cacheManager.getCache("TEST")?.get("test1").value, 1);
+  t.is(cacheManager.getCache("TEST")?.get("test2").value, 2);
 });
 
 test("should cache method call result in correct cache with correct key", async (t) => {

@@ -6,6 +6,7 @@ import { Cacheable } from "./decorators/Cacheable.js";
 import { SimpleCache } from "./SimpleCache.js";
 import { CacheEvict } from "./decorators/CacheEvict.js";
 import { CacheEvictAll } from "./decorators/CacheEvictAll.js";
+import { CachePut } from "./decorators/CachePut.js";
 
 export {
   CacheManager,
@@ -15,5 +16,6 @@ export {
   Cacheable,
   CacheEvict,
   CacheEvictAll,
+  CachePut,
   SimpleCache,
 };

@@ -97,6 +97,7 @@ import {
   Cacheable,
   CacheEvict,
   CacheEvictAll,
+  CachePut,
   SimpleCache,
 } from "../revane-caching/RevaneCaching.js";
 
@@ -190,6 +191,7 @@ export {
   Cacheable,
   CacheEvict,
   CacheEvictAll,
+  CachePut,
   SimpleCache,
 };
 

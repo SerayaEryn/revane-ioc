@@ -1,6 +1,7 @@
 export interface CacheData {
   cacheables?: CachableData[];
   cacheEvict?: CachableData[];
+  cachePut?: CachableData[];
   cacheEvictAll?: string[];
 }
 
