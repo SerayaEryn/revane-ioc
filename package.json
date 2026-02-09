@@ -48,7 +48,7 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.29.0",
+    "@eslint/js": "^10.0.1",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.1",
     "ava": "^6.4.0",
